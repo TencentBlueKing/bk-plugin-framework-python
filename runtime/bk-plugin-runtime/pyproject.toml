@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bk-plugin-runtime"
-version = "1.1.0rc1"
+version = "1.2.0rc1"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -16,6 +16,10 @@ raven = "^6.5.0"
 ddtrace = "^0.14.1"
 django-cors-headers = "^3.8.0"
 django-dbconn-retry = "^0.1.5"
+blueapps = "4.2.2"
+celery = "^4.4.0"
+django-celery-beat = "^2.0.0"
+django-celery-results = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 

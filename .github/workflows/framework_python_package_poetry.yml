@@ -3,7 +3,7 @@ name: Runtime python package
 on:
   push:
     tags:
-      - "bk-plugin-runtime-v*.*.*"
+      - "bk-plugin-framework-v*.*.*"
   workflow_dispatch:
 
 jobs:
@@ -23,8 +23,6 @@ jobs:
 
       - name: Package and Publish
         run: |
-          cd runtime/bk-plugin-runtime
-          rm -rf benchmark
-          rm -rf tests
+          cd bk-plugin-framework
           poetry build -vvv
           poetry publish -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PWD }}
