@@ -4,6 +4,7 @@
     "plugin_desc": "the description of this plugin",
     "init_admin": "init admin username",
     "init_apigw_maintainer": "admin",
+    "apigw_subdomain": "bk apigw sub domain",
     "_copy_without_render": [
         ".ci"
     ]
