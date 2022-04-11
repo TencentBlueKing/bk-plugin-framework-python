@@ -18,7 +18,7 @@ from blueapps.conf.default_settings import *  # noqa
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
 
 # 请在这里加入你的自定义 APP
-INSTALLED_APPS += (
+INSTALLED_APPS += (  # noqa
     "rest_framework",
     "drf_yasg",
     "bk_plugin_framework.runtime.loghub",
