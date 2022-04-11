@@ -40,7 +40,7 @@ DEBUG = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": APP_CODE
+        "NAME": APP_CODE  # noqa
     },
 }
 # 本地开发是否使用mysql数据库
@@ -54,7 +54,7 @@ try:
         port=int(os.getenv("BK_PLUGIN_RUNTIME_DB_PORT")),
         user=os.getenv("BK_PLUGIN_RUNTIME_DB_USER"),
         passwd=os.getenv("BK_PLUGIN_RUNTIME_DB_PWD"),
-        db=APP_CODE,
+        db=APP_CODE,  # noqa
     )
     connect.close()
     is_exist_mysql = True
@@ -70,7 +70,7 @@ if (int(BK_PLUGIN_DEV_USE_MYSQL or 0)) or (BK_PLUGIN_DEV_USE_MYSQL is None and i
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": APP_CODE,
+            "NAME": APP_CODE,  # noqa
             "USER": os.getenv("BK_PLUGIN_RUNTIME_DB_USER"),
             "PASSWORD": os.getenv("BK_PLUGIN_RUNTIME_DB_PWD"),
             "HOST": os.getenv("BK_PLUGIN_RUNTIME_DB_HOST"),
@@ -78,7 +78,7 @@ if (int(BK_PLUGIN_DEV_USE_MYSQL or 0)) or (BK_PLUGIN_DEV_USE_MYSQL is None and i
         },
     }
 
-default.logging_addition_settings(LOGGING)
+default.logging_addition_settings(LOGGING)  # noqa
 
 # 本地开发豁免 APIGW 来源校验
 BK_APIGW_REQUIRE_EXEMPT = True
