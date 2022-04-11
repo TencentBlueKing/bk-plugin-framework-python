@@ -89,7 +89,6 @@ ENV/
 
 
 # Frontend project lib file
-static/pipeline/node_modules/
 node_modules/
 webpack_cache
 
