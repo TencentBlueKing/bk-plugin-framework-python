@@ -24,7 +24,9 @@ jobs:
         pip install flake8 black
     - name: Lint with flake8
       run: |
-        flake8 bk-plugin-framework/bk_plugin_framework
+        cd bk-plugin-framework
+        flake8 bk_plugin_framework
     - name: Format with black
       run: |
-        black bk-plugin-framework/bk_plugin_framework
+        cd bk-plugin-framework
+        black bk_plugin_framework
