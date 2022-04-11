@@ -1,3 +1,28 @@
+[tool.poetry]
+name = "bk-plugin-runtime"
+version = "1.1.0rc1"
+description = "bk plugin python django runtime"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+redis = "^2.10.5"
+Django = "^2.2.6"
+gunicorn = "^19.6.0"
+djangorestframework = "^3.12.4"
+drf-yasg = "^1.20.0"
+raven = "^6.5.0"
+ddtrace = "^0.14.1"
+django-cors-headers = "^3.8.0"
+django-dbconn-retry = "^0.1.5"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.black]
 line-length = 120
 include = '\.pyi?$'
