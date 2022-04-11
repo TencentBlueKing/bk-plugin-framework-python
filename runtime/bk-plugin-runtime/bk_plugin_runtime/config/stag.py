@@ -11,6 +11,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
+import os
 from bk_plugin_runtime.config import RUN_VER
 
 if RUN_VER == "open":
@@ -23,7 +24,7 @@ RUN_MODE = "STAGING"
 
 BK_APIGW_REQUIRE_EXEMPT = os.getenv("BK_APIGW_REQUIRE_EXEMPT", None) is not None
 
-default.logging_addition_settings(LOGGING)
+default.logging_addition_settings(LOGGING)  # noqa
 
 # 正式环境的日志级别可以在这里配置
 # V2

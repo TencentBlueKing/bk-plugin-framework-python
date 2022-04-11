@@ -10,7 +10,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-from corsheaders.defaults import default_headers
+
+import os
 from blueapps.conf.log import get_logging_config_dict
 from blueapps.conf.default_settings import *  # noqa
 
@@ -29,7 +30,7 @@ INSTALLED_APPS += (
 )
 
 if BKPAAS_ENVIRONMENT == "dev":
-    INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)
+    INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
 
 from bk_plugin_framework.runtime.schedule.celery import queues as schedule_queues  # noqa
 from bk_plugin_framework.runtime.callback.celery import queues as callback_queues  # noqa
@@ -61,7 +62,7 @@ CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
 # )
 
 # 自定义中间件
-MIDDLEWARE += (
+MIDDLEWARE += (  # noqa
     "corsheaders.middleware.CorsMiddleware",
     "bk_plugin_framework.services.bpf_service.middlewares.TraceIDInjectMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
@@ -80,7 +81,7 @@ MIDDLEWARE += (
 #
 STATIC_VERSION = "1.0"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # noqa
 
 # CELERY 开关，使用时请改为 True，修改项目目录下的 Procfile 文件，添加以下两行命令：
 # worker: python manage.py celery worker -l info
@@ -113,7 +114,7 @@ IS_BKUI_HISTORY_MODE = False
 IS_AJAX_PLAIN_MODE = False
 
 # 国际化配置
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)  # noqa
 
 TIME_ZONE = "Asia/Shanghai"
 LANGUAGE_CODE = "zh-hans"
@@ -160,8 +161,8 @@ if locals().get("DISABLED_APPS"):
 
 ROOT_URLCONF = "bk_plugin_runtime.urls"
 
-from blueapps.core.celery import celery_app
-from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE
+from blueapps.core.celery import celery_app  # noqa
+from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
 
 celery_app.conf.beat_schedule = SCHEDULE
 
