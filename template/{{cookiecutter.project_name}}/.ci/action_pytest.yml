@@ -1,0 +1,32 @@
+version: v2.0
+
+on:
+  push: [ "*" ]
+
+variables:
+  local_path: wait_test_directory
+
+steps:
+  - name: init directory
+    run: |
+      cd ${{ ci.workspace }}
+      rm -rf ${{ variables.local_path }}
+      mkdir ${{ variables.local_path }}
+
+  - checkout: self
+    name: checkout the base repo
+    with:
+      localPath: ${{ variables.local_path }}/${{ ci.repo_name }}
+
+  - name: install pytest and start test
+    run: |
+      cd ${{ ci.workspace }}/${{ variables.local_path }}/${{ ci.repo_name }}
+      pip install pytest==6.2.5
+      pip install nose==1.3.7
+      pip install pytest-mock==3.6.1
+      pytest tests -vv
+
+  - name: clear directory
+    run: |
+      cd ${{ ci.workspace }}
+      rm -rf ${{ variables.local_path }}

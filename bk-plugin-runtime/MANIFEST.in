@@ -1,0 +1,2 @@
+recursive-include bk_plugin_runtime/static *
+recursive-include bk_plugin_runtime/templates *

@@ -1,0 +1,6 @@
+pydantic>1.0,<2.0
+werkzeug>=2.0.0,<3.0.0
+bk-plugin-runtime==0.5.2
+apigw-manager==0.1.9
+apigw-manager[extra]==0.1.9
+

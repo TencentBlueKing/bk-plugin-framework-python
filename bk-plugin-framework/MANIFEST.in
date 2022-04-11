@@ -1,0 +1,1 @@
+recursive-include bk_plugin_framework/services/bpf_service/management/commands/data *

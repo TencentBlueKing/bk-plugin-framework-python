@@ -1,0 +1,27 @@
+spec_version: 2
+modules:
+  default:
+    language: python
+    is_default: true
+    env_variables:
+      - key: PIP_VERSION
+        value: 21.0
+        description: pip version control
+      - key: BK_APIGW_MANAGER_URL_TEMPL
+        value: http://{api_name}.{{cookiecutter.apigw_subdomain}}/
+        description: pip version control
+      - key: BK_APIGW_MANAGER_MAINTAINERS
+        value: {{cookiecutter.init_apigw_maintainer}}
+        description: plugin apigw managers
+      - key: BK_INIT_SUPERUSER
+        value: {{cookiecutter.init_admin}}
+        description: plugin admin panel init superuser
+      - key: BK_SOPS_APP_CODE
+        value: bksops
+        description: bk-sops app code
+      - key: DJANGO_SETTINGS_MODULE
+        value: bk_plugin_runtime.settings
+        description: django settings module path
+      - key: BK_APP_CONFIG_PATH
+        value: bk_plugin_runtime.config
+        description: blueapps config path
