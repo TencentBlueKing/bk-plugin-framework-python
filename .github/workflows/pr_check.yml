@@ -1,0 +1,12 @@
+name: PR check
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  framework-lint:
+    uses: TencentBlueKing/bk-plugin-framework-python/.github/workflows/framework_flake8_and_black.yml@master
+
+  runtime-lint:
+    uses: TencentBlueKing/bk-plugin-framework-python/.github/workflows/runtime_flake8_and_black.yml@master

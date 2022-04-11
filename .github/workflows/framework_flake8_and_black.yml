@@ -1,0 +1,30 @@
+name: Framework Flake8 and Black
+
+on:
+  workflow_call:
+
+jobs:
+  flake8_and_black:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black
+    - name: Lint with flake8
+      run: |
+        flake8 bk-plugin-framework/bk_plugin_framework
+    - name: Format with black
+      run: |
+        black bk-plugin-framework/bk_plugin_framework
