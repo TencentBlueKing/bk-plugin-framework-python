@@ -35,7 +35,6 @@ setup(
         "redis==2.10.5",
         "blueapps==3.3.6rc",
         "gunicorn==19.6.0",
-        "blueking-component-ieod>=0.0.68",
         "djangorestframework==3.12.4",
         "drf-yasg==1.20.0",
         "raven==6.5.0",
