@@ -26,5 +26,6 @@ jobs:
           cd runtime/bk-plugin-runtime
           rm -rf benchmark
           rm -rf tests
+          poetry build -vvv
           poetry config pypi-token.pypi ${{ secrets.RUNTIME_PYPI_TOKEN }}
-          poetry publish --build
+          poetry publish
