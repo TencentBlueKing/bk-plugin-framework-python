@@ -26,8 +26,6 @@ jobs:
           cd runtime/bk-plugin-runtime
           rm -rf benchmark
           rm -rf tests
-          poetry config pypi-token.pypi ${{ secrets.RUNTIME_PYPI_TOKEN }}
-          poetry publish
           poetry config repositories.tencent https://mirrors.tencent.com/tencent_pypi/simple
           poetry config http-basic.tencent ${{ secrets.TENCENT_PYPI_USER }} ${{ secrets.TENCENT_PYPI_TOKEN }}
-          poetry publish -r tencent
+          poetry publish -r tencent --build
