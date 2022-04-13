@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 import re
 import typing
+import inspect
 
 from pydantic import BaseModel
 
@@ -21,6 +22,13 @@ from bk_plugin_framework.constants import State
 from bk_plugin_framework.runtime.callback.api import prepare_callback, CallbackPreparation
 
 VALID_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9][a-z0-9]*$")
+
+
+class FormModel:
+    @classmethod
+    def fields(cls):
+        attributes = inspect.getmembers(cls, lambda a: not inspect.isroutine(a))
+        return [a[0] for a in attributes if not a[0].startswith("_")]
 
 
 class InputsModel(BaseModel):
@@ -121,6 +129,14 @@ class PluginMeta(type):
                 "plugin deinition error, {}'s ContextInputs is not subclass of {}".format(new_cls, ContextRequire)
             )
 
+        # inputs form check
+        inputs_form_cls = getattr(new_cls, "InputsForm", None)
+        if inputs_form_cls is not None:
+            if not issubclass(inputs_form_cls, FormModel):
+                raise TypeError(
+                    "plugin deinition error, {}'s InputsForm is not subclass of {}".format(new_cls, FormModel)
+                )
+
         # register plugin
         VersionHub._register_plugin(new_cls)
 
@@ -185,7 +201,14 @@ class Plugin(metaclass=PluginMeta):
 
         inputs_cls = getattr(cls, "Inputs", None)
         if inputs_cls:
-            data["inputs"] = cls._trim_schema(inputs_cls.schema())
+            inputs_schema = cls._trim_schema(inputs_cls.schema())
+            # update form fields to json schema
+            inputs_form_cls = getattr(cls, "InputsForm", None)
+            if inputs_form_cls:
+                for attr in inputs_form_cls.fields():
+                    inputs_schema["properties"][attr].update(getattr(inputs_form_cls, attr))
+
+            data["inputs"] = inputs_schema
 
         outputs_cls = getattr(cls, "Outputs", None)
         if outputs_cls:
