@@ -1,5 +1,5 @@
 # base
 # DO NOT DELETE ANY PACKAGE IN base SECTION !!!
-bk-plugin-framework>=v1.1.0rc1,<2.0.0
+bk-plugin-framework>=1.1.0rc1,<1.2.0
 
 # add your custom requirements below this line
