@@ -19,14 +19,6 @@ pip install cookiecutter
 cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --directory template
 ```
 
-- [📚如何开发插件](#61-定义插件)
-- [🔬如何在本地调试插件](#71-环境准备)
-
-# 📊benchmark
-
-[测试数据](./docs/benchmark.md)
-
-
 # 🧾基础概念
 
 
