@@ -735,14 +735,6 @@ bk_plugin
 - mysql（如果本地使用sqlite作为数据库则不需要该组件）
 - rabbitmq or reids（如果插件没有 wait_poll 或 wait_callback 操作则不需要该组件）
 
-安装依赖前，请确保 pip 源中配置了内部源：
-
-```
-[global]
-index-url = https://mirrors.tencent.com/tencent_pypi/simple/
-trusted-host = mirrors.tencent.com
-```
-
 准备一个舒适的 Python 环境，安装插件所需的依赖
 
 ```bash
@@ -763,6 +755,7 @@ export BK_INIT_SUPERUSER="admin" # 数据库初始化管理员
 export BK_PLUGIN_RUNTIME_BROKER_URL="amqp://guest:guest@localhost:5672//" # broker url，如果插件没有 wait_poll 或 wait_callback 操作可以不设置该变量
 export DJANGO_SETTINGS_MODULE="bk_plugin_runtime.settings"
 export BK_APP_CONFIG_PATH="bk_plugin_runtime.config"
+export BK_APIGW_MANAGER_URL_TEMPL="http://{api_name}.com/"
 ```
 
 如果想在本地使用 MySQL，请确保存在以下环境变量并进行相应的配置
