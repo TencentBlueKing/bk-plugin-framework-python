@@ -621,6 +621,14 @@ bk_plugin
 - mysql（如果本地使用sqlite作为数据库则不需要该组件）
 - rabbitmq or reids（如果插件没有 wait_poll 或 wait_callback 操作则不需要该组件）
 
+安装依赖前，请确保 pip 源中配置了内部源：
+
+```
+[global]
+index-url = https://mirrors.tencent.com/tencent_pypi/simple/
+trusted-host = mirrors.tencent.com
+```
+
 准备一个舒适的 Python 环境，安装插件所需的依赖
 
 ```bash
