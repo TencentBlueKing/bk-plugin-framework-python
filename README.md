@@ -51,10 +51,6 @@
 <!-- /TOC -->
 
 
-
-
-
-
 <a id="toc_anchor" name="#1-🧐bk-plugin-framework"></a>
 
 # 1. 🧐bk-plugin-framework
@@ -819,7 +815,7 @@ python bin/manage.py runserver
 - task_id(int)：当前任务 ID
 - task_name(str)：当前任务名
 
-## Support
+## 8.2. Support
 
 - [蓝鲸论坛](https://bk.tencent.com/s-mart/community)
 - [蓝鲸 DevOps 在线视频教程](https://cloud.tencent.com/developer/edu/major-100008)
@@ -828,7 +824,7 @@ python bin/manage.py runserver
 <img src="https://github.com/Tencent/bk-PaaS/raw/master/docs/resource/img/bk_qq_group.png" width="250" hegiht="250" align=center />
 
 
-## BlueKing Community
+## 8.3. BlueKing Community
 
 - [BK-CI](https://github.com/Tencent/bk-ci)：蓝鲸持续集成平台是一个开源的持续集成和持续交付系统，可以轻松将你的研发流程呈现到你面前。
 - [BK-BCS](https://github.com/Tencent/bk-bcs)：蓝鲸容器管理平台是以容器技术为基础，为微服务业务提供编排管理的基础服务平台。
@@ -837,7 +833,7 @@ python bin/manage.py runserver
 - [BK-SOPS](https://github.com/Tencent/bk-sops)：标准运维（SOPS）是通过可视化的图形界面进行任务流程编排和执行的系统，是蓝鲸体系中一款轻量级的调度编排类SaaS产品。
 - [BK-CMDB](https://github.com/Tencent/bk-cmdb)：蓝鲸配置平台是一个面向资产及应用的企业级配置管理平台。
 
-## Contributing
+## 8.4. Contributing
 
 如果你有好的意见或建议，欢迎给我们提 Issues 或 Pull Requests，为蓝鲸开源社区贡献力量。
 
@@ -845,6 +841,6 @@ python bin/manage.py runserver
 2. PR 需要通过 CI 中的所有代码风格检查，单元测试及集成测试才可被接受合并
 3. 新增加的模块请确保完备的单元测试覆盖
 
-## License
+## 8.5. License
 
 基于 MIT 协议， 详细请参考[LICENSE](LICENSE.txt)
