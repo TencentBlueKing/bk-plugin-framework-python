@@ -77,7 +77,7 @@ bk-plugin-framework 是一个轻量化系统插件开发框架，开发者只需
 
 ```shell
 pip install cookiecutter
-cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/template
+cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --directory template
 ```
 
 - [📚如何开发插件](#61-定义插件)
