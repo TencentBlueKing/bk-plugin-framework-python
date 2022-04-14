@@ -1,58 +1,3 @@
-<!-- TOC -->
-
-- [🧐bk-plugin-framework](#1-🧐bk-plugin-framework)
-- [🚀快速开始](#2-🚀快速开始)
-    - [创建你的第一个插件项目](#21-创建你的第一个插件项目)
-- [📦DEMO](#3-📦DEMO)
-- [📊benchmark](#4-📊benchmark)
-- [🧾基础概念](#5-🧾基础概念)
-    - [插件构成](#51-插件构成)
-    - [插件项目结构](#52-插件项目结构)
-        - [开发者需要关注的](#521-开发者需要关注的)
-        - [开发者不需要（不应该）关注的](#522-开发者不需要（不应该）关注的)
-    - [一次插件调用的状态转换](#53-一次插件调用的状态转换)
-- [📚如何开发插件](#6-📚如何开发插件)
-    - [定义插件](#61-定义插件)
-    - [插件元数据](#62-插件元数据)
-        - [我应该在什么时候开发一个新的插件版本？](#621-我应该在什么时候开发一个新的插件版本？)
-    - [定义输入模型(可选)](#63-定义输入模型(可选))
-        - [输入模型字段定义说明(可选)](#631-输入模型字段定义说明(可选))
-        - [嵌套输入模型定义](#632-嵌套输入模型定义)
-    - [定义输出模型(可选)](#64-定义输出模型(可选))
-    - [定义上下文输入模型(可选)](#65-定义上下文输入模型(可选))
-    - [插件初始化方法(可选)](#66-插件初始化方法(可选))
-    - [定义插件执行逻辑](#67-定义插件执行逻辑)
-        - [执行错误](#671-执行错误)
-        - [等待调度](#672-等待调度)
-        - [等待回调](#673-等待回调)
-        - [执行成功](#674-执行成功)
-        - [inputs: Inputs 输入参数说明](#675-inputs:Inputs输入参数说明)
-        - [context: Context 输入参数说明](#676-context:Context输入参数说明)
-            - [trace_id: str](#6761-trace_id:str)
-            - [data: ContextRequire](#6762-data:ContextRequire)
-            - [state: State](#6763-state:State)
-            - [invoke_count: int](#6764-invoke_count:int)
-            - [storage: dict](#6765-storage:dict)
-            - [outputs: dict](#6766-outputs:dict)
-    - [定义插件前端表单(可选)](#68-定义插件前端表单(可选))
-        - [表单存放位置](#681-表单存放位置)
-        - [表单构成](#682-表单构成)
-        - [表单开发指南](#683-表单开发指南)
-        - [可使用的 Tag 及说明](#684-可使用的Tag及说明)
-    - [定义表单数据接口(可选)](#69-定义表单数据接口(可选))
-    - [插件配置](#610-插件配置)
-- [🔬如何在本地调试插件](#7-🔬如何在本地调试插件)
-    - [环境准备](#71-环境准备)
-    - [准备 DB](#72-准备DB)
-    - [启动调试进程](#73-启动调试进程)
-- [各系统插件开发说明](#8-各系统插件开发说明)
-    - [标准运维](#81-标准运维)
-
-<!-- /TOC -->
-
-
-<a id="toc_anchor" name="#1-🧐bk-plugin-framework"></a>
-
 # 1. 🧐bk-plugin-framework
 
 bk-plugin-framework 是一个轻量化系统插件开发框架，开发者只需要使用该框架进行插件开发，并将其部署到蓝鲸 PaaS 平台上，即可完成系统插件的开发和接入。
@@ -63,13 +8,11 @@ bk-plugin-framework 是一个轻量化系统插件开发框架，开发者只需
 
 ![](./docs/assets/img/flow.png)
 
-<a id="toc_anchor" name="#2-🚀快速开始"></a>
 
 # 2. 🚀快速开始
 
-<a id="toc_anchor" name="#21-创建你的第一个插件项目"></a>
 
-## 2.1. 创建你的第一个插件项目
+##  1. <a name=''></a>2.1. 创建你的第一个插件项目
 
 ```shell
 pip install cookiecutter
@@ -80,25 +23,16 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 - [🔬如何在本地调试插件](#71-环境准备)
 
 
-<a id="toc_anchor" name="#3-📦DEMO"></a>
 
-# 3. 📦DEMO
-
-[传送门](./bk_plugin/versions/v1_0_0.py)
-
-<a id="toc_anchor" name="#4-📊benchmark"></a>
-
-# 4. 📊benchmark
+# 3. 📊benchmark
 
 [测试数据](./docs/benchmark.md)
 
-<a id="toc_anchor" name="#5-🧾基础概念"></a>
 
-# 5. 🧾基础概念
+# 4. 🧾基础概念
 
-<a id="toc_anchor" name="#51-插件构成"></a>
 
-## 5.1. 插件构成
+##  2. <a name='-1'></a>4.1. 插件构成
 
 一个插件由以下元素构成
 
@@ -110,9 +44,8 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 
 ![](./docs/assets/img/plugin.png)
 
-<a id="toc_anchor" name="#52-插件项目结构"></a>
 
-## 5.2. 插件项目结构
+##  3. <a name='-1'></a>4.2. 插件项目结构
 
 ```
 ├── Procfile
@@ -132,27 +65,24 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 └── requirements.txt
 ```
 
-<a id="toc_anchor" name="#521-开发者需要关注的"></a>
 
-### 5.2.1. 开发者需要关注的
+###  3.1. <a name='-1'></a>4.2.1. 开发者需要关注的
 
 - bk_plugin/forms：存放每个插件版本对应的接入系统表单配置
 - bk_plugin/meta.py：定义插件级别的元信息
 - bk_plugin/versions：存放每个版本的插件定义，所有插件定义必须位于该目录下，目录下文件名不做限制，框架会自动从该目录下发现插件
 - requirements.txt：插件需要依赖的第三方库
 
-<a id="toc_anchor" name="#522-开发者不需要（不应该）关注的"></a>
 
-### 5.2.2. 开发者不需要（不应该）关注的
+###  3.2. <a name='-1'></a>4.2.2. 开发者不需要（不应该）关注的
 
 - Procfile：插件运行时进程定义文件
 - app_desc.yml：插件描述文件
 - bin/maange.py：运行时命令入口
 - bin/post_compile：插件部署后置操作
 
-<a id="toc_anchor" name="#53-一次插件调用的状态转换"></a>
 
-## 5.3. 一次插件调用的状态转换
+##  4. <a name='-1'></a>4.3. 一次插件调用的状态转换
 
 一个插件在一次执行声明周期中可能会经过下图所示的状态转换，每种状态说明如下：
 
@@ -166,13 +96,11 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 
 ![](./docs/assets/img/plugin_status.png)
 
-<a id="toc_anchor" name="#6-📚如何开发插件"></a>
 
-# 6. 📚如何开发插件
+# 5. 📚如何开发插件
 
-<a id="toc_anchor" name="#61-定义插件"></a>
 
-## 6.1. 定义插件
+##  5. <a name='-1'></a>5.1. 定义插件
 
 所有的插件都需要继承 `bk_plugin_framework.kit.Plugin`，如下所示
 
@@ -183,9 +111,8 @@ class SopsExecPlugin(Plugin):
     pass
 ```
 
-<a id="toc_anchor" name="#62-插件元数据"></a>
 
-## 6.2. 插件元数据
+##  6. <a name='-1'></a>5.2. 插件元数据
 
 在每个插件类中我们需要定义 `Meta` 内部类，其中包含该版本插件的元数据：
 
@@ -201,9 +128,8 @@ class SopsExecPlugin(Plugin):
         version = "1.0.0"
 ```
 
-<a id="toc_anchor" name="#621-我应该在什么时候开发一个新的插件版本？"></a>
 
-### 6.2.1. 我应该在什么时候开发一个新的插件版本？
+###  6.1. <a name='-1'></a>5.2.1. 我应该在什么时候开发一个新的插件版本？
 
 如果你的插件发生了以下任一项或多项破坏性的改动，为了不影响插件现有版本的使用，请开发一个新版本插件：
 
@@ -218,9 +144,8 @@ class SopsExecPlugin(Plugin):
 - 插件的表单`数据结构`发生了变化
 - 插件的功能发生了翻天覆地的变化
 
-<a id="toc_anchor" name="#63-定义输入模型(可选)"></a>
 
-## 6.3. 定义输入模型(可选)
+##  7. <a name='-1'></a>5.3. 定义输入模型(可选)
 
 每个插件都需要包含一个继承自 `bk_plugin_framework.kit.InputsModel` 的内部类 `Inputs` 来声明该插件的输入模型，输入模型的作用如下：
 
@@ -241,9 +166,8 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
-<a id="toc_anchor" name="#631-输入模型字段定义说明(可选)"></a>
 
-### 6.3.1. 输入模型字段定义说明(可选)
+###  7.1. <a name='-1'></a>5.3.1. 输入模型字段定义说明(可选)
 
 ```python
 class Inputs(InputsModel):
@@ -253,9 +177,8 @@ class Inputs(InputsModel):
     detail_field: bool = Field(default=True, description="字段详细说明")  # bool 类型非必填，默认值为 True
 ```
 
-<a id="toc_anchor" name="#632-嵌套输入模型定义"></a>
 
-### 6.3.2. 嵌套输入模型定义
+###  7.2. <a name='-1'></a>5.3.2. 嵌套输入模型定义
 
 ```python
 class Inputs(InputsModel):
@@ -272,9 +195,8 @@ def execute(self, inputs: InputsModel, context: ContextRequire):
     option_value = inputs.options.value
 ```
 
-<a id="toc_anchor" name="#64-定义输出模型(可选)"></a>
 
-## 6.4. 定义输出模型(可选)
+##  8. <a name='-1'></a>5.4. 定义输出模型(可选)
 
 每个插件都需要包含一个继承自 `bk_plugin_framework.kit.OutputsModel` 的内部类 `Outputs` 来声明该插件的输入模型，输入模型的作用如下：
 
@@ -297,9 +219,8 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
-<a id="toc_anchor" name="#65-定义上下文输入模型(可选)"></a>
 
-## 6.5. 定义上下文输入模型(可选)
+##  9. <a name='-1'></a>5.5. 定义上下文输入模型(可选)
 
 每个插件都需要包含一个继承自 `bk_plugin_framework.kit.ContextRequire` 的内部类 `ContextInputs` 来声明该插件的上下文输入模型，该模型的作用如下：
 
@@ -323,9 +244,8 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
-<a id="toc_anchor" name="#66-插件初始化方法(可选)"></a>
 
-## 6.6. 插件初始化方法(可选)
+##  10. <a name='-1'></a>5.6. 插件初始化方法(可选)
 
 如果你希望在插件实例化的时候做一些初始化工作，那么可以重载插件的 `__init__` 方法。
 
@@ -349,15 +269,13 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
-<a id="toc_anchor" name="#67-定义插件执行逻辑"></a>
 
-## 6.7. 定义插件执行逻辑
+##  11. <a name='-1'></a>5.7. 定义插件执行逻辑
 
 插件的 `execute` 方法定义了插件的执行逻辑，该方法必须接受两个输入参数：`inputs: Inputs` 与 `context: Context`。
 
-<a id="toc_anchor" name="#671-执行错误"></a>
 
-### 6.7.1. 执行错误
+###  11.1. <a name='-1'></a>5.7.1. 执行错误
 
 在插件执行过程中，如果遇到了需要让本次调用进入失败状态的情况（例如，外部接口调用失败），可以通过抛出 `self.Error` 来让插件进入失败状态
 
@@ -368,9 +286,8 @@ def execute(self, inputs: Inputs, context: Context):
         raise self.Error("error message")
 ```
 
-<a id="toc_anchor" name="#672-等待调度"></a>
 
-### 6.7.2. 等待调度
+###  11.2. <a name='-1'></a>5.7.2. 等待调度
 
 在某些场景下，依次调用执行的任务可能会耗费很长时间，这时候如果一直在 `execute` 中使用 `while` 来等待是不太合适的，此时我们可以调用 `self.wait_poll(interval)` 方法来让本次调用进入等待调度状态，当 wait_poll 调用成功且 execute 正常返回后，execute 方法会在 `interval` 秒后被再次拉起执行。
 
@@ -397,7 +314,7 @@ def execute(self, inputs: Inputs, context: Context):
 
 
 
-### 6.7.3. 等待回调
+###  11.3. <a name='-1'></a>5.7.3. 等待回调
 
 调用第三方系统执行任务可能耗时很长，这个时候我们要在任务执行完成之后进行一些操作，一方面我们可以使用上面的`self.wait_poll(interval)`轮询任务是否执行完成；另一方面，如果第三方系统支持回调，我们可以使用`self.wait_callback()`等待第三方系统执行完成任务之后，回调插件服务，在接受到第三方系统等回调请求后，`execute `方法会被再次拉起执行。
 
@@ -436,15 +353,13 @@ def execute(self, inputs: Inputs, context: Context):
             self.wait_callback()
 ```
 
-<a id="toc_anchor" name="#674-执行成功"></a>
 
-### 6.7.4. 执行成功
+###  11.4. <a name='-1'></a>5.7.4. 执行成功
 
 若 execute 中如果没有抛出任何异常，没有 `self.wait_poll` 和 `self.wait_callback` 的调用，就会进入成功状态
 
-<a id="toc_anchor" name="#675-inputs:Inputs输入参数说明"></a>
 
-### 6.7.5. inputs: Inputs 输入参数说明
+###  11.5. <a name='inputs:Inputs'></a>5.7.5. inputs: Inputs 输入参数说明
 
 插件调用输入，插件输入模型 `Plugin.Inputs` 对象，你可以通过 `inputs.template_id` 方式访问其内部字段，且无需对该成员的类型和存在性进行判断，插件运行时框架会保证传入的 `inputs` 对象中字段的合法性
 
@@ -464,15 +379,13 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
-<a id="toc_anchor" name="#676-context:Context输入参数说明"></a>
 
-### 6.7.6. context: Context 输入参数说明
+###  11.6. <a name='context:Context'></a>5.7.6. context: Context 输入参数说明
 
 插件调用上下文，用于记录一次调用中的上下文信息，该对象包含以下字段：
 
-<a id="toc_anchor" name="#6761-trace_id:str"></a>
 
-#### 6.7.6.1. trace_id: str
+####  11.6.1. <a name='trace_id:str'></a>5.7.6.1. trace_id: str
 
 trace_id，在一次调用发生前生成，在同一次调用中不会发生变化
 
@@ -481,9 +394,8 @@ def execute(self, inputs: Inputs, context: Context):
     logger.info("[%s] execute" % context.trace_id)
 ```
 
-<a id="toc_anchor" name="#6762-data:ContextRequire"></a>
 
-#### 6.7.6.2. data: ContextRequire
+####  11.6.2. <a name='data:ContextRequire'></a>5.7.6.2. data: ContextRequire
 
 插件定义上下文输入模型 `Plugin.ContextInputs` 对象，你可以通过 `data.template_id` 方式访问其内部字段，且无需对该成员的类型和存在性进行判断，插件运行时框架会保证传入的 `data` 对象中字段的合法性，若插件没有定义 `ContextInputs`，该字段值为 `None`
 
@@ -497,9 +409,8 @@ def execute(self, inputs: Inputs, context: Context):
     executor = context.data.executor
 ```
 
-<a id="toc_anchor" name="#6763-state:State"></a>
 
-#### 6.7.6.3. state: State
+####  11.6.3. <a name='state:State'></a>5.7.6.3. state: State
 
 本次调用所处状态，值为 [1.2.3. 一次插件调用的状态转换](#123-一次插件调用的状态转换) 中所描述的 `EMPTY`, `SCHEDULE`, `CALLBACK` 状态的一种
 
@@ -513,9 +424,8 @@ def execute(self, inputs: Inputs, context: Context):
         pass
 ```
 
-<a id="toc_anchor" name="#6764-invoke_count:int"></a>
 
-#### 6.7.6.4. invoke_count: int
+####  11.6.4. <a name='invoke_count:int'></a>5.7.6.4. invoke_count: int
 
 本次调用中 `execute` 方法执行的次数
 
@@ -524,9 +434,8 @@ def execute(self, inputs: Inputs, context: Context):
     logger.info("%s times execute" % context.invoke_count)
 ```
 
-<a id="toc_anchor" name="#6765-storage:dict"></a>
 
-#### 6.7.6.5. storage: dict
+####  11.6.5. <a name='storage:dict'></a>5.7.6.5. storage: dict
 
 插件调用临时数据存储，你可以在这里存储一些在执行过程中生成的临时数据，便于调用进入 `POLL` 或 `CALLBACK` 状态后被再次拉起执行时进行读取。**该字段中存储的数据必须能够正常进行 JSON 序列化/反序列化。**
 
@@ -538,9 +447,8 @@ def execute(self, inputs: Inputs, context: Context):
         task_id = context.storage["task_id"]
 ```
 
-<a id="toc_anchor" name="#6766-outputs:dict"></a>
 
-#### 6.7.6.6. outputs: dict
+####  11.6.6. <a name='outputs:dict'></a>5.7.6.6. outputs: dict
 
 插件输出数据，插件执行的输出数据可以记录到该字段中。**该字段中存储的数据必须能够正常进行 JSON 序列化/反序列化。**
 
@@ -555,9 +463,8 @@ def execute(self, inputs: Inputs, context: Context):
     context.outputs["task_url"] = "xxx"
 ```
 
-<a id="toc_anchor" name="#68-定义插件前端表单(可选)"></a>
 
-## 6.8. 定义插件前端表单(可选)
+##  12. <a name='-1'></a>5.8. 定义插件前端表单(可选)
 
 每个版本的插件都需要开发一个与之对应的前端表单，便于接入系统展示对用户友好的输入信息填写页面，表单生成的数据会作为 inputs 传递到插件的 `execute` 方法中。
 
@@ -565,9 +472,8 @@ def execute(self, inputs: Inputs, context: Context):
 
 ![](./docs/assets/img/form_to_plugin.png)
 
-<a id="toc_anchor" name="#681-表单存放位置"></a>
 
-### 6.8.1. 表单存放位置
+###  12.1. <a name='-1'></a>5.8.1. 表单存放位置
 
 框架会从 `bk_plugin/forms/{version}/form.js` 文件中获取版本号为 `{version}` 的插件表单定义。
 
@@ -584,9 +490,8 @@ bk_plugin
     └── v1_0_0.py
 ```
 
-<a id="toc_anchor" name="#682-表单构成"></a>
 
-### 6.8.2. 表单构成
+###  12.2. <a name='-1'></a>5.8.2. 表单构成
 
 插件表单由多个 tag 构成，每个 tag 代表一个独立的表单项（输入框，文本框，下拉框，时间选择器...），同时可以通过 combine 来将多个 tag 组合成一个复合 tag。
 
@@ -594,9 +499,8 @@ bk_plugin
 
 ![](./docs/assets/img/form_map_inputs.png)
 
-<a id="toc_anchor" name="#683-表单开发指南"></a>
 
-### 6.8.3. 表单开发指南
+###  12.3. <a name='-1'></a>5.8.3. 表单开发指南
 
 `form.js` 表单文件需要包含一个全局的 tag 数组定义，示例如下：
 
@@ -625,15 +529,13 @@ bk_plugin
 })();
 ```
 
-<a id="toc_anchor" name="#684-可使用的Tag及说明"></a>
 
-### 6.8.4. 可使用的 Tag 及说明
+###  12.4. <a name='Tag'></a>5.8.4. 可使用的 Tag 及说明
 
 [Tag 使用说明](./docs/tags.md)
 
-<a id="toc_anchor" name="#69-定义表单数据接口(可选)"></a>
 
-## 6.9. 定义表单数据接口(可选)
+##  13. <a name='-1'></a>5.9. 定义表单数据接口(可选)
 
 > 若要使用该功能，请确保 bk-plugin-framework 的版本 >= 0.7.0
 
@@ -712,19 +614,17 @@ bk_plugin
 └── versions
 ```
 
-<a id="toc_anchor" name="#7-🔬如何在本地调试插件"></a>
 
-## 6.10. 插件配置
+##  14. <a name='-1'></a>5.10. 插件配置
 
 如果需要修改一些插件的配置，可以通过以下环境变量进行相应的配置
 
 - SCHEDULE_PERSISITEN_DAYS：插件调度的过期时间，单位为天；周期任务每天执行一次清理(成功/失败)的过期插件调度记录
 
-# 7. 🔬如何在本地调试插件
+# 6. 🔬如何在本地调试插件
 
-<a id="toc_anchor" name="#71-环境准备"></a>
 
-## 7.1. 环境准备
+##  15. <a name='-1'></a>6.1. 环境准备
 
 请确保本地开发环境安装了以下组件：
 
@@ -764,9 +664,8 @@ export BK_PLUGIN_RUNTIME_DB_HOST="localhost" # 本地 DB 域名
 export BK_PLUGIN_RUNTIME_DB_PORT="3306" # 本地 DB 端口
 ```
 
-<a id="toc_anchor" name="#72-准备DB"></a>
 
-## 7.2. 准备 DB
+##  16. <a name='DB'></a>6.2. 准备 DB
 
 进入项目根目录，初始化数据库
 
@@ -774,9 +673,8 @@ export BK_PLUGIN_RUNTIME_DB_PORT="3306" # 本地 DB 端口
 python bin/manage.py migrate
 ```
 
-<a id="toc_anchor" name="#73-启动调试进程"></a>
 
-## 7.3. 启动调试进程
+##  17. <a name='-1'></a>6.3. 启动调试进程
 
 启动调试服务器
 
@@ -795,14 +693,12 @@ python bin/manage.py runserver
 ![](./docs/assets/img/debug_panel.png)
 
 
-<a id="toc_anchor" name="#8-各系统插件开发说明"></a>
 
-# 8. 各系统插件开发说明
+# 7. 各系统插件开发说明
 
 
-<a id="toc_anchor" name="#81-标准运维"></a>
 
-## 8.1. 标准运维
+##  18. <a name='-1'></a>7.1. 标准运维
 
 在开发标准运维系统插件时，可以在上下文输入中定义这些字段，标准运维会根据当前流程任务执行的上下文传入插件中：
 
@@ -815,7 +711,7 @@ python bin/manage.py runserver
 - task_id(int)：当前任务 ID
 - task_name(str)：当前任务名
 
-## 8.2. Support
+##  19. <a name='Support'></a>7.2. Support
 
 - [蓝鲸论坛](https://bk.tencent.com/s-mart/community)
 - [蓝鲸 DevOps 在线视频教程](https://cloud.tencent.com/developer/edu/major-100008)
@@ -824,7 +720,7 @@ python bin/manage.py runserver
 <img src="https://github.com/Tencent/bk-PaaS/raw/master/docs/resource/img/bk_qq_group.png" width="250" hegiht="250" align=center />
 
 
-## 8.3. BlueKing Community
+##  20. <a name='BlueKingCommunity'></a>7.3. BlueKing Community
 
 - [BK-CI](https://github.com/Tencent/bk-ci)：蓝鲸持续集成平台是一个开源的持续集成和持续交付系统，可以轻松将你的研发流程呈现到你面前。
 - [BK-BCS](https://github.com/Tencent/bk-bcs)：蓝鲸容器管理平台是以容器技术为基础，为微服务业务提供编排管理的基础服务平台。
@@ -833,7 +729,7 @@ python bin/manage.py runserver
 - [BK-SOPS](https://github.com/Tencent/bk-sops)：标准运维（SOPS）是通过可视化的图形界面进行任务流程编排和执行的系统，是蓝鲸体系中一款轻量级的调度编排类SaaS产品。
 - [BK-CMDB](https://github.com/Tencent/bk-cmdb)：蓝鲸配置平台是一个面向资产及应用的企业级配置管理平台。
 
-## 8.4. Contributing
+##  21. <a name='Contributing'></a>7.4. Contributing
 
 如果你有好的意见或建议，欢迎给我们提 Issues 或 Pull Requests，为蓝鲸开源社区贡献力量。
 
@@ -841,6 +737,6 @@ python bin/manage.py runserver
 2. PR 需要通过 CI 中的所有代码风格检查，单元测试及集成测试才可被接受合并
 3. 新增加的模块请确保完备的单元测试覆盖
 
-## 8.5. License
+##  22. <a name='License'></a>7.5. License
 
 基于 MIT 协议， 详细请参考[LICENSE](LICENSE.txt)
