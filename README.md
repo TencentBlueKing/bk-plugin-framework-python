@@ -649,7 +649,7 @@ export BK_APIGW_MANAGER_URL_TEMPL="http://{api_name}.com/"
 ```bash
 export BK_PLUGIN_DEV_USE_MYSQL="1" # 本地使用mysql数据库
 export BK_PLUGIN_RUNTIME_DB_USER="" # 本地 DB 用户名
-export BK_PLUGIN_RUNTIME_DB_PWD="root960201" # 本地 DB 密码
+export BK_PLUGIN_RUNTIME_DB_PWD="" # 本地 DB 密码
 export BK_PLUGIN_RUNTIME_DB_HOST="localhost" # 本地 DB 域名
 export BK_PLUGIN_RUNTIME_DB_PORT="3306" # 本地 DB 端口
 ```
