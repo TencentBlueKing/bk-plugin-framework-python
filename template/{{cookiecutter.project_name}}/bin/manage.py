@@ -18,6 +18,7 @@ import sys
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bk_plugin_runtime.settings")
+    os.environ.setdefault("BK_APP_CONFIG_PATH", "bk_plugin_runtime.config")
 
     from django.core.management import execute_from_command_line
 
