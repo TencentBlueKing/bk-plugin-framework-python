@@ -645,11 +645,9 @@ pip install -r requirements.txt
 export BKPAAS_APP_ID="" # 插件 app code，从 paas 开发者中心获取
 export BKPAAS_APP_SECRET="" # 插件 app secret paas 开发者中心获取
 
-export BK_INIT_SUPERUSER="admin" # 数据库初始化管理员
 export BK_PLUGIN_RUNTIME_BROKER_URL="amqp://guest:guest@localhost:5672//" # broker url，如果插件没有 wait_poll 或 wait_callback 操作可以不设置该变量
-export DJANGO_SETTINGS_MODULE="bk_plugin_runtime.settings"
-export BK_APP_CONFIG_PATH="bk_plugin_runtime.config"
-export BK_APIGW_MANAGER_URL_TEMPL="http://{api_name}.com/"
+export BKPAAS_ENGINE_REGION="open"
+export BKPAAS_LOGIN_URL="BK PaaS 登陆 URL"
 ```
 
 如果想在本地使用 MySQL，请确保存在以下环境变量并进行相应的配置
@@ -677,7 +675,7 @@ python bin/manage.py migrate
 启动调试服务器
 
 ```bash
-python bin/manage.py runserver
+python bin/manage.py rundebugserver
 ```
 
 > 如果插件会进入 POLL 或 CALLBACK 状态，需要额外运行 worker 进程
