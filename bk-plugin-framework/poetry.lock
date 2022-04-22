@@ -39,14 +39,14 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "1.2.0rc1"
+version = "1.2.2rc1"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
 python-versions = ">=3.6,<4.0"
 
 [package.dependencies]
-blueapps = "4.2.2"
+blueapps = "4.2.4"
 celery = ">=4.4.0,<5.0.0"
 ddtrace = ">=0.14.1,<0.15.0"
 Django = ">=2.2.6,<3.0.0"
@@ -128,7 +128,7 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "blueapps"
-version = "4.2.2"
+version = "4.2.4"
 description = "development framework for blueking"
 category = "main"
 optional = false
@@ -937,8 +937,8 @@ billiard = [
     {file = "billiard-3.6.4.0.tar.gz", hash = "sha256:299de5a8da28a783d51b197d496bef4f1595dd023a93a4f59dde1886ae905547"},
 ]
 bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-1.2.0rc1.tar.gz", hash = "sha256:ee972eb17fd9731e84ac9ce5275a902899e48c690126742cf0ea211a7410af02"},
-    {file = "bk_plugin_runtime-1.2.0rc1-py3-none-any.whl", hash = "sha256:1d581174e896cd7f03abd635b3b7b9381e2ecd77be3e2034eac71a8b940680f0"},
+    {file = "bk-plugin-runtime-1.2.2rc1.tar.gz", hash = "sha256:19d8957ee659cd9ba5912003acbcaf450d9e93051b226f6fd1092d2c1e8c8e1d"},
+    {file = "bk_plugin_runtime-1.2.2rc1-py3-none-any.whl", hash = "sha256:535eb78cbe54f0628ba6909bbb79ae3119ec0cca9f2889a08e5be9dcc68171c5"},
 ]
 bkapi-bk-apigateway = [
     {file = "bkapi-bk-apigateway-1.0.6.tar.gz", hash = "sha256:561bca6fcdb84f7cc9e7b3aee2b70318859b4bd8d374995df68f7dc394ea8a5d"},
@@ -975,7 +975,7 @@ black = [
     {file = "black-22.3.0.tar.gz", hash = "sha256:35020b8886c022ced9282b51b5a875b6d1ab0c387b31a065b84db7c33085ca79"},
 ]
 blueapps = [
-    {file = "blueapps-4.2.2.tar.gz", hash = "sha256:63a2609c7549dcba2134f558b29e38a81f12d846b73c4653b08193406f663a0b"},
+    {file = "blueapps-4.2.4.tar.gz", hash = "sha256:efaca6aa64c27b57fda616bc166f94f8a81c64e45d3ca3c15a7a9830874a3bfc"},
 ]
 celery = [
     {file = "celery-4.4.7-py2.py3-none-any.whl", hash = "sha256:a92e1d56e650781fb747032a3997d16236d037c8199eacd5217d1a72893bca45"},
