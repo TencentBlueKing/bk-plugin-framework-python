@@ -65,6 +65,7 @@ CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
 MIDDLEWARE += (  # noqa
     "corsheaders.middleware.CorsMiddleware",
     "bk_plugin_framework.services.bpf_service.middlewares.TraceIDInjectMiddleware",
+    "bk_plugin_framework.services.bpf_service.middlewares.TokenInjectMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
     "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",  # JWT 透传的应用信息
 )

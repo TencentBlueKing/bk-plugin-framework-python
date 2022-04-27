@@ -114,6 +114,9 @@ class PluginAPIDispatch(APIView):
             # inject APIGW jwt
             fake_request.jwt = request.jwt
 
+            # inject APIGW jwt token
+            fake_request.token = request.token
+
             # inject user username info
             fake_request._force_auth_user = DummyUser(username=request_data["username"])
 

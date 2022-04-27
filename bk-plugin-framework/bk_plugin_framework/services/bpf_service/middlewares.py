@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 import uuid
 
 from bk_plugin_framework.utils import local
+from bk_plugin_framework.envs import settings
 
 
 class TraceIDInjectMiddleware:
@@ -23,5 +24,19 @@ class TraceIDInjectMiddleware:
     def __call__(self, request):
         request.trace_id = uuid.uuid4().hex
         local.set_trace_id(request.trace_id)
+        response = self.get_response(request)
+        return response
+
+
+class TokenInjectMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if settings.BKPAAS_ENVIRONMENT == "dev":
+            request.token = request.COOKIES.get("bk_ticket", "")
+        elif not hasattr(request, "token"):
+            request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
+
         response = self.get_response(request)
         return response
