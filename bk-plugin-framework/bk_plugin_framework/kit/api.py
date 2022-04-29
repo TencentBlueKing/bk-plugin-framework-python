@@ -10,11 +10,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-from django.utils.decorators import method_decorator
-from rest_framework.views import APIView
+import json
 
+from django.utils.decorators import method_decorator
+from django.conf import settings as default_settings
+from rest_framework.views import APIView
+from rest_framework.request import Request
+from bkoauth import get_app_access_token
 from apigw_manager.apigw.decorators import apigw_require
+
 from bk_plugin_framework.envs import settings
+from bk_plugin_framework.constants import API_SOURCE
 from bk_plugin_framework.kit.decorators import login_exempt
 from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
 
@@ -31,3 +37,21 @@ custom_authentication_classes = (
 @method_decorator(apigw_require, name="dispatch")
 class PluginAPIView(APIView):
     authentication_classes = custom_authentication_classes
+
+    @staticmethod
+    def get_bkapi_authorization_info(request: Request, api_source: str = API_SOURCE.APIGW, app_code: str = None,
+                                     app_secret: str = None) -> str:
+        app_code = app_secret or default_settings.BK_APP_CODE
+        app_secret = app_secret or default_settings.BK_APP_SECRET
+        auth_info = {
+            "bk_app_code": app_code,
+            "bk_app_secret": app_secret,
+            settings.USER_TOKEN_KEY_NAME: request.token
+        }
+        if api_source is API_SOURCE.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
+            access_token = get_app_access_token().access_token
+            auth_info.update({
+                "access_token": access_token
+            })
+
+        return json.dumps(auth_info)

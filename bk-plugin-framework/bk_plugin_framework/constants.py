@@ -19,3 +19,8 @@ class State(Enum):
     CALLBACK = 3
     SUCCESS = 4
     FAIL = 5
+
+
+class API_SOURCE(Enum):
+    APIGW = 1
+    ESB = 2

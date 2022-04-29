@@ -69,8 +69,8 @@ class Settings(BaseSettings):
         ):
             return (
                 init_settings,
-                compute_settings,
                 env_settings,
+                compute_settings,
                 file_secret_settings,
             )
 

@@ -34,7 +34,7 @@ class TokenInjectMiddleware:
 
     def __call__(self, request):
         if settings.BKPAAS_ENVIRONMENT == "dev":
-            request.token = request.COOKIES.get("bk_ticket", "")
+            request.token = request.COOKIES.get(settings.USER_TOKEN_KEY_NAME, "")
         elif not hasattr(request, "token"):
             request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
 
