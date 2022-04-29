@@ -39,7 +39,7 @@ class PluginAPIView(APIView):
     authentication_classes = custom_authentication_classes
 
     @staticmethod
-    def get_bkapi_authorization_info(request: Request, api_source: str = API_SOURCE.APIGW, app_code: str = None,
+    def get_bkapi_authorization_info(request: Request, api_source: API_SOURCE = API_SOURCE.APIGW, app_code: str = None,
                                      app_secret: str = None) -> str:
         app_code = app_secret or default_settings.BK_APP_CODE
         app_secret = app_secret or default_settings.BK_APP_SECRET
