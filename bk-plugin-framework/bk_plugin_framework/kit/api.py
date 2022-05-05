@@ -21,9 +21,8 @@ from apigw_manager.apigw.decorators import apigw_require
 
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.constants import ApiPlatform
-from bk_plugin_framework.kit.decorators import login_exempt
+from bk_plugin_framework.kit.decorators import login_exempt, inject_user_token
 from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
-from bk_plugin_framework.kit.permission import UserTokenAuthPermission
 
 custom_authentication_classes = (
     [
@@ -36,9 +35,9 @@ custom_authentication_classes = (
 
 @method_decorator(login_exempt, name="dispatch")
 @method_decorator(apigw_require, name="dispatch")
+@method_decorator(inject_user_token, name="dispatch")
 class PluginAPIView(APIView):
     authentication_classes = custom_authentication_classes
-    permission_classes = [UserTokenAuthPermission]
 
     @staticmethod
     def get_bkapi_authorization_info(request: Request, api_platform: ApiPlatform = ApiPlatform.APIGW) -> str:
