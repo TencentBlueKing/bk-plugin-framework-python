@@ -47,7 +47,7 @@ class PluginAPIView(APIView):
             "bk_app_secret": default_settings.BK_APP_SECRET,
             settings.USER_TOKEN_KEY_NAME: request.token
         }
-        if api_platform is api_platform.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
+        if api_platform is ApiPlatform.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
             access_token = get_app_access_token().access_token
             auth_info.update({
                 "access_token": access_token
