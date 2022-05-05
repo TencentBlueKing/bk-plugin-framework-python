@@ -20,7 +20,7 @@ class UserTokenAuthPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if settings.BKPAAS_ENVIRONMENT == "dev":
             request.token = request.COOKIES.get(settings.USER_TOKEN_KEY_NAME, "")
-        elif not hasattr(request, "token"):
+        else:
             request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
 
         return True
