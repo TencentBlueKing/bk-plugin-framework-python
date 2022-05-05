@@ -21,6 +21,6 @@ class State(Enum):
     FAIL = 5
 
 
-class API_SOURCE(Enum):
+class ApiPlatform(Enum):
     APIGW = 1
     ESB = 2

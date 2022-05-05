@@ -65,7 +65,6 @@ CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
 MIDDLEWARE += (  # noqa
     "corsheaders.middleware.CorsMiddleware",
     "bk_plugin_framework.services.bpf_service.middlewares.TraceIDInjectMiddleware",
-    "bk_plugin_framework.services.bpf_service.middlewares.TokenInjectMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
     "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",  # JWT 透传的应用信息
 )
@@ -214,8 +213,3 @@ BK_API_URL_TMPL = os.getenv("BK_APIGW_MANAGER_URL_TEMPL")
 BK_PLUGIN_APIGW_STAGE_NAME = BKPAAS_ENVIRONMENT
 BK_PLUGIN_APIGW_BACKEND_HOST = os.getenv("BKPAAS_ENGINE_APP_DEFAULT_SUBDOMAINS", "").split(";")[0]
 BK_PLUGIN_CORS_ALLOW_HEADERS = os.getenv("BK_PLUGIN_CORS_ALLOW_HEADERS", "").split(",")
-
-# bk oauth
-# Auth API request credentials, if not provided, will use APP_CODE/SECRET_KEY as a fallback option
-BKAUTH_TOKEN_APP_CODE = os.getenv("BKAUTH_TOKEN_APP_CODE")
-BKAUTH_TOKEN_SECRET_KEY = os.getenv("BKAUTH_TOKEN_SECRET_KEY")

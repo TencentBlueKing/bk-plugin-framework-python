@@ -20,9 +20,10 @@ from bkoauth import get_app_access_token
 from apigw_manager.apigw.decorators import apigw_require
 
 from bk_plugin_framework.envs import settings
-from bk_plugin_framework.constants import API_SOURCE
+from bk_plugin_framework.constants import ApiPlatform
 from bk_plugin_framework.kit.decorators import login_exempt
 from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
+from bk_plugin_framework.kit.permission import UserTokenAuthPermission
 
 custom_authentication_classes = (
     [
@@ -37,18 +38,16 @@ custom_authentication_classes = (
 @method_decorator(apigw_require, name="dispatch")
 class PluginAPIView(APIView):
     authentication_classes = custom_authentication_classes
+    permission_classes = [UserTokenAuthPermission]
 
     @staticmethod
-    def get_bkapi_authorization_info(request: Request, api_source: API_SOURCE = API_SOURCE.APIGW, app_code: str = None,
-                                     app_secret: str = None) -> str:
-        app_code = app_secret or default_settings.BK_APP_CODE
-        app_secret = app_secret or default_settings.BK_APP_SECRET
+    def get_bkapi_authorization_info(request: Request, api_platform: ApiPlatform = ApiPlatform.APIGW) -> str:
         auth_info = {
-            "bk_app_code": app_code,
-            "bk_app_secret": app_secret,
+            "bk_app_code": default_settings.BK_APP_CODE,
+            "bk_app_secret": default_settings.BK_APP_SECRET,
             settings.USER_TOKEN_KEY_NAME: request.token
         }
-        if api_source is API_SOURCE.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
+        if api_platform is api_platform.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
             access_token = get_app_access_token().access_token
             auth_info.update({
                 "access_token": access_token

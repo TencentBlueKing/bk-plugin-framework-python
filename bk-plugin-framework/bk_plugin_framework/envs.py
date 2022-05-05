@@ -38,7 +38,7 @@ def compute_settings(settings: BaseSettings) -> dict:
     callback_host = "http://{}".format(default_settings.BK_PLUGIN_APIGW_BACKEND_HOST)
 
     BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-    user_token_key_name = "bk_ticket" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
+    user_token_key_name = "bk_token" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
 
     return {
         "BK_PLUGIN_CALLBACK_KEY": callback_key,

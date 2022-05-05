@@ -10,18 +10,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+from rest_framework import permissions
 
-import uuid
-
-from bk_plugin_framework.utils import local
+from bk_plugin_framework.envs import settings
 
 
-class TraceIDInjectMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
+class UserTokenAuthPermission(permissions.BasePermission):
 
-    def __call__(self, request):
-        request.trace_id = uuid.uuid4().hex
-        local.set_trace_id(request.trace_id)
-        response = self.get_response(request)
-        return response
+    def has_permission(self, request, view):
+        if settings.BKPAAS_ENVIRONMENT == "dev":
+            request.token = request.COOKIES.get(settings.USER_TOKEN_KEY_NAME, "")
+        elif not hasattr(request, "token"):
+            request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
+
+        return True
