@@ -10,6 +10,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+import os
 import base64
 import hashlib
 import logging
@@ -36,9 +37,13 @@ def compute_settings(settings: BaseSettings) -> dict:
 
     callback_host = "http://{}".format(default_settings.BK_PLUGIN_APIGW_BACKEND_HOST)
 
+    BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
+    user_token_key_name = "bk_token" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
+
     return {
         "BK_PLUGIN_CALLBACK_KEY": callback_key,
-        "BK_PLUGIN_CALLBACK_HOST": callback_host
+        "BK_PLUGIN_CALLBACK_HOST": callback_host,
+        "USER_TOKEN_KEY_NAME": user_token_key_name
     }
 
 
@@ -50,21 +55,22 @@ class Settings(BaseSettings):
     PLUGIN_CALLBACK_RETRY_TIMES: int = 3
     CALLBACK_TASK_NAME: str = "bk_plugin_framework.runtime.callback.celery.tasks.callback"
     SCHEDULE_PERSISTENT_DAYS: int = 30
+    USER_TOKEN_KEY_NAME: str = ""
 
     class Config:
         case_sensitive = True
 
         @classmethod
         def customise_sources(
-            cls,
-            init_settings,
-            env_settings,
-            file_secret_settings,
+                cls,
+                init_settings,
+                env_settings,
+                file_secret_settings,
         ):
             return (
                 init_settings,
-                compute_settings,
                 env_settings,
+                compute_settings,
                 file_secret_settings,
             )
 

@@ -578,6 +578,46 @@ class TaskList(PluginAPIView):
         )
 ```
 
+如果数据接口的实现需要调用`apigw`或者`esb`的请求，需要传入用户登录态，可通过以下步骤实现：
+
+1. 配置环境变量
+   - USER_TOKEN_KEY_NAME: cookie中用户认证信息的key，本地默认为`bk_token`，线上默认为`jwt`
+2. 代码实现如下
+
+```python
+# task_list.py
+import requests
+
+from rest_framework.response import Response
+from bk_plugin_framework.kit.api import PluginAPIView
+from bk_plugin_framework.constants import APIPlatform
+
+
+class TaskList(PluginAPIView):
+    def get(self, request, biz_id):
+      	# apigw 请求
+        apigw_url = ""
+        header = {
+        	"Content-Type": "application/json",
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request)
+    		}
+        response = requests.get(url=apigw_url, headers=header)
+        
+        # esb 请求
+        esb_url = ""
+        header = {
+        	"Content-Type": "application/json",
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request, APIPlatform.ESB)
+    		}
+        response = requests.get(url=esb_url, headers=header)
+        
+        return Response(
+            [{"text": "task 1", "value": 1}, {"text": "task 2", "value": 2}]
+        )
+```
+
+
+
 最后，在 `apis` 目录下新建 `urls.py` 文件，并定义接口路由：
 
 ```py

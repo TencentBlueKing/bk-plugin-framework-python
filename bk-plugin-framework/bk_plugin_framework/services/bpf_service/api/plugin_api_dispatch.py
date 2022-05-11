@@ -103,6 +103,9 @@ class PluginAPIDispatch(APIView):
                 if CUSTOM_REQUEST_HEADER_REGEX.match(key):
                     custom_headers[key] = value
 
+            # get apigw jwt info
+            custom_headers["HTTP_X_BKAPI_JWT"] = request.META.get("HTTP_X_BKAPI_JWT", "")
+
             fake_request = getattr(RequestFactory(), request_data["method"].lower())(
                 path=request_data["url"], content_type=request.content_type, data=request_data["data"], **custom_headers
             )

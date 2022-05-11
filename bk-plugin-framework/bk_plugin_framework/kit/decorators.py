@@ -23,3 +23,14 @@ def login_exempt(view_func):
 
     wrapped_view.login_exempt = settings.BKPAAS_ENVIRONMENT != "dev"
     return wraps(view_func)(wrapped_view)
+
+
+def inject_user_token(view_func):
+    def wrapped_view(request, *args, **kwargs):
+        if settings.BKPAAS_ENVIRONMENT == "dev":
+            request.token = request.COOKIES.get(settings.USER_TOKEN_KEY_NAME, "")
+        else:
+            request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
+        return view_func(request, *args, **kwargs)
+
+    return wraps(view_func)(wrapped_view)
