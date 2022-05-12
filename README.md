@@ -720,7 +720,7 @@ python bin/manage.py rundebugserver
 > 如果插件会进入 POLL 或 CALLBACK 状态，需要额外运行 worker 进程
 
 > ```bash
-> celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule -l DEBUG
+> DJANGO_SETTINGS_MODULE=bk_plugin_runtime.settings BK_APP_CONFIG_PATH=bk_plugin_runtime.config celery worker -A blueapps.core.celery -P threads -Q plugin_schedule -l DEBUG
 > ```
 
 访问 `localhost:8000` 进入调试页面
