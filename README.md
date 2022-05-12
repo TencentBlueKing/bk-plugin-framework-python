@@ -590,7 +590,6 @@ import requests
 
 from rest_framework.response import Response
 from bk_plugin_framework.kit.api import PluginAPIView
-from bk_plugin_framework.constants import APIPlatform
 
 
 class TaskList(PluginAPIView):
