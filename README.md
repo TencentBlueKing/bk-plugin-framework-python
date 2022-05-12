@@ -590,7 +590,6 @@ import requests
 
 from rest_framework.response import Response
 from bk_plugin_framework.kit.api import PluginAPIView
-from bk_plugin_framework.constants import APIPlatform
 
 
 class TaskList(PluginAPIView):
@@ -607,7 +606,7 @@ class TaskList(PluginAPIView):
         esb_url = ""
         header = {
         	"Content-Type": "application/json",
-        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request, APIPlatform.ESB)
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request)
     		}
         response = requests.get(url=esb_url, headers=header)
         
