@@ -20,7 +20,6 @@ from bkoauth import get_app_access_token
 from apigw_manager.apigw.decorators import apigw_require
 
 from bk_plugin_framework.envs import settings
-from bk_plugin_framework.constants import APIPlatform
 from bk_plugin_framework.kit.decorators import login_exempt, inject_user_token
 from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
 
