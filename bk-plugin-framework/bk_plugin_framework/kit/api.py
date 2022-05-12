@@ -40,13 +40,13 @@ class PluginAPIView(APIView):
     authentication_classes = custom_authentication_classes
 
     @staticmethod
-    def get_bkapi_authorization_info(request: Request, api_platform: APIPlatform = APIPlatform.APIGW) -> str:
+    def get_bkapi_authorization_info(request: Request) -> str:
         auth_info = {
             "bk_app_code": default_settings.BK_APP_CODE,
             "bk_app_secret": default_settings.BK_APP_SECRET,
             settings.USER_TOKEN_KEY_NAME: request.token
         }
-        if api_platform is APIPlatform.ESB and settings.BKPAAS_ENVIRONMENT != "dev":
+        if settings.BKPAAS_ENVIRONMENT != "dev":
             access_token = get_app_access_token().access_token
             auth_info.update({
                 "access_token": access_token

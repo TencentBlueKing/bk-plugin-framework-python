@@ -607,7 +607,7 @@ class TaskList(PluginAPIView):
         esb_url = ""
         header = {
         	"Content-Type": "application/json",
-        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request, APIPlatform.ESB)
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request)
     		}
         response = requests.get(url=esb_url, headers=header)
         
