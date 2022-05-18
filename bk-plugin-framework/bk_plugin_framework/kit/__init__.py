@@ -12,4 +12,4 @@ specific language governing permissions and limitations under the License.
 """
 
 from pydantic import Field  # noqa
-from bk_plugin_framework.kit.plugin import Plugin, InputsModel, Context, OutputsModel, ContextRequire, State, Callback  # noqa
+from bk_plugin_framework.kit.plugin import Plugin, InputsModel, Context, OutputsModel, ContextRequire, State, Callback, FormModel  # noqa
