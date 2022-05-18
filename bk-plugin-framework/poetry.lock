@@ -39,7 +39,7 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "1.2.2rc1"
+version = "1.3.0"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
@@ -812,7 +812,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "725774eb39f530aa8c262039dcabc23a1c82dc041d2c8b2a968ba743a0c7ff80"
+content-hash = "f108a4d804bbdbe15df6c086fbe63fd052f6d7cabbf584bdb343a1c61ed73e2d"
 
 [metadata.files]
 amqp = [
@@ -827,8 +827,8 @@ billiard = [
     {file = "billiard-3.6.4.0.tar.gz", hash = "sha256:299de5a8da28a783d51b197d496bef4f1595dd023a93a4f59dde1886ae905547"},
 ]
 bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-1.2.2rc1.tar.gz", hash = "sha256:19d8957ee659cd9ba5912003acbcaf450d9e93051b226f6fd1092d2c1e8c8e1d"},
-    {file = "bk_plugin_runtime-1.2.2rc1-py3-none-any.whl", hash = "sha256:535eb78cbe54f0628ba6909bbb79ae3119ec0cca9f2889a08e5be9dcc68171c5"},
+    {file = "bk-plugin-runtime-1.3.0.tar.gz", hash = "sha256:47ffa3560b10fb70e2d2afc1f941626b26e74356431cba5fd3880075c66401d5"},
+    {file = "bk_plugin_runtime-1.3.0-py3-none-any.whl", hash = "sha256:244f2a7b423d57d3969097f2d90ed69d04256c55b7768a0a190acecd1733be44"},
 ]
 bkapi-bk-apigateway = [
     {file = "bkapi-bk-apigateway-1.0.6.tar.gz", hash = "sha256:561bca6fcdb84f7cc9e7b3aee2b70318859b4bd8d374995df68f7dc394ea8a5d"},
