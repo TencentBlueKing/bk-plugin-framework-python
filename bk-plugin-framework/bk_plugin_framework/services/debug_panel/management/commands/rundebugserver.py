@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 import os
 
 from django.core.management.commands.runserver import Command
-from django.core.management import call_command
 
 
 class Command(Command):
