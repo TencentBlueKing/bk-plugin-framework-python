@@ -683,6 +683,7 @@ pip install -r requirements.txt
 ```bash
 export BKPAAS_APP_ID="" # 插件 app code，从 paas 开发者中心获取
 export BKPAAS_APP_SECRET="" # 插件 app secret paas 开发者中心获取
+export BK_APP_CONFIG_PATH="bk_plugin_runtime.config"
 
 export BK_PLUGIN_RUNTIME_BROKER_URL="amqp://guest:guest@localhost:5672//" # broker url，如果插件没有 wait_poll 或 wait_callback 操作可以不设置该变量
 export BKPAAS_ENGINE_REGION="open"
