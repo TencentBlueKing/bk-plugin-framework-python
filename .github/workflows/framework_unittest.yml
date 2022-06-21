@@ -27,7 +27,7 @@ jobs:
         run: |
           cd bk-plugin-framework
           poetry install
-          coverage run -m pytest -vv --disable-pytest-warnings
+          poetry run coverage run -m pytest -vv --disable-pytest-warnings
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
