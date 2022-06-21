@@ -48,7 +48,7 @@ class Schedule(models.Model):
     invoke_count = models.IntegerField("invoke count", default=1)
     data = models.TextField("context and inputs")
     scheduling = models.BooleanField("是否正在调度", default=False)
-    err = models.TextField("schedule error message")
+    err = models.TextField("schedule error message", default="")
     created_at = models.DateTimeField("create time", auto_now_add=True)
     finish_at = models.DateTimeField("finish time", null=True)
 
