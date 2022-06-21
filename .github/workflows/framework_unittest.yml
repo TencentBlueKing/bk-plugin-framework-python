@@ -29,6 +29,9 @@ jobs:
           poetry install
           poetry run coverage run -m pytest -vv --disable-pytest-warnings
 
+      - name: Convert coverage
+        run: poetry run coverage xml
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
