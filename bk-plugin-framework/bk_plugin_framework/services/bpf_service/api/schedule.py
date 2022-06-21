@@ -38,6 +38,7 @@ class ScheduleResponseSerializer(StandardResponseSerializer):
         plugin_version = serializers.CharField(help_text="插件版本")
         state = serializers.IntegerField(help_text="插件执行状态(2: POLL 3:CALLBACK 4:SUCCESS 5:FAIL)")
         outputs = serializers.DictField(help_text="插件输出")
+        err = serializers.CharField(help_text="错误信息")
         created_at = serializers.CharField(help_text="创建时间")
         finish_at = serializers.CharField(help_text="结束时间")
 
@@ -89,6 +90,7 @@ class Schedule(APIView):
                     "plugin_version": s.plugin_version,
                     "state": s.state,
                     "outputs": outputs,
+                    "err": s.err,
                     "created_at": s.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                     "finish_at": s.finish_at.strftime("%Y-%m-%d %H:%M:%S") if s.finish_at else "",
                 },

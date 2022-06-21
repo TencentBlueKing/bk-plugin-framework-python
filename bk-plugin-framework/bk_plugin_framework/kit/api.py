@@ -42,12 +42,10 @@ class PluginAPIView(APIView):
         auth_info = {
             "bk_app_code": default_settings.BK_APP_CODE,
             "bk_app_secret": default_settings.BK_APP_SECRET,
-            settings.USER_TOKEN_KEY_NAME: request.token
+            settings.USER_TOKEN_KEY_NAME: request.token,
         }
         if settings.BKPAAS_ENVIRONMENT != "dev":
             access_token = get_app_access_token().access_token
-            auth_info.update({
-                "access_token": access_token
-            })
+            auth_info.update({"access_token": access_token})
 
         return json.dumps(auth_info)
