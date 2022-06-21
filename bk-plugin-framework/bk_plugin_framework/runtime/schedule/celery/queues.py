@@ -14,5 +14,7 @@ from kombu import Exchange, Queue
 
 exchange = Exchange("default", type="direct")
 
-CELERY_QUEUES = [Queue("plugin_schedule", exchange, routing_key="plugin_schedule", max_priority=255),
-                 Queue("schedule_delete", exchange, routing_key="schedule_delete", max_priority=255)]
+CELERY_QUEUES = [
+    Queue("plugin_schedule", exchange, routing_key="plugin_schedule", max_priority=255),
+    Queue("schedule_delete", exchange, routing_key="schedule_delete", max_priority=255),
+]

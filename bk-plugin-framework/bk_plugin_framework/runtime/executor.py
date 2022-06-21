@@ -203,15 +203,18 @@ class BKPluginExecutor:
             storage=schedule_data["context"]["storage"],
         )
         plugin = plugin_cls()
+        err = ""
 
         # run schedule execute
         try:
             plugin.execute(inputs=valid_inputs, context=context)
-        except Plugin.Error:
+        except Plugin.Error as e:
             logger.exception("[schedule] plugin execute failed")
+            err = "plugin schedule failed: %s" % str(e)
             execute_fail = True
-        except Exception:
+        except Exception as e:
             logger.exception("[schedule] plugin execute raise unexpected error")
+            err = "plugin schedule failed: %s" % str(e)
             unexpected_error_raise = True
 
         context.data = context_inputs_cls(**schedule_data["context"]["data"])
@@ -230,6 +233,7 @@ class BKPluginExecutor:
                 "invoke_count": invoke_count,
                 "data": schedule_data,
                 "finish_at": now(),
+                "err": err,
             }
 
         elif unexpected_error_raise:
@@ -238,6 +242,7 @@ class BKPluginExecutor:
                 "state": State.FAIL.value,
                 "invoke_count": invoke_count,
                 "finish_at": now(),
+                "err": err,
             }
 
         elif plugin.is_wating_poll:

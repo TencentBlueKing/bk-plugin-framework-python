@@ -47,7 +47,7 @@ def compute_settings(settings: BaseSettings) -> dict:
     return {
         "BK_PLUGIN_CALLBACK_KEY": callback_key,
         "BK_PLUGIN_CALLBACK_HOST": callback_host,
-        "USER_TOKEN_KEY_NAME": user_token_key_name
+        "USER_TOKEN_KEY_NAME": user_token_key_name,
     }
 
 
@@ -66,10 +66,10 @@ class Settings(BaseSettings):
 
         @classmethod
         def customise_sources(
-                cls,
-                init_settings,
-                env_settings,
-                file_secret_settings,
+            cls,
+            init_settings,
+            env_settings,
+            file_secret_settings,
         ):
             return (
                 init_settings,
