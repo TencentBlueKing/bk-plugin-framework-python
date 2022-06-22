@@ -187,6 +187,13 @@ def logging_addition_settings(logging_dict):
         }
         logging_dict["loggers"]["bk_plugin"]["handlers"].append("db_log_handler")
 
+        logging_dict["handlers"]["console"] = {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        }
+        logging_dict["loggers"]["bk_plugin"]["handlers"].append("console")
+
     logging_dict.update(
         {"filters": {"trace_id_inject_filter": {"()": "bk_plugin_framework.utils.log.TraceIDInjectFilter"}}}
     )
