@@ -578,11 +578,9 @@ class TaskList(PluginAPIView):
         )
 ```
 
-如果数据接口的实现需要调用`apigw`或者`esb`的请求，需要传入用户登录态，可通过以下步骤实现：
+### 透传用户登录态
 
-1. 配置环境变量
-   - USER_TOKEN_KEY_NAME: cookie中用户认证信息的key，本地默认为`bk_token`，线上默认为`jwt`
-2. 代码实现如下
+如果数据接口需要调用 BK-APIGW 或 BK-ESB，则需要将用户态通过请求头透出给 BK-APIGW 或 BK-ESB：
 
 ```python
 # task_list.py
@@ -615,6 +613,34 @@ class TaskList(PluginAPIView):
         )
 ```
 
+以下述代码为例，调用 bk-cmdb 在 BK-ESB 上的接口拉取用户有权限的业务列表：
+
+```python
+import os
+import requests
+
+from rest_framework.response import Response
+from bk_plugin_framework.kit.api import PluginAPIView
+
+
+class BusinessList(PluginAPIView):
+    def get(self, request):
+        response = requests.post(
+            url="http://{esb_host}/api/c/compapi/v2/cc/search_business/",
+            headers={
+                "Content-Type": "application/json",
+                "X-Bkapi-Authorization": self.get_bkapi_authorization_info(request),
+            },
+            json={
+                "bk_app_code": os.getenv("APP_ID"),
+                "bk_app_secret": os.getenv("APP_TOKEN"),
+                "bk_username": request.user.username,
+            },
+        )
+        json_data = response.json()
+        return Response([{"text": b["bk_biz_name"], "value": b["bk_biz_id"]} for b in json_data["data"]["info"]])
+
+```
 
 
 最后，在 `apis` 目录下新建 `urls.py` 文件，并定义接口路由：
