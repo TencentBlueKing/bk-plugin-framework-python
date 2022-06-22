@@ -157,6 +157,7 @@ class BKPluginExecutor:
     def schedule(self, plugin_cls: Plugin, schedule: Schedule, callback_info: dict = {}):
 
         # load schedule data
+        logger.info("[schedule] load schedule data")
         try:
             schedule_data = self._load_schedule_data(schedule)
         except Exception:
@@ -165,6 +166,7 @@ class BKPluginExecutor:
             return
 
         # inputs validation
+        logger.info("[schedule] validate inputs")
         input_cls = getattr(plugin_cls, "Inputs", InputsModel)
         try:
             valid_inputs = input_cls(**schedule_data["inputs"])
@@ -176,6 +178,7 @@ class BKPluginExecutor:
             return
 
         # context inputs validation
+        logger.info("[schedule] validate context value")
         context_inputs_cls = getattr(plugin_cls, "ContextInputs", ContextRequire)
         try:
             valid_context_inputs = context_inputs_cls(**schedule_data["context"]["data"])
@@ -187,6 +190,7 @@ class BKPluginExecutor:
             return
 
         # schedule execute prepare
+        logger.info("[schedule] prepare context and plugin")
         invoke_count = schedule.invoke_count + 1
         execute_fail = False
         unexpected_error_raise = False
@@ -206,6 +210,7 @@ class BKPluginExecutor:
         err = ""
 
         # run schedule execute
+        logger.info("[schedule] run execute")
         try:
             plugin.execute(inputs=valid_inputs, context=context)
         except Plugin.Error as e:
