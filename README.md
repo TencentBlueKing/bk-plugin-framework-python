@@ -74,7 +74,7 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 
 ## 一次插件调用的状态转换
 
-一个插件在一次执行声明周期中可能会经过下图所示的状态转换，每种状态说明如下：
+一个插件在一次执行生命周期中可能会经过下图所示的状态转换，每种状态说明如下：
 
 - EMPTY：初始状态，每次插件调用都会从这个状态开始
 - SUCCESS：执行成功状态，插件在 `execute` 方法中如果没有抛出任何异常，没有 `self.wait_poll` 和 `self.wait_callback` 的调用，就会进入成功状态，**SUCCESS 是一次调用的结束状态**
