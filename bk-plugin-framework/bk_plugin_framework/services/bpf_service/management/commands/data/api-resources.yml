@@ -29,7 +29,7 @@ paths:
           transformHeaders: {}
         authConfig:
           userVerifiedRequired: false
-        disabledStages: []
+        disabledStages: ["user-stag","user-prod"]
   /plugin_api_dispatch:
     post:
       operationId: plugin_api_dispatch
@@ -52,4 +52,28 @@ paths:
           transformHeaders: {}
         authConfig:
           userVerifiedRequired: false
-        disabledStages: []
+        disabledStages: ["user-stag","user-prod"]
+  /bk_plugin/plugin_api/:
+    x-bk-apigateway-method-any:
+      operationId: plugin_api
+      description: ''
+      tags: []
+      responses:
+        default:
+          description: ''
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: true
+        backend:
+          type: HTTP
+          method: any
+          path: /bk_plugin/plugin_api/
+          matchSubpath: true
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: false
+        disabledStages: ["prod","stag"]

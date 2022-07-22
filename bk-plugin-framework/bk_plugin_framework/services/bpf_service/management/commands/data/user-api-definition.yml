@@ -1,0 +1,27 @@
+stage:
+  name: "user-{{ settings.BK_PLUGIN_APIGW_STAGE_NAME }}"
+  vars: {}
+  proxy_http:
+    timeout: 60
+    upstreams:
+      loadbalance: "roundrobin"
+      hosts:
+        - host: "http://{{ settings.BK_PLUGIN_APIGW_BACKEND_HOST }}/"
+          weight: 100
+
+strategies:
+  - type: "cors"
+    comment: ""
+    name: "跨域资源共享(CORS)"
+
+    config:
+      allowed_origins: []
+      allowed_methods: ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE", "OPTIONS"]
+      allowed_headers:  ["Accept", "Cache-Control", "Content-Type", "Keep-Alive", "Origin", "User-Agent", "X-Requested-With", "X-Devops-Project-Id"]
+      exposed_headers: []
+      max_age: 86400
+      allow_credentials: true
+      option_passthrough: false
+
+release:
+  comment: "auto release by bk-plugin-runtime"
