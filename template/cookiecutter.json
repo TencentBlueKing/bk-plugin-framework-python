@@ -5,6 +5,7 @@
     "init_admin": "init admin username",
     "init_apigw_maintainer": "admin",
     "apigw_subdomain": "bk apigw sub domain",
+    "cors_allow_origin": "bk apigw cors allow origins",
     "_copy_without_render": [
         ".ci"
     ]

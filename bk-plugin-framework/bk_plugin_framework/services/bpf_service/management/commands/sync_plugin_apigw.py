@@ -21,31 +21,13 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         definition_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/api-definition.yml")
         resources_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/api-resources.yml")
-        user_api_definition_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/user-api-definition.yml")
-
         print("[bk-plugin-framework]call sync_apigw_stage with definition: %s" % definition_file_path)
         call_command("sync_apigw_stage", file=definition_file_path)
-        print("[bk-plugin-framework]call sync_apigw_stage with user-api-definition: %s" % user_api_definition_file_path)
-        call_command("sync_apigw_stage", file=user_api_definition_file_path)
-
         print("[bk-plugin-framework]call sync_apigw_resources with resources: %s" % resources_file_path)
         call_command("sync_apigw_resources", file=resources_file_path)
-        print(
-            "[bk-plugin-framework]call sync_apigw_strategies with user-api-definition: %s"
-            % user_api_definition_file_path
-        )
-        call_command("sync_apigw_strategies", file=user_api_definition_file_path)
-
+        print("[bk-plugin-framework]call sync_apigw_strategies with definition: %s" % definition_file_path)
+        call_command("sync_apigw_strategies", file=definition_file_path)
         print("[bk-plugin-framework]call create_version_and_release_apigw with definition: %s" % definition_file_path)
         call_command(
             "create_version_and_release_apigw", file=definition_file_path, stage=[settings.BK_PLUGIN_APIGW_STAGE_NAME]
-        )
-        print(
-            "[bk-plugin-framework]call create_version_and_release_apigw with user-api-definition: %s"
-            % user_api_definition_file_path
-        )
-        call_command(
-            "create_version_and_release_apigw",
-            file=user_api_definition_file_path,
-            stage=["user-%s" % settings.BK_PLUGIN_APIGW_STAGE_NAME],
         )
