@@ -5,7 +5,7 @@
     "init_admin": "init admin username",
     "init_apigw_maintainer": "admin",
     "apigw_subdomain": "bk apigw sub domain",
-    "apigw_cors_allow_origin": "bk apigw cors allow origin ",
+    "apigw_cors_allow_origins": "bk apigw cors allow origins",
     "apigw_cors_allow_methods": "GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS",
     "apigw_cors_allow_headers": "Accept,Cache-Control,Content-Type,Keep-Alive,Origin,User-Agent,X-Requested-With",
     "_copy_without_render": [
