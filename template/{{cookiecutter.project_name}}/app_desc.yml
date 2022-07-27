@@ -27,7 +27,7 @@ modules:
         description: blueapps config path
       - key: BK_APIGW_CORS_ALLOW_ORIGINS
         value: {{cookiecutter.apigw_cors_allow_origins}}
-        description: apigw cors strategie allow origin
+        description: apigw cors strategie allow origins
       - key: BK_APIGW_CORS_ALLOW_METHODS
         value: {{cookiecutter.apigw_cors_allow_methods}}
         description: apigw cors strategie allow methods
