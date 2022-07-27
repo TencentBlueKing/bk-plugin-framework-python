@@ -30,7 +30,7 @@ modules:
         description: apigw cors strategie allow origin
       - key: BK_APIGW_CORS_ALLOW_METHODS
         value: {{cookiecutter.apigw_cors_allow_methods}}
-        description: apigw cors strategie allow headers
+        description: apigw cors strategie allow methods
       - key: BK_APIGW_CORS_ALLOW_HEADERS
         value: {{cookiecutter.apigw_cors_allow_headers}}
         description: apigw cors strategie allow headers
