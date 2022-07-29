@@ -25,6 +25,8 @@ class Command(BaseCommand):
         call_command("sync_apigw_stage", file=definition_file_path)
         print("[bk-plugin-framework]call sync_apigw_resources with resources: %s" % resources_file_path)
         call_command("sync_apigw_resources", file=resources_file_path)
+        print("[bk-plugin-framework]call sync_apigw_strategies with definition: %s" % definition_file_path)
+        call_command("sync_apigw_strategies", file=definition_file_path)
         print("[bk-plugin-framework]call create_version_and_release_apigw with definition: %s" % definition_file_path)
         call_command(
             "create_version_and_release_apigw", file=definition_file_path, stage=[settings.BK_PLUGIN_APIGW_STAGE_NAME]

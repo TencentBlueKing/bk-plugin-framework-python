@@ -25,3 +25,12 @@ modules:
       - key: BK_APP_CONFIG_PATH
         value: bk_plugin_runtime.config
         description: blueapps config path
+      - key: BK_APIGW_CORS_ALLOW_ORIGINS
+        value: {{cookiecutter.apigw_cors_allow_origins}}
+        description: apigw cors strategie allow origins
+      - key: BK_APIGW_CORS_ALLOW_METHODS
+        value: {{cookiecutter.apigw_cors_allow_methods}}
+        description: apigw cors strategie allow methods
+      - key: BK_APIGW_CORS_ALLOW_HEADERS
+        value: {{cookiecutter.apigw_cors_allow_headers}}
+        description: apigw cors strategie allow headers
