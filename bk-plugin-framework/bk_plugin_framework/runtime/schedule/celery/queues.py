@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -15,5 +14,7 @@ from kombu import Exchange, Queue
 
 exchange = Exchange("default", type="direct")
 
-CELERY_QUEUES = [Queue("plugin_schedule", exchange, routing_key="plugin_schedule", max_priority=255),
-                 Queue("schedule_delete", exchange, routing_key="schedule_delete", max_priority=255)]
+CELERY_QUEUES = [
+    Queue("plugin_schedule", exchange, routing_key="plugin_schedule", max_priority=255),
+    Queue("schedule_delete", exchange, routing_key="schedule_delete", max_priority=255),
+]

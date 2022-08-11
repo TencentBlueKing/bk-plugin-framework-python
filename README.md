@@ -74,7 +74,7 @@ cookiecutter https://github.com/TencentBlueKing/bk-plugin-framework-python/ --di
 
 ## 一次插件调用的状态转换
 
-一个插件在一次执行声明周期中可能会经过下图所示的状态转换，每种状态说明如下：
+一个插件在一次执行生命周期中可能会经过下图所示的状态转换，每种状态说明如下：
 
 - EMPTY：初始状态，每次插件调用都会从这个状态开始
 - SUCCESS：执行成功状态，插件在 `execute` 方法中如果没有抛出任何异常，没有 `self.wait_poll` 和 `self.wait_callback` 的调用，就会进入成功状态，**SUCCESS 是一次调用的结束状态**
@@ -578,6 +578,71 @@ class TaskList(PluginAPIView):
         )
 ```
 
+### 透传用户登录态
+
+如果数据接口需要调用 BK-APIGW 或 BK-ESB，则需要将用户态通过请求头透出给 BK-APIGW 或 BK-ESB：
+
+```python
+# task_list.py
+import requests
+
+from rest_framework.response import Response
+from bk_plugin_framework.kit.api import PluginAPIView
+
+
+class TaskList(PluginAPIView):
+    def get(self, request, biz_id):
+      	# apigw 请求
+        apigw_url = ""
+        header = {
+        	"Content-Type": "application/json",
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request)
+    		}
+        response = requests.get(url=apigw_url, headers=header)
+        
+        # esb 请求
+        esb_url = ""
+        header = {
+        	"Content-Type": "application/json",
+        	"X-Bkapi-Authorization": self.get_bkapi_authorization_info(request)
+    		}
+        response = requests.get(url=esb_url, headers=header)
+        
+        return Response(
+            [{"text": "task 1", "value": 1}, {"text": "task 2", "value": 2}]
+        )
+```
+
+以下述代码为例，调用 bk-cmdb 在 BK-ESB 上的接口拉取用户有权限的业务列表：
+
+```python
+import os
+import requests
+
+from rest_framework.response import Response
+from bk_plugin_framework.kit.api import PluginAPIView
+
+
+class BusinessList(PluginAPIView):
+    def get(self, request):
+        response = requests.post(
+            url="http://{esb_host}/api/c/compapi/v2/cc/search_business/",
+            headers={
+                "Content-Type": "application/json",
+                "X-Bkapi-Authorization": self.get_bkapi_authorization_info(request),
+            },
+            json={
+                "bk_app_code": os.getenv("APP_ID"),
+                "bk_app_secret": os.getenv("APP_TOKEN"),
+                "bk_username": request.user.username,
+            },
+        )
+        json_data = response.json()
+        return Response([{"text": b["bk_biz_name"], "value": b["bk_biz_id"]} for b in json_data["data"]["info"]])
+
+```
+
+
 最后，在 `apis` 目录下新建 `urls.py` 文件，并定义接口路由：
 
 ```py
@@ -644,6 +709,7 @@ pip install -r requirements.txt
 ```bash
 export BKPAAS_APP_ID="" # 插件 app code，从 paas 开发者中心获取
 export BKPAAS_APP_SECRET="" # 插件 app secret paas 开发者中心获取
+export BK_APP_CONFIG_PATH="bk_plugin_runtime.config"
 
 export BK_PLUGIN_RUNTIME_BROKER_URL="amqp://guest:guest@localhost:5672//" # broker url，如果插件没有 wait_poll 或 wait_callback 操作可以不设置该变量
 export BKPAAS_ENGINE_REGION="open"
@@ -681,7 +747,7 @@ python bin/manage.py rundebugserver
 > 如果插件会进入 POLL 或 CALLBACK 状态，需要额外运行 worker 进程
 
 > ```bash
-> celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule -l DEBUG
+> DJANGO_SETTINGS_MODULE=bk_plugin_runtime.settings BK_APP_CONFIG_PATH=bk_plugin_runtime.config celery worker -A blueapps.core.celery -P threads -Q plugin_schedule -l DEBUG
 > ```
 
 访问 `localhost:8000` 进入调试页面

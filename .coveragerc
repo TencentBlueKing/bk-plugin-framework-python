@@ -1,0 +1,3 @@
+
+[report]
+include = bk-plugin-framework/bk_plugin_framework/*.py

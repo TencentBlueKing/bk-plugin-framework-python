@@ -1,4 +1,4 @@
-name: Runtime python package
+name: Framework python package
 
 on:
   push:

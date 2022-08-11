@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -101,7 +100,7 @@ LOGGING = get_logging_config_dict(locals())
 # 初始化管理员列表，列表中的人员将拥有预发布环境和正式环境的管理员权限
 # 注意：请在首次提测和上线前修改，之后的修改将不会生效
 INIT_SUPERUSER = [
-    os.getenv("BK_INIT_SUPERUSER"),
+    os.getenv("BK_INIT_SUPERUSER") or "admin",
 ]
 
 # 使用mako模板时，默认打开的过滤器：h(过滤html)
@@ -188,6 +187,13 @@ def logging_addition_settings(logging_dict):
         }
         logging_dict["loggers"]["bk_plugin"]["handlers"].append("db_log_handler")
 
+        logging_dict["handlers"]["console"] = {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        }
+        logging_dict["loggers"]["bk_plugin"]["handlers"].append("console")
+
     logging_dict.update(
         {"filters": {"trace_id_inject_filter": {"()": "bk_plugin_framework.utils.log.TraceIDInjectFilter"}}}
     )
@@ -212,4 +218,7 @@ BK_APIGW_NAME = os.getenv("BKPAAS_BK_PLUGIN_APIGW_NAME")
 BK_API_URL_TMPL = os.getenv("BK_APIGW_MANAGER_URL_TEMPL")
 BK_PLUGIN_APIGW_STAGE_NAME = BKPAAS_ENVIRONMENT
 BK_PLUGIN_APIGW_BACKEND_HOST = os.getenv("BKPAAS_ENGINE_APP_DEFAULT_SUBDOMAINS", "").split(";")[0]
-BK_PLUGIN_CORS_ALLOW_HEADERS = os.getenv("BK_PLUGIN_CORS_ALLOW_HEADERS", "").split(",")
+
+BK_APIGW_CORS_ALLOW_ORIGINS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "").split(",") if s]
+BK_APIGW_CORS_ALLOW_METHODS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "").split(",") if s]
+BK_APIGW_CORS_ALLOW_HEADERS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_HEADERS", "").split(",") if s]

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -26,6 +25,8 @@ class Command(BaseCommand):
         call_command("sync_apigw_stage", file=definition_file_path)
         print("[bk-plugin-framework]call sync_apigw_resources with resources: %s" % resources_file_path)
         call_command("sync_apigw_resources", file=resources_file_path)
+        print("[bk-plugin-framework]call sync_apigw_strategies with definition: %s" % definition_file_path)
+        call_command("sync_apigw_strategies", file=definition_file_path)
         print("[bk-plugin-framework]call create_version_and_release_apigw with definition: %s" % definition_file_path)
         call_command(
             "create_version_and_release_apigw", file=definition_file_path, stage=[settings.BK_PLUGIN_APIGW_STAGE_NAME]

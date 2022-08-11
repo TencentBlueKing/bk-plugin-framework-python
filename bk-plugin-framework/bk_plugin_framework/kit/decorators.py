@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -22,4 +21,15 @@ def login_exempt(view_func):
         return view_func(*args, **kwargs)
 
     wrapped_view.login_exempt = settings.BKPAAS_ENVIRONMENT != "dev"
+    return wraps(view_func)(wrapped_view)
+
+
+def inject_user_token(view_func):
+    def wrapped_view(request, *args, **kwargs):
+        if settings.BKPAAS_ENVIRONMENT == "dev":
+            request.token = request.COOKIES.get(settings.USER_TOKEN_KEY_NAME, "")
+        else:
+            request.token = request.META.get("HTTP_X_BKAPI_JWT", "")
+        return view_func(request, *args, **kwargs)
+
     return wraps(view_func)(wrapped_view)

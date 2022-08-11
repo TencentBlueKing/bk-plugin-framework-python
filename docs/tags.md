@@ -13,8 +13,6 @@
         - [TagTime](#236-TagTime)
         - [TagInput](#237-TagInput)
         - [TagInt](#238-TagInt)
-        - [TagIpSelector](#239-TagIpSelector)
-        - [TagPassword](#2310-TagPassword)
         - [TagRadio](#2311-TagRadio)
         - [TagSelect](#2312-TagSelect)
         - [TagText](#2313-TagText)
@@ -23,7 +21,6 @@
         - [TagUpload](#2316-TagUpload)
         - [TagMemberSelector](#2317-TagMemberSelector)
         - [TagLogDisplay](#2318-TagLogDisplay)
-        - [TagSetAllocation](#2319-TagSetAllocation)
         - [TagSection](#2320-TagSection)
         - [TagCodeEditor](#2321-TagCodeEditor)
 - [标准插件中定义的方法](#3-标准插件中定义的方法)
@@ -313,39 +310,6 @@ Tag 为表单项的最小单元，它的使用非常简单，只需要在标准�
 
 *none*
 
-<a id="toc_anchor" name="#239-TagIpSelector"></a>
-
-### TagIpSelector
-
-ip 选择器，支持静态 ip 或动态 ip 的单选和多选。
-
-**属性**
-
-  - `isMultiple`：ip 选择器是否为多选（单选为选择静态或者动态 ip，多选为同时选择静态、动态 ip）
-  - `remote_url`：组件内部调用接口 url 配置，支持对象格式以及返回对象的方法，eg: { cc_search_module: '/pipeline/cc_search_module/2/' }
-  - `disabled`：设置是否禁用组件
-  - `value`：选择的 ip 值
-
-**方法**
-
-*none*
-
-
-<a id="toc_anchor" name="#2310-TagPassword"></a>
-
-### TagPassword
-
-密码输入框。
-
-**属性**
-
-  - `disabled`：设置是否禁用组件
-  - `value`：加密后的密码值
-
-**方法**
-
-*none*
-
 <a id="toc_anchor" name="#2311-TagRadio"></a>
 
 ### TagRadio
@@ -521,22 +485,6 @@ ip 选择器，支持静态 ip 或动态 ip 的单选和多选。
 **属性**
 
   - `value`：日志内容， \n 表示换行
-
-**方法**
-
-*none*
-
-<a id="toc_anchor" name="#2319-TagSetAllocation"></a>
-
-### TagSetAllocation
-
-开区资源选择器。
-
-**属性**
-
-  - `remote_url`：组件内部调用接口 url 配置，支持对象格式以及返回对象的方法，eg: { cc_search_module: '/pipeline/cc_search_module/2/' }
-  - `disabled`：设置是否禁用组件
-  - `value`：选择的资源值以及筛选配置
 
 **方法**
 

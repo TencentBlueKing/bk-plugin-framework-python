@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -10,6 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+import os
 import base64
 import hashlib
 import logging
@@ -36,9 +36,18 @@ def compute_settings(settings: BaseSettings) -> dict:
 
     callback_host = "http://{}".format(default_settings.BK_PLUGIN_APIGW_BACKEND_HOST)
 
+    BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
+    BKPAAS_ENGINE_REGION = os.getenv("BKPAAS_ENGINE_REGION", "open")
+
+    if BKPAAS_ENGINE_REGION == "ieod":
+        user_token_key_name = "bk_ticket" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
+    else:
+        user_token_key_name = "bk_token" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
+
     return {
         "BK_PLUGIN_CALLBACK_KEY": callback_key,
-        "BK_PLUGIN_CALLBACK_HOST": callback_host
+        "BK_PLUGIN_CALLBACK_HOST": callback_host,
+        "USER_TOKEN_KEY_NAME": user_token_key_name,
     }
 
 
@@ -50,6 +59,7 @@ class Settings(BaseSettings):
     PLUGIN_CALLBACK_RETRY_TIMES: int = 3
     CALLBACK_TASK_NAME: str = "bk_plugin_framework.runtime.callback.celery.tasks.callback"
     SCHEDULE_PERSISTENT_DAYS: int = 30
+    USER_TOKEN_KEY_NAME: str = ""
 
     class Config:
         case_sensitive = True
@@ -63,8 +73,8 @@ class Settings(BaseSettings):
         ):
             return (
                 init_settings,
-                compute_settings,
                 env_settings,
+                compute_settings,
                 file_secret_settings,
             )
 

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -49,6 +48,7 @@ class Schedule(models.Model):
     invoke_count = models.IntegerField("invoke count", default=1)
     data = models.TextField("context and inputs")
     scheduling = models.BooleanField("是否正在调度", default=False)
+    err = models.TextField("schedule error message", default="")
     created_at = models.DateTimeField("create time", auto_now_add=True)
     finish_at = models.DateTimeField("finish time", null=True)
 

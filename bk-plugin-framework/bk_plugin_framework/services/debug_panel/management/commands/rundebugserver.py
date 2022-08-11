@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -13,11 +12,10 @@ specific language governing permissions and limitations under the License.
 
 import os
 
-from django.core.management.base import BaseCommand
-from django.core.management import call_command
+from django.core.management.commands.runserver import Command
 
 
-class Command(BaseCommand):
+class Command(Command):
     def prepare_devlop_env(self):
         os.environ.setdefault("BK_INIT_SUPERUSER", "admin")
         os.environ.setdefault("BK_PAAS2_URL", "")
@@ -39,4 +37,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.prepare_devlop_env()
-        call_command("runserver", *args, **kwargs)
+        super().handle(*args, **kwargs)

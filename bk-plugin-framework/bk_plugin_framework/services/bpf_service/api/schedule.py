@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -39,6 +38,7 @@ class ScheduleResponseSerializer(StandardResponseSerializer):
         plugin_version = serializers.CharField(help_text="插件版本")
         state = serializers.IntegerField(help_text="插件执行状态(2: POLL 3:CALLBACK 4:SUCCESS 5:FAIL)")
         outputs = serializers.DictField(help_text="插件输出")
+        err = serializers.CharField(help_text="错误信息")
         created_at = serializers.CharField(help_text="创建时间")
         finish_at = serializers.CharField(help_text="结束时间")
 
@@ -90,6 +90,7 @@ class Schedule(APIView):
                     "plugin_version": s.plugin_version,
                     "state": s.state,
                     "outputs": outputs,
+                    "err": s.err,
                     "created_at": s.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                     "finish_at": s.finish_at.strftime("%Y-%m-%d %H:%M:%S") if s.finish_at else "",
                 },

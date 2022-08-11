@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -102,6 +101,9 @@ class PluginAPIDispatch(APIView):
             for key, value in request.META.items():
                 if CUSTOM_REQUEST_HEADER_REGEX.match(key):
                     custom_headers[key] = value
+
+            # get apigw jwt info
+            custom_headers["HTTP_X_BKAPI_JWT"] = request.META.get("HTTP_X_BKAPI_JWT", "")
 
             fake_request = getattr(RequestFactory(), request_data["method"].lower())(
                 path=request_data["url"], content_type=request.content_type, data=request_data["data"], **custom_headers

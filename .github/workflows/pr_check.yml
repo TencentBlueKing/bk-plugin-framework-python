@@ -10,3 +10,7 @@ jobs:
 
   runtime-lint:
     uses: TencentBlueKing/bk-plugin-framework-python/.github/workflows/runtime_flake8_and_black.yml@master
+  
+  framework-unittest:
+    needs: [framework-lint]
+    uses: TencentBlueKing/bk-plugin-framework-python/.github/workflows/framework_unittest.yml@master

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -158,6 +157,7 @@ class BKPluginExecutor:
     def schedule(self, plugin_cls: Plugin, schedule: Schedule, callback_info: dict = {}):
 
         # load schedule data
+        logger.info("[schedule] load schedule data")
         try:
             schedule_data = self._load_schedule_data(schedule)
         except Exception:
@@ -166,6 +166,7 @@ class BKPluginExecutor:
             return
 
         # inputs validation
+        logger.info("[schedule] validate inputs")
         input_cls = getattr(plugin_cls, "Inputs", InputsModel)
         try:
             valid_inputs = input_cls(**schedule_data["inputs"])
@@ -177,6 +178,7 @@ class BKPluginExecutor:
             return
 
         # context inputs validation
+        logger.info("[schedule] validate context value")
         context_inputs_cls = getattr(plugin_cls, "ContextInputs", ContextRequire)
         try:
             valid_context_inputs = context_inputs_cls(**schedule_data["context"]["data"])
@@ -188,6 +190,7 @@ class BKPluginExecutor:
             return
 
         # schedule execute prepare
+        logger.info("[schedule] prepare context and plugin")
         invoke_count = schedule.invoke_count + 1
         execute_fail = False
         unexpected_error_raise = False
@@ -204,15 +207,19 @@ class BKPluginExecutor:
             storage=schedule_data["context"]["storage"],
         )
         plugin = plugin_cls()
+        err = ""
 
         # run schedule execute
+        logger.info("[schedule] run execute")
         try:
             plugin.execute(inputs=valid_inputs, context=context)
-        except Plugin.Error:
+        except Plugin.Error as e:
             logger.exception("[schedule] plugin execute failed")
+            err = "plugin schedule failed: %s" % str(e)
             execute_fail = True
-        except Exception:
+        except Exception as e:
             logger.exception("[schedule] plugin execute raise unexpected error")
+            err = "plugin schedule failed: %s" % str(e)
             unexpected_error_raise = True
 
         context.data = context_inputs_cls(**schedule_data["context"]["data"])
@@ -231,6 +238,7 @@ class BKPluginExecutor:
                 "invoke_count": invoke_count,
                 "data": schedule_data,
                 "finish_at": now(),
+                "err": err,
             }
 
         elif unexpected_error_raise:
@@ -239,6 +247,7 @@ class BKPluginExecutor:
                 "state": State.FAIL.value,
                 "invoke_count": invoke_count,
                 "finish_at": now(),
+                "err": err,
             }
 
         elif plugin.is_wating_poll:

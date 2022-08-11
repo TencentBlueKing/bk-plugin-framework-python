@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Tencent is pleased to support the open source community by making 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community
-Edition) available.
-Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
+Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
+Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
 Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://opensource.org/licenses/MIT
@@ -62,7 +61,7 @@ def plugin_cls():
 
         def execute(self, inputs: InputsModel, context: Context):
             if inputs.raise_unexpected_err:
-                raise Exception()
+                raise Exception("fail")
 
             if inputs.success:
                 if inputs.poll:
@@ -229,7 +228,11 @@ class TestBKPluginExecutor:
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
         Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.FAIL.value, invoke_count=2, data=schedule.data, finish_at="now"
+            state=State.FAIL.value,
+            invoke_count=2,
+            data=schedule.data,
+            finish_at="now",
+            err="plugin schedule failed: fail",
         )
 
     def test_schedule__plugin_execute_raise_unexpected_err(self, executor, plugin_cls):
@@ -245,7 +248,7 @@ class TestBKPluginExecutor:
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
         Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.FAIL.value, invoke_count=2, finish_at="now"
+            state=State.FAIL.value, invoke_count=2, finish_at="now", err="plugin schedule failed: fail"
         )
 
     def test_schedule__plugin_execute_waiting_poll(self, executor, plugin_cls):
