@@ -19,4 +19,5 @@ from bk_plugin_framework.kit.plugin import (  # noqa
     ContextRequire,
     State,
     Callback,
+    FormModel,
 )
