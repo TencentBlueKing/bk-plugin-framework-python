@@ -1,0 +1,13 @@
+strategies:
+  - type: "cors"
+    comment: ""
+    name: "跨域资源共享(CORS)"
+
+    config:
+      allowed_origins: {{ settings.BK_APIGW_CORS_ALLOW_ORIGINS }}
+      allowed_methods: {{ settings.BK_APIGW_CORS_ALLOW_METHODS }}
+      allowed_headers: {{ settings.BK_APIGW_CORS_ALLOW_HEADERS }}
+      exposed_headers: []
+      max_age: 86400
+      allow_credentials: true
+      option_passthrough: false
