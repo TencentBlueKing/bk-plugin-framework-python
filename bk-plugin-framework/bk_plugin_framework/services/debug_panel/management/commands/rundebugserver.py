@@ -20,6 +20,8 @@ class Command(Command):
         os.environ.setdefault("BK_INIT_SUPERUSER", "admin")
         os.environ.setdefault("BK_PAAS2_URL", "")
         os.environ.setdefault("BKPAAS_MAJOR_VERSION", "3")
+        os.environ.setdefault("BK_APIGW_MANAGER_URL_TMPL", "")
+        # 兼容旧版本环境变量
         os.environ.setdefault("BK_APIGW_MANAGER_URL_TEMPL", "")
 
         for env in [
