@@ -7,8 +7,8 @@ modules:
       - key: PIP_VERSION
         value: 21.0
         description: pip version control
-      - key: BK_APIGW_MANAGER_URL_TEMPL
-        value: http://{api_name}.{{cookiecutter.apigw_subdomain}}/
+      - key: BK_APIGW_MANAGER_URL_TMPL
+        value: {{cookiecutter.apigw_manager_url_tmpl}}
         description: pip version control
       - key: BK_APIGW_MANAGER_MAINTAINERS
         value: {{cookiecutter.init_apigw_maintainer}}
