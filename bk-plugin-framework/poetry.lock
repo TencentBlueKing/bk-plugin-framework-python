@@ -70,7 +70,7 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "1.4.0"
+version = "1.4.1"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
@@ -1013,7 +1013,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "df6800a2ef4135e4f393871b5a4b60a2e20aeafa50fcade49e2e880273244709"
+content-hash = "449ddcd4e48e49d3013082e18234a9bc3b176879d9241bd9d411fe368869deb4"
 
 [metadata.files]
 amqp = []
@@ -1022,7 +1022,10 @@ appdirs = []
 atomicwrites = []
 attrs = []
 billiard = []
-bk-plugin-runtime = []
+bk-plugin-runtime = [
+    {file = "bk-plugin-runtime-1.4.1.tar.gz", hash = "sha256:ba83a7411f536399c15bbe2afe15f8908d5cd8079f5ead83649582d7dc15d7d4"},
+    {file = "bk_plugin_runtime-1.4.1-py3-none-any.whl", hash = "sha256:f307b09777a0e67f20f5433f84a1ffcc6dad46e131d7f45d42aa7f240d30e4bb"},
+]
 bkapi-bk-apigateway = []
 bkapi-client-core = []
 bkoauth = []
