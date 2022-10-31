@@ -90,10 +90,10 @@ class BKPluginExecutor:
             logger.info("[execute] plugin start execute")
             plugin.execute(inputs=valid_inputs, context=context)
         except Plugin.Error as e:
-            logger.exception("[execute] plugin execute failed")
+            logger.exception("[execute] plugin execute failed: %s" % str(e))
             return ExecuteResult(state=State.FAIL, outputs=None, err="plugin execute failed: %s" % str(e))
         except Exception as e:
-            logger.exception("[execute] plugin execute raise unexpected error")
+            logger.exception("[execute] plugin execute raise unexpected error: %s" % str(e))
             return ExecuteResult(
                 state=State.FAIL, outputs=None, err="plugin execute raise unexpected error: %s" % str(e)
             )
@@ -214,11 +214,11 @@ class BKPluginExecutor:
         try:
             plugin.execute(inputs=valid_inputs, context=context)
         except Plugin.Error as e:
-            logger.exception("[schedule] plugin execute failed")
+            logger.exception("[schedule] plugin execute failed: %s" % str(e))
             err = "plugin schedule failed: %s" % str(e)
             execute_fail = True
         except Exception as e:
-            logger.exception("[schedule] plugin execute raise unexpected error")
+            logger.exception("[schedule] plugin execute raise unexpected error: %s" % str(e))
             err = "plugin schedule failed: %s" % str(e)
             unexpected_error_raise = True
 
