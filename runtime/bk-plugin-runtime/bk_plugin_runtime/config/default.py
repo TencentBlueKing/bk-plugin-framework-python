@@ -15,6 +15,8 @@ from blueapps.conf.log import get_logging_config_dict
 from blueapps.conf.default_settings import *  # noqa
 
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
+# 默认关闭可观侧性
+ENABLE_OTEL_METRICS = os.getenv("ENABLE_METRICS", False)
 
 # 请在这里加入你的自定义 APP
 INSTALLED_APPS += (  # noqa
@@ -27,6 +29,8 @@ INSTALLED_APPS += (  # noqa
     "apigw_manager.apigw",
     "django_dbconn_retry",
 )
+if ENABLE_OTEL_METRICS:
+    INSTALLED_APPS += ("blueapps.opentelemetry.instrument_app",)  # noqa
 
 if BKPAAS_ENVIRONMENT == "dev":
     INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
