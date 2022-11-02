@@ -1,3 +1,6 @@
-web: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 8 --max-requests=1000
+web: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 1 --max-requests=1000
 schedule: celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO
 beat: celery beat -A blueapps.core.celery -l INFO
+{% if cookiecutter.enable_otel_metrics == "yes" -%}
+c-monitor: celery-prometheus-exporter --broker amqp://$RABBITMQ_USER:$RABBITMQ_PASSWORD@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_VHOST --addr 0.0.0.0:5001 --queue-list plugin_schedule,plugin_callback,schedule_delete
+{% endif -%}

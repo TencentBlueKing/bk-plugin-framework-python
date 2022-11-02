@@ -34,3 +34,10 @@ modules:
       - key: BK_APIGW_CORS_ALLOW_HEADERS
         value: {{cookiecutter.apigw_cors_allow_headers}}
         description: apigw cors strategie allow headers
+      {% if cookiecutter.enable_otel_metrics == "yes" -%}
+      - key: ENABLE_METRICS
+        value: 1
+        description: "enable metrics"
+      {% endif -%}
+    bkmonitor:
+      port: 5001

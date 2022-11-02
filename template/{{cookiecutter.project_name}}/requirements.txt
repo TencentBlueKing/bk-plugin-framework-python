@@ -1,4 +1,7 @@
 # base
 # DO NOT DELETE ANY PACKAGE IN base SECTION !!!
 bk-plugin-framework==1.5.2
-# add your custom requirements below this line
+{% if cookiecutter.enable_otel_metrics == "yes"-%}
+# opentelemetry
+celery-prometheus-exporter==1.7.0
+{% endif -%}
