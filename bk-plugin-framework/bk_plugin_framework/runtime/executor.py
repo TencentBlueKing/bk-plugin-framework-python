@@ -19,6 +19,10 @@ from pydantic import ValidationError
 from django.utils.timezone import now
 
 from bk_plugin_framework.kit import Plugin, Context, State, InputsModel, ContextRequire, Callback
+from bk_plugin_framework.metrics import HOSTNAME, BK_PLUGIN_EXECUTE_FAILED_COUNT, BK_PLUGIN_EXECUTE_EXCEPTION_COUNT, \
+    BK_PLUGIN_SCHEDULE_FAILED_COUNT, BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT, setup_gauge, setup_histogram, \
+    BK_PLUGIN_EXECUTE_RUNNING_PROCESSES, BK_PLUGIN_EXECUTE_TIME, BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES, \
+    BK_PLUGIN_SCHEDULE_TIME
 from bk_plugin_framework.runtime.schedule.models import Schedule
 
 logger = logging.getLogger("bk_plugin")
@@ -61,8 +65,10 @@ class BKPluginExecutor:
         except Exception:
             logger.exception("[execute] set schedule state error")
 
+    @setup_gauge(BK_PLUGIN_EXECUTE_RUNNING_PROCESSES)
+    @setup_histogram(BK_PLUGIN_EXECUTE_TIME)
     def execute(
-        self, plugin_cls: Plugin, inputs: typing.Dict[str, typing.Any], context_inputs: typing.Dict[str, typing.Any]
+            self, plugin_cls: Plugin, inputs: typing.Dict[str, typing.Any], context_inputs: typing.Dict[str, typing.Any]
     ) -> ExecuteResult:
 
         # user inputs validation
@@ -84,15 +90,16 @@ class BKPluginExecutor:
             trace_id=self.trace_id, data=valid_context_inputs, state=State.EMPTY, invoke_count=1, outputs={}
         )
         plugin = plugin_cls()
-
         # run execute method
         try:
             logger.info("[execute] plugin start execute")
             plugin.execute(inputs=valid_inputs, context=context)
         except Plugin.Error as e:
+            BK_PLUGIN_EXECUTE_FAILED_COUNT.labels(hostname=HOSTNAME, version=plugin_cls.Meta.version).inc()
             logger.exception("[execute] plugin execute failed")
             return ExecuteResult(state=State.FAIL, outputs=None, err="plugin execute failed: %s" % str(e))
         except Exception as e:
+            BK_PLUGIN_EXECUTE_EXCEPTION_COUNT.labels(hostname=HOSTNAME, version=plugin_cls.Meta.version).inc()
             logger.exception("[execute] plugin execute raise unexpected error")
             return ExecuteResult(
                 state=State.FAIL, outputs=None, err="plugin execute raise unexpected error: %s" % str(e)
@@ -154,6 +161,8 @@ class BKPluginExecutor:
 
         return ExecuteResult(state=state, outputs=context.outputs, err=None)
 
+    @setup_gauge(BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES)
+    @setup_histogram(BK_PLUGIN_SCHEDULE_TIME)
     def schedule(self, plugin_cls: Plugin, schedule: Schedule, callback_info: dict = {}):
 
         # load schedule data
@@ -214,10 +223,12 @@ class BKPluginExecutor:
         try:
             plugin.execute(inputs=valid_inputs, context=context)
         except Plugin.Error as e:
+            BK_PLUGIN_SCHEDULE_FAILED_COUNT.labels(hostname=HOSTNAME, version=plugin_cls.Meta.version).inc()
             logger.exception("[schedule] plugin execute failed")
             err = "plugin schedule failed: %s" % str(e)
             execute_fail = True
         except Exception as e:
+            BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT.labels(hostname=HOSTNAME, version=plugin_cls.Meta.version).inc()
             logger.exception("[schedule] plugin execute raise unexpected error")
             err = "plugin schedule failed: %s" % str(e)
             unexpected_error_raise = True

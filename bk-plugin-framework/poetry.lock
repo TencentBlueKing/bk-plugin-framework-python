@@ -1,4 +1,15 @@
 [[package]]
+name = "aiocontextvars"
+version = "0.2.2"
+description = "Asyncio support for PEP-567 contextvars backport."
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+contextvars = {version = "2.4", markers = "python_version < \"3.7\""}
+
+[[package]]
 name = "amqp"
 version = "2.6.1"
 description = "Low-level AMQP client for Python (fork of amqplib)."
@@ -26,9 +37,9 @@ pyyaml = ">=5.4.1"
 urllib3 = ">=1.25.3"
 
 [package.extras]
-demo = ["PyMySQL (>=1.0.2,<2.0.0)", "Django (>=1.11.1)", "django-environ (>=0.8.1)", "pyjwt (>=1.6.4)"]
-cryptography = ["cryptography (>=3.1.1)", "pyjwt (>=1.6.4)"]
-django = ["Django (>=1.11.1)", "pyjwt (>=1.6.4)"]
+cryptography = ["pyjwt (>=1.6.4)", "cryptography (>=3.1.1)"]
+django = ["pyjwt (>=1.6.4)", "Django (>=1.11.1)"]
+demo = ["pyjwt (>=1.6.4)", "django-environ (>=0.8.1)", "Django (>=1.11.1)", "PyMySQL (>=1.0.2,<2.0.0)"]
 
 [[package]]
 name = "appdirs"
@@ -61,6 +72,22 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
 
 [[package]]
+name = "backoff"
+version = "1.11.1"
+description = "Function decoration for backoff and retry"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "backoff"
+version = "2.2.1"
+description = "Function decoration for backoff and retry"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[[package]]
 name = "billiard"
 version = "3.6.4.0"
 description = "Python multiprocessing fork with improvements and bugfixes"
@@ -70,14 +97,14 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "1.4.1"
+version = "1.5.0"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
 python-versions = ">=3.6,<4.0"
 
 [package.dependencies]
-blueapps = "4.2.4"
+blueapps = {version = "4.5.0", extras = ["opentelemetry"]}
 celery = ">=4.4.0,<5.0.0"
 ddtrace = ">=0.14.1,<0.15.0"
 Django = ">=2.2.6,<3.0.0"
@@ -88,6 +115,7 @@ django-dbconn-retry = ">=0.1.5,<0.2.0"
 djangorestframework = ">=3.12.4,<4.0.0"
 drf-yasg = ">=1.20.0,<2.0.0"
 gunicorn = ">=19.6.0,<20.0.0"
+protobuf = "3.19.4"
 raven = ">=6.5.0,<7.0.0"
 redis = ">=2.10.5,<3.0.0"
 
@@ -158,7 +186,7 @@ d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
 name = "blueapps"
-version = "4.2.4"
+version = "4.5.0"
 description = "development framework for blueking"
 category = "main"
 optional = false
@@ -168,9 +196,24 @@ python-versions = "*"
 bkoauth = ">=0.0.12"
 cryptography = ">=2.7,<3.4"
 Django = ">=2.2.6,<4.0.0"
+django-prometheus = {version = ">=2.1.0,<3.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 Mako = ">=1.0.6,<2.0"
 MarkupSafe = ">=1.1.1,<2.0.0"
 mysqlclient = ">=1.4.4,<=2.0.3"
+opentelemetry-api = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-exporter-jaeger = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-exporter-jaeger-proto-grpc = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-exporter-jaeger-thrift = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-exporter-otlp = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-celery = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-dbapi = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-django = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-logging = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-redis = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-instrumentation-requests = {version = ">=0.25b2,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+opentelemetry-sdk = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
+prometheus-client = {version = ">=0.9.0,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 pyCryptodome = ">=3.9.7"
 PyJWT = ">=1.6.1,<2.0"
 python-json-logger = ">=0.1.7"
@@ -178,7 +221,7 @@ requests = ">=2.22.0,<3.0.0"
 whitenoise = ">=3.3.0,<=5.2.0"
 
 [package.extras]
-opentelemetry = ["opentelemetry-api (>=1.6.2,<2.0.0)", "opentelemetry-sdk (>=1.6.2,<2.0.0)", "opentelemetry-exporter-otlp (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-proto-grpc (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-thrift (>=1.6.2,<2.0.0)", "opentelemetry-instrumentation (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-celery (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-django (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-dbapi (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-redis (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-logging (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-requests (>=0.25b2,<1.0.0)"]
+opentelemetry = ["opentelemetry-api (>=1.6.2,<2.0.0)", "opentelemetry-sdk (>=1.6.2,<2.0.0)", "opentelemetry-exporter-otlp (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-proto-grpc (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-thrift (>=1.6.2,<2.0.0)", "opentelemetry-instrumentation (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-celery (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-django (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-dbapi (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-redis (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-logging (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-requests (>=0.25b2,<1.0.0)", "prometheus-client (>=0.9.0,<1.0.0)", "django-prometheus (>=2.1.0,<3.0.0)"]
 
 [[package]]
 name = "celery"
@@ -279,6 +322,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "contextvars"
+version = "2.4"
+description = "PEP 567 Backport"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+immutables = ">=0.9"
+
+[[package]]
 name = "coreapi"
 version = "2.3.3"
 description = "Python client library for Core API."
@@ -368,6 +422,20 @@ wrapt = "*"
 opentracing = ["opentracing (>=2.0.0)"]
 
 [[package]]
+name = "deprecated"
+version = "1.2.13"
+description = "Python @deprecated decorator to deprecate old python classes, functions or methods."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+wrapt = ">=1.10,<2"
+
+[package.extras]
+dev = ["tox", "bump2version (<1)", "sphinx (<2)", "importlib-metadata (<3)", "importlib-resources (<4)", "configparser (<5)", "sphinxcontrib-websupport (<2)", "zipp (<2)", "PyTest (<5)", "PyTest-Cov (<2.6)", "pytest", "pytest-cov"]
+
+[[package]]
 name = "django"
 version = "2.2.28"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
@@ -428,6 +496,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "django-prometheus"
+version = "2.2.0"
+description = "Django middlewares to monitor your application with Prometheus.io."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+prometheus-client = ">=0.7"
+
+[[package]]
 name = "django-timezone-field"
 version = "4.2.3"
 description = "A Django app providing database and form fields for pytz timezone objects."
@@ -484,6 +563,34 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "googleapis-common-protos"
+version = "1.56.2"
+description = "Common protobufs used in Google APIs"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+protobuf = ">=3.15.0,<4.0.0dev"
+
+[package.extras]
+grpc = ["grpcio (>=1.0.0,<2.0.0dev)"]
+
+[[package]]
+name = "grpcio"
+version = "1.48.2"
+description = "HTTP/2-based RPC framework"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+six = ">=1.5.2"
+
+[package.extras]
+protobuf = ["grpcio-tools (>=1.48.2)"]
+
+[[package]]
 name = "gunicorn"
 version = "19.10.0"
 description = "WSGI HTTP Server for UNIX"
@@ -503,6 +610,20 @@ description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
 python-versions = ">=3.5"
+
+[[package]]
+name = "immutables"
+version = "0.19"
+description = "Immutable Collections"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.8\""}
+
+[package.extras]
+test = ["flake8 (>=5.0.4,<5.1.0)", "pycodestyle (>=2.9.1,<2.10.0)", "mypy (==0.971)", "pytest (>=6.2.4,<6.3.0)"]
 
 [[package]]
 name = "importlib-metadata"
@@ -635,6 +756,285 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "opentelemetry-api"
+version = "1.12.0"
+description = "OpenTelemetry Python API"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+aiocontextvars = {version = "*", markers = "python_version < \"3.7\""}
+Deprecated = ">=1.2.6"
+
+[[package]]
+name = "opentelemetry-exporter-jaeger"
+version = "1.12.0"
+description = "Jaeger Exporters for OpenTelemetry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-exporter-jaeger-proto-grpc = "1.12.0"
+opentelemetry-exporter-jaeger-thrift = "1.12.0"
+
+[[package]]
+name = "opentelemetry-exporter-jaeger-proto-grpc"
+version = "1.12.0"
+description = "Jaeger Protobuf Exporter for OpenTelemetry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+googleapis-common-protos = ">=1.52,<1.56.3"
+grpcio = ">=1.0.0,<2.0.0"
+opentelemetry-api = ">=1.3,<2.0"
+opentelemetry-sdk = ">=1.11,<2.0"
+
+[[package]]
+name = "opentelemetry-exporter-jaeger-thrift"
+version = "1.12.0"
+description = "Jaeger Thrift Exporter for OpenTelemetry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.3,<2.0"
+opentelemetry-sdk = ">=1.11,<2.0"
+thrift = ">=0.10.0"
+
+[[package]]
+name = "opentelemetry-exporter-otlp"
+version = "1.12.0"
+description = "OpenTelemetry Collector Exporters"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-exporter-otlp-proto-grpc = "1.12.0"
+opentelemetry-exporter-otlp-proto-http = "1.12.0"
+
+[[package]]
+name = "opentelemetry-exporter-otlp-proto-grpc"
+version = "1.12.0"
+description = "OpenTelemetry Collector Protobuf over gRPC Exporter"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+backoff = [
+    {version = ">=1.10.0,<2.0.0", markers = "python_version < \"3.7\""},
+    {version = ">=1.10.0,<3.0.0", markers = "python_version >= \"3.7\""},
+]
+googleapis-common-protos = ">=1.52,<2.0"
+grpcio = ">=1.0.0,<2.0.0"
+opentelemetry-api = ">=1.3,<2.0"
+opentelemetry-proto = "1.12.0"
+opentelemetry-sdk = ">=1.11,<2.0"
+
+[package.extras]
+test = ["pytest-grpc"]
+
+[[package]]
+name = "opentelemetry-exporter-otlp-proto-http"
+version = "1.12.0"
+description = "OpenTelemetry Collector Protobuf over HTTP Exporter"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+backoff = [
+    {version = ">=1.10.0,<2.0.0", markers = "python_version < \"3.7\""},
+    {version = ">=1.10.0,<3.0.0", markers = "python_version >= \"3.7\""},
+]
+googleapis-common-protos = ">=1.52,<2.0"
+opentelemetry-api = ">=1.3,<2.0"
+opentelemetry-proto = "1.12.0"
+opentelemetry-sdk = ">=1.11,<2.0"
+requests = ">=2.7,<3.0"
+
+[[package]]
+name = "opentelemetry-instrumentation"
+version = "0.33b0"
+description = "Instrumentation Tools & Auto Instrumentation for OpenTelemetry Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.4,<2.0"
+wrapt = ">=1.0.0,<2.0.0"
+
+[[package]]
+name = "opentelemetry-instrumentation-celery"
+version = "0.33b0"
+description = "OpenTelemetry Celery Instrumentation"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+
+[package.extras]
+instruments = ["celery (>=4.0,<6.0)"]
+test = ["pytest", "opentelemetry-test-utils (==0.33b0)", "celery (>=4.0,<6.0)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-dbapi"
+version = "0.33b0"
+description = "OpenTelemetry Database API instrumentation"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+wrapt = ">=1.0.0,<2.0.0"
+
+[package.extras]
+test = ["opentelemetry-test-utils (==0.33b0)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-django"
+version = "0.33b0"
+description = "OpenTelemetry Instrumentation for Django"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-instrumentation-wsgi = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+opentelemetry-util-http = "0.33b0"
+
+[package.extras]
+asgi = ["opentelemetry-instrumentation-asgi (==0.33b0)"]
+instruments = ["django (>=1.10)"]
+test = ["opentelemetry-test-utils (==0.33b0)", "django (>=1.10)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-logging"
+version = "0.33b0"
+description = "OpenTelemetry Logging instrumentation"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+
+[package.extras]
+test = ["opentelemetry-test-utils (==0.33b0)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-redis"
+version = "0.33b0"
+description = "OpenTelemetry Redis instrumentation"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+wrapt = ">=1.12.1"
+
+[package.extras]
+instruments = ["redis (>=2.6)"]
+test = ["opentelemetry-test-utils (==0.33b0)", "opentelemetry-sdk (>=1.3,<2.0)", "redis (>=2.6)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-requests"
+version = "0.33b0"
+description = "OpenTelemetry requests instrumentation"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+opentelemetry-util-http = "0.33b0"
+
+[package.extras]
+instruments = ["requests (>=2.0,<3.0)"]
+test = ["opentelemetry-test-utils (==0.33b0)", "httpretty (>=1.0,<2.0)", "requests (>=2.0,<3.0)"]
+
+[[package]]
+name = "opentelemetry-instrumentation-wsgi"
+version = "0.33b0"
+description = "WSGI Middleware for OpenTelemetry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.12,<2.0"
+opentelemetry-instrumentation = "0.33b0"
+opentelemetry-semantic-conventions = "0.33b0"
+opentelemetry-util-http = "0.33b0"
+
+[package.extras]
+test = ["opentelemetry-test-utils (==0.33b0)"]
+
+[[package]]
+name = "opentelemetry-proto"
+version = "1.12.0"
+description = "OpenTelemetry Python Proto"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+protobuf = ">=3.13,<4.0"
+
+[[package]]
+name = "opentelemetry-sdk"
+version = "1.12.0"
+description = "OpenTelemetry Python SDK"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+dataclasses = {version = "0.8", markers = "python_version < \"3.7\""}
+opentelemetry-api = "1.12.0"
+opentelemetry-semantic-conventions = "0.33b0"
+typing-extensions = ">=3.7.4"
+
+[[package]]
+name = "opentelemetry-semantic-conventions"
+version = "0.33b0"
+description = "OpenTelemetry Semantic Conventions"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "opentelemetry-util-http"
+version = "0.33b0"
+description = "Web util for OpenTelemetry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -665,8 +1065,27 @@ python-versions = ">=3.6"
 importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 
 [package.extras]
-testing = ["pytest-benchmark", "pytest"]
-dev = ["tox", "pre-commit"]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
+
+[[package]]
+name = "prometheus-client"
+version = "0.15.0"
+description = "Python client for the Prometheus monitoring system."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+twisted = ["twisted"]
+
+[[package]]
+name = "protobuf"
+version = "3.19.4"
+description = "Protocol Buffers"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "py"
@@ -905,6 +1324,22 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "thrift"
+version = "0.16.0"
+description = "Python bindings for the Apache Thrift RPC system"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.7.2"
+
+[package.extras]
+all = ["tornado (>=4.0)", "twisted"]
+tornado = ["tornado (>=4.0)"]
+twisted = ["twisted"]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1013,19 +1448,18 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "449ddcd4e48e49d3013082e18234a9bc3b176879d9241bd9d411fe368869deb4"
+content-hash = "dffd4b87681b9fb762ac9f01b5d4fae6330c354bb3f3c5cc6d20af7ed1fbf937"
 
 [metadata.files]
+aiocontextvars = []
 amqp = []
 apigw-manager = []
 appdirs = []
 atomicwrites = []
 attrs = []
+backoff = []
 billiard = []
-bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-1.4.1.tar.gz", hash = "sha256:ba83a7411f536399c15bbe2afe15f8908d5cd8079f5ead83649582d7dc15d7d4"},
-    {file = "bk_plugin_runtime-1.4.1-py3-none-any.whl", hash = "sha256:f307b09777a0e67f20f5433f84a1ffcc6dad46e131d7f45d42aa7f240d30e4bb"},
-]
+bk-plugin-runtime = []
 bkapi-bk-apigateway = []
 bkapi-client-core = []
 bkoauth = []
@@ -1037,6 +1471,7 @@ cffi = []
 charset-normalizer = []
 click = []
 colorama = []
+contextvars = []
 coreapi = []
 coreschema = []
 coverage = []
@@ -1044,17 +1479,22 @@ cryptography = []
 curlify = []
 dataclasses = []
 ddtrace = []
+deprecated = []
 django = []
 django-celery-beat = []
 django-celery-results = []
 django-cors-headers = []
 django-dbconn-retry = []
+django-prometheus = []
 django-timezone-field = []
 djangorestframework = []
 drf-yasg = []
 future = []
+googleapis-common-protos = []
+grpcio = []
 gunicorn = []
 idna = []
+immutables = []
 importlib-metadata = []
 inflection = []
 iniconfig = []
@@ -1066,9 +1506,30 @@ markupsafe = []
 msgpack-python = []
 mypy-extensions = []
 mysqlclient = []
+opentelemetry-api = []
+opentelemetry-exporter-jaeger = []
+opentelemetry-exporter-jaeger-proto-grpc = []
+opentelemetry-exporter-jaeger-thrift = []
+opentelemetry-exporter-otlp = []
+opentelemetry-exporter-otlp-proto-grpc = []
+opentelemetry-exporter-otlp-proto-http = []
+opentelemetry-instrumentation = []
+opentelemetry-instrumentation-celery = []
+opentelemetry-instrumentation-dbapi = []
+opentelemetry-instrumentation-django = []
+opentelemetry-instrumentation-logging = []
+opentelemetry-instrumentation-redis = []
+opentelemetry-instrumentation-requests = []
+opentelemetry-instrumentation-wsgi = []
+opentelemetry-proto = []
+opentelemetry-sdk = []
+opentelemetry-semantic-conventions = []
+opentelemetry-util-http = []
 packaging = []
 pathspec = []
 pluggy = []
+prometheus-client = []
+protobuf = []
 py = []
 pycparser = []
 pycryptodome = []
@@ -1090,6 +1551,7 @@ requests = []
 "ruamel.yaml.clib" = []
 six = []
 sqlparse = []
+thrift = []
 toml = []
 tomli = []
 typed-ast = []
