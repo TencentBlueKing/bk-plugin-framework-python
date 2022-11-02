@@ -12,10 +12,12 @@ specific language governing permissions and limitations under the License.
 import json
 import logging
 import random
+import time
 
 from celery import task, current_app
 
 from bk_plugin_framework.kit import State
+from bk_plugin_framework.metrics import BK_PLUGIN_CALLBACK_EXCEPTION_COUNT, HOSTNAME, BK_PLUGIN_CALLBACK_TIME
 from bk_plugin_framework.utils import local
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.hub import VersionHub
@@ -45,6 +47,8 @@ def callback(trace_id: str, callback_id: str, callback_data: str):
             )
             return
 
+        start = time.perf_counter()
+
         local.set_trace_id(trace_id)
 
         try:
@@ -71,5 +75,9 @@ def callback(trace_id: str, callback_id: str, callback_data: str):
         try:
             executor.schedule(plugin_cls=plugin_cls, schedule=schedule, callback_info=callback_info)
         except Exception:
+            BK_PLUGIN_CALLBACK_EXCEPTION_COUNT.labels(hostname=HOSTNAME, version=schedule.plugin_version).inc()
             logger.exception("[callback_task] executor schedule raise unexpected error")
             _set_schedule_state(trace_id=trace_id, state=State.FAIL)
+
+        BK_PLUGIN_CALLBACK_TIME.labels(hostname=HOSTNAME, version=schedule.plugin_version).observe(
+            time.perf_counter() - start)
