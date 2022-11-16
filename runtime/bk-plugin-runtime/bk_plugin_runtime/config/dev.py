@@ -82,6 +82,12 @@ default.logging_addition_settings(LOGGING)  # noqa
 # 本地开发豁免 APIGW 来源校验
 BK_APIGW_REQUIRE_EXEMPT = True
 
+# 插件开发者自定义配置变量
+try:
+    from bk_plugin.settings import *  # noqa
+except ImportError:
+    pass
+
 # 多人开发时，无法共享的本地配置可以放到新建的 local_settings.py 文件中
 # 并且把 local_settings.py 加入版本管理忽略文件中
 try:

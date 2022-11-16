@@ -21,3 +21,9 @@ else:
 RUN_MODE = "PRODUCT"
 
 default.logging_addition_settings(LOGGING)  # noqa
+
+# 插件开发者自定义配置变量
+try:
+    from bk_plugin.settings import *  # noqa
+except ImportError:
+    pass

@@ -25,27 +25,8 @@ BK_APIGW_REQUIRE_EXEMPT = os.getenv("BK_APIGW_REQUIRE_EXEMPT", None) is not None
 
 default.logging_addition_settings(LOGGING)  # noqa
 
-# 正式环境的日志级别可以在这里配置
-# V2
-# import logging
-# logging.getLogger('root').setLevel('INFO')
-# V3
-# import logging
-# logging.getLogger('app').setLevel('INFO')
-
-
-# 预发布环境数据库可以在这里配置
-# 默认 default 请不要修改，如果使用了外部数据库，请联系【蓝鲸助手】授权
-# DATABASES.update(
-#     {
-#         # 外部数据库授权，请联系 【蓝鲸助手】
-#         'external_db': {
-#             'ENGINE': 'django.db.backends.mysql',
-#             'NAME': '',  # 外部数据库名
-#             'USER': '',  # 外部数据库用户
-#             'PASSWORD': '',  # 外部数据库密码
-#             'HOST': '',  # 外部数据库主机
-#             'PORT': '',  # 外部数据库端口
-#         },
-#     }
-# )
+# 插件开发者自定义配置变量
+try:
+    from bk_plugin.settings import *  # noqa
+except ImportError:
+    pass
