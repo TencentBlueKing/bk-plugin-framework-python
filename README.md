@@ -672,9 +672,37 @@ bk_plugin
 
 ## 插件配置
 
-如果需要修改一些插件的配置，可以通过以下环境变量进行相应的配置
+如果需要修改一些插件的运行时配置，可以在插件代码中进行自定义。
 
-- SCHEDULE_PERSISITEN_DAYS：插件调度的过期时间，单位为天；周期任务每天执行一次清理(成功/失败)的过期插件调度记录
+首先，在插件目录中添加 `settings.py` 文件，配置之后目录如下
+```
+bk_plugin
+├── __init__.py
+├── forms
+├── versions
+├── meta.py
+└── settings.py
+```
+
+然后，在 `settings.py` 文件中添加配置项，如下所示：
+
+```py
+import os
+
+# 从环境变量中获取配置项
+TEST_ENV = os.getenv("TEST_ENV", "test")
+```
+
+在对应的地方使用该配置项，如在 `versions/v1_0_0.py` 中使用：
+
+```py
+from django.conf import settings
+
+class MyPlugin(Plugin):
+    ...
+    def execute(self, inputs: Inputs, context: Context):
+        context.outputs["env"] = settings.TEST_ENV
+```
 
 # 6. 🔬如何在本地调试插件
 
