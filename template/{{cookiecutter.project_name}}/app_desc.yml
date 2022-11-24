@@ -5,7 +5,7 @@ modules:
     is_default: true
     env_variables:
       - key: PIP_VERSION
-        value: 21.0
+        value: 21.2.2
         description: pip version control
       - key: BK_APIGW_MANAGER_URL_TMPL
         value: {{cookiecutter.apigw_manager_url_tmpl}}
