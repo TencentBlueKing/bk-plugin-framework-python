@@ -20,7 +20,7 @@ def login_exempt(view_func):
     def wrapped_view(*args, **kwargs):
         return view_func(*args, **kwargs)
 
-    wrapped_view.login_exempt = settings.BKPAAS_ENVIRONMENT != "dev"
+    wrapped_view.login_exempt = settings.BKPAAS_ENVIRONMENT == "dev"
     return wraps(view_func)(wrapped_view)
 
 
