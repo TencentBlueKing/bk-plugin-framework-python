@@ -22,7 +22,11 @@ paths:
         backend:
           type: HTTP
           method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/invoke/{version}
+          {% else %}
           path: /bk_plugin/invoke/{version}
+          {% endif %}
           matchSubpath: false
           timeout: 0
           upstreams: {}
@@ -45,7 +49,11 @@ paths:
         backend:
           type: HTTP
           method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/plugin_api_dispatch/
+          {% else %}
           path: /bk_plugin/plugin_api_dispatch/
+          {% endif %}
           matchSubpath: false
           timeout: 0
           upstreams: {}
@@ -68,7 +76,11 @@ paths:
         backend:
           type: HTTP
           method: any
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/plugin_api/
+          {% else %}
           path: /bk_plugin/plugin_api/
+          {% endif %}
           matchSubpath: true
           timeout: 0
           upstreams: {}
