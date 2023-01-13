@@ -12,6 +12,7 @@ max-complexity = 25
 
 ; exclude file
 exclude =
+    packages,
     .tox,
     .git,
     __pycache__,
