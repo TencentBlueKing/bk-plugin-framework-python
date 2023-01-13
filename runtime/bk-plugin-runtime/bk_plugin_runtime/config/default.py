@@ -10,7 +10,9 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-import os
+import json
+import urllib
+
 from blueapps.conf.log import get_logging_config_dict
 from blueapps.conf.default_settings import *  # noqa
 
@@ -215,6 +217,13 @@ def logging_addition_settings(logging_dict):
 # BK SOPS RELATE
 BK_SOPS_APP_CODE = os.getenv("BK_SOPS_APP_CODE")
 
+# ESB SDK
+ESB_SDK_NAME = (
+    "bk_plugin_runtime.packages.blueking.component"
+    if os.getenv("BKPAAS_ENGINE_REGION", "open") != "ieod"
+    else None
+)
+
 # APIGW MANAGER
 BK_APP_CODE = os.getenv("BKPAAS_APP_ID")
 BK_APP_SECRET = os.getenv("BKPAAS_APP_SECRET")
@@ -222,7 +231,11 @@ BK_APIGW_NAME = os.getenv("BKPAAS_BK_PLUGIN_APIGW_NAME")
 # 兼容旧版环境变量
 BK_API_URL_TMPL = os.getenv("BK_APIGW_MANAGER_URL_TMPL") or os.getenv("BK_APIGW_MANAGER_URL_TEMPL")
 BK_PLUGIN_APIGW_STAGE_NAME = BKPAAS_ENVIRONMENT
-BK_PLUGIN_APIGW_BACKEND_HOST = os.getenv("BKPAAS_ENGINE_APP_DEFAULT_SUBDOMAINS", "").split(";")[0]
+
+BK_PLUGIN_APIGW_BACKEND_HOST = json.loads(os.getenv("BKPAAS_DEFAULT_PREALLOCATED_URLS", "{}")).get(BKPAAS_ENVIRONMENT)
+url_parse = urllib.parse.urlparse(BK_PLUGIN_APIGW_BACKEND_HOST)
+BK_PLUGIN_APIGW_BACKEND_NETLOC = url_parse.netloc
+BK_PLUGIN_APIGW_BACKEND_SUB_PATH = url_parse.path.lstrip("/")
 
 BK_APIGW_CORS_ALLOW_ORIGINS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "").split(",") if s]
 BK_APIGW_CORS_ALLOW_METHODS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "").split(",") if s]

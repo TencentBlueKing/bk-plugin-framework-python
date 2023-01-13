@@ -41,7 +41,7 @@ APP_CODE = get_env_or_raise("BKPAAS_APP_ID")
 SECRET_KEY = get_env_or_raise("BKPAAS_APP_SECRET")
 
 # SaaS运行版本，如非必要请勿修改
-RUN_VER = "ieod"
+RUN_VER = "ieod" if os.getenv("BKPAAS_ENGINE_REGION", "open") == "ieod" else "open"
 # 蓝鲸SaaS平台URL，例如 http://paas.bking.com
 BK_URL = None
 
