@@ -1,12 +1,17 @@
 stage:
   name: {{ settings.BK_PLUGIN_APIGW_STAGE_NAME }}
+  {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+  vars:
+    api_sub_path: {{ settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH }}
+  {% else %}
   vars: {}
+  {% endif %}
   proxy_http:
     timeout: 60
     upstreams:
       loadbalance: "roundrobin"
       hosts:
-        - host: "http://{{ settings.BK_PLUGIN_APIGW_BACKEND_HOST }}/"
+        - host: "http://{{ settings.BK_PLUGIN_APIGW_BACKEND_NETLOC }}/"
           weight: 100
 
 release:
