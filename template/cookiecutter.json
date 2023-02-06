@@ -1,14 +1,15 @@
 {
-    "project_name": "my_plugin",
-    "app_code": "the app code of plugin saas",
-    "plugin_desc": "the description of this plugin",
-    "init_admin": "init admin username",
-    "init_apigw_maintainer": "admin",
-    "apigw_manager_url_tmpl": "bk apigw manager url template",
-    "apigw_cors_allow_origins": "''",
-    "apigw_cors_allow_methods": "GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS",
-    "apigw_cors_allow_headers": "Accept,Cache-Control,Content-Type,Keep-Alive,Origin,User-Agent,X-Requested-With",
-    "_copy_without_render": [
-        ".ci"
-    ]
+  "project_name": "my_plugin",
+  "app_code": "the app code of plugin saas",
+  "plugin_desc": "the description of this plugin",
+  "init_admin": "init admin username",
+  "init_apigw_maintainer": "admin",
+  "apigw_manager_url_tmpl": "bk apigw manager url template",
+  "enable_otel_metrics": "no",
+  "apigw_cors_allow_origins": "''",
+  "apigw_cors_allow_methods": "GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS",
+  "apigw_cors_allow_headers": "Accept,Cache-Control,Content-Type,Keep-Alive,Origin,User-Agent,X-Requested-With",
+  "_copy_without_render": [
+    ".ci"
+  ]
 }
