@@ -1,1 +1,1 @@
-description = "{{cookiecutter.plugin_desc}}"
+description = "{{cookiecutter.plugin_desc}}" # noqa
