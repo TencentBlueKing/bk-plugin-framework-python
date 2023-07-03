@@ -1,6 +1,6 @@
 import logging
 
-from bk_plugin_framework.kit import (
+from bk_plugin_framework.kit import ( # noqa
     Plugin,
     InputsModel,
     OutputsModel,
