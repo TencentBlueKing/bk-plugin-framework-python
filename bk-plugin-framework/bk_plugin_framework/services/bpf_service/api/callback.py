@@ -23,7 +23,7 @@ from apigw_manager.apigw.decorators import apigw_require
 
 from bk_plugin_framework.runtime.callback.api import parse_callback_token, callback
 
-logger = logging.getLogger("bk-plugin")
+logger = logging.getLogger("bk_plugin")
 
 
 @method_decorator(login_exempt, name="dispatch")
