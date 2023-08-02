@@ -17,7 +17,7 @@ import logging
 from pydantic import BaseSettings
 from django.conf import settings as default_settings
 
-logger = logging.getLogger("bk-plugin")
+logger = logging.getLogger("bk_plugin")
 
 
 def compute_settings(settings: BaseSettings) -> dict:
