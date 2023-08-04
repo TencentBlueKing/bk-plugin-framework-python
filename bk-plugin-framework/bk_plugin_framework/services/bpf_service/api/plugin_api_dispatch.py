@@ -31,7 +31,7 @@ from apigw_manager.apigw.decorators import apigw_require
 
 from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
 
-logger = logging.getLogger("bk-plugin")
+logger = logging.getLogger("bk_plugin")
 
 CUSTOM_REQUEST_HEADER_REGEX = re.compile("HTTP_BK_PLUGIN_*")
 

@@ -29,7 +29,7 @@ from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
 
-logger = logging.getLogger("bk-plugin")
+logger = logging.getLogger("bk_plugin")
 
 
 class InvokeParamsSerializer(serializers.Serializer):

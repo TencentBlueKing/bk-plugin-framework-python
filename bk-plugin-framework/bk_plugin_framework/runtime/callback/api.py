@@ -21,7 +21,7 @@ from bk_plugin_framework.envs import settings
 from bk_plugin_framework.runtime.schedule.models import Schedule
 from bk_plugin_framework.constants import State
 
-logger = logging.getLogger("bk-plugin")
+logger = logging.getLogger("bk_plugin")
 
 
 class CallbackPreparation(object):
