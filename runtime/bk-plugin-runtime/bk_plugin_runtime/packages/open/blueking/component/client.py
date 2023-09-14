@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """Component API Client
 """
-import requests
 import json
-import time
-import random
 import logging
+import random
+import time
 
+import requests
+
+from . import collections, conf
 from .compat import urlparse
-from . import conf
-from . import collections
 from .utils import get_signature
 
 # shutdown urllib3's warning
