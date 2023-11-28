@@ -38,6 +38,11 @@ class OutputsModel(BaseModel):
     pass
 
 
+class PluginCallbackModel(BaseModel):
+    url: str
+    data: dict
+
+
 class ContextRequire(BaseModel):
     pass
 
@@ -75,6 +80,9 @@ class Context:
             "data": self.data.dict(),
         }
 
+    @property
+    def plugin_callback_info(self) -> typing.Optional[PluginCallbackModel]:
+        return getattr(self.data, "plugin_callback_info", None)
 
 class PluginMeta(type):
     def __new__(cls, name, bases, dct):
@@ -187,6 +195,7 @@ class Plugin(metaclass=PluginMeta):
         data = {
             "desc": getattr(cls.Meta, "desc", ""),
             "version": cls.Meta.version,
+            "enable_plugin_callback": getattr(cls.Meta, "enable_plugin_callback", False),
             "inputs": cls._EMPTY_SCHEMA,
             "outputs": cls._EMPTY_SCHEMA,
             "context_inputs": cls._EMPTY_SCHEMA,

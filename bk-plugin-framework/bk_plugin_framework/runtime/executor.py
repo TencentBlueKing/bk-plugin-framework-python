@@ -19,10 +19,21 @@ from pydantic import ValidationError
 from django.utils.timezone import now
 
 from bk_plugin_framework.kit import Plugin, Context, State, InputsModel, ContextRequire, Callback
-from bk_plugin_framework.metrics import HOSTNAME, BK_PLUGIN_EXECUTE_FAILED_COUNT, BK_PLUGIN_EXECUTE_EXCEPTION_COUNT, \
-    BK_PLUGIN_SCHEDULE_FAILED_COUNT, BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT, setup_gauge, setup_histogram, \
-    BK_PLUGIN_EXECUTE_RUNNING_PROCESSES, BK_PLUGIN_EXECUTE_TIME, BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES, \
-    BK_PLUGIN_SCHEDULE_TIME
+from bk_plugin_framework.kit.plugin import PluginCallbackModel
+from bk_plugin_framework.metrics import (
+    HOSTNAME,
+    BK_PLUGIN_EXECUTE_FAILED_COUNT,
+    BK_PLUGIN_EXECUTE_EXCEPTION_COUNT,
+    BK_PLUGIN_SCHEDULE_FAILED_COUNT,
+    BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT,
+    setup_gauge,
+    setup_histogram,
+    BK_PLUGIN_EXECUTE_RUNNING_PROCESSES,
+    BK_PLUGIN_EXECUTE_TIME,
+    BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES,
+    BK_PLUGIN_SCHEDULE_TIME,
+)
+from bk_plugin_framework.runtime.callbacker import PluginCallbacker
 from bk_plugin_framework.runtime.schedule.models import Schedule
 
 logger = logging.getLogger("bk_plugin")
@@ -65,10 +76,17 @@ class BKPluginExecutor:
         except Exception:
             logger.exception("[execute] set schedule state error")
 
+    def _plugin_finish_callback(self, plugin_cls: Plugin, plugin_callback_info: typing.Optional[PluginCallbackModel]):
+        if getattr(plugin_cls.Meta, "enable_plugin_callback", False) is False or plugin_callback_info is None:
+            return
+        PluginCallbacker(
+            callback_url=plugin_callback_info.url, callback_data=plugin_callback_info.data
+        ).callback_with_retry()
+
     @setup_gauge(BK_PLUGIN_EXECUTE_RUNNING_PROCESSES)
     @setup_histogram(BK_PLUGIN_EXECUTE_TIME)
     def execute(
-            self, plugin_cls: Plugin, inputs: typing.Dict[str, typing.Any], context_inputs: typing.Dict[str, typing.Any]
+        self, plugin_cls: Plugin, inputs: typing.Dict[str, typing.Any], context_inputs: typing.Dict[str, typing.Any]
     ) -> ExecuteResult:
 
         # user inputs validation
@@ -164,7 +182,6 @@ class BKPluginExecutor:
     @setup_gauge(BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES)
     @setup_histogram(BK_PLUGIN_SCHEDULE_TIME)
     def schedule(self, plugin_cls: Plugin, schedule: Schedule, callback_info: dict = {}):
-
         # load schedule data
         logger.info("[schedule] load schedule data")
         try:
@@ -241,6 +258,7 @@ class BKPluginExecutor:
         except Exception:
             logger.exception("[execute] schedule data json dumps error")
             self._set_schedule_state(trace_id=schedule.trace_id, state=State.FAIL)
+            self._plugin_finish_callback(plugin_cls, context.plugin_callback_info)
             return
 
         if execute_fail:
@@ -282,6 +300,7 @@ class BKPluginExecutor:
         except Exception:
             logger.exception("[schedule] schedule object update error")
             self._set_schedule_state(trace_id=schedule.trace_id, state=State.FAIL)
+            self._plugin_finish_callback(plugin_cls, context.plugin_callback_info)
             return
 
         try:
@@ -298,6 +317,9 @@ class BKPluginExecutor:
             logger.exception("[schedule] schedule task dispatch error")
             # set failed to prevent infinity poll at caller side
             self._set_schedule_state(trace_id=schedule.trace_id, state=State.FAIL)
+            self._plugin_finish_callback(plugin_cls, context.plugin_callback_info)
             return
 
+        if execute_fail or unexpected_error_raise or not (plugin.is_wating_poll or plugin.is_waiting_callback):
+            self._plugin_finish_callback(plugin_cls, context.plugin_callback_info)
         logger.info("[schedule] plugin execute schedule done")
