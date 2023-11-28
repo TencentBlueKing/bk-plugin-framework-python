@@ -20,7 +20,6 @@ class PluginCallbacker:
             return False
         return True
 
-
     def callback(self, *args, **kwargs):
         try:
             logger.info(f"[plugin callback]: url={self.callback_url}, data={self.callback_data}")
@@ -40,4 +39,7 @@ class PluginCallbacker:
                 logger.exception(f"[plugin callback with retry] callback {i+1} times failed: {e}")
             else:
                 return
-        logger.error(f"[plugin callback with retry] retry {retry_times} times failed with {self.callback_url} and {self.callback_data}")
+        logger.error(
+            f"[plugin callback with retry] retry {retry_times} times "
+            f"failed with {self.callback_url} and {self.callback_data}"
+        )
