@@ -34,7 +34,7 @@ def compute_settings(settings: BaseSettings) -> dict:
         logger.exception("get CALLBACK_KEY fail")
         raise Exception(e)
 
-    callback_host = "http://{}".format(default_settings.BK_PLUGIN_APIGW_BACKEND_HOST)
+    callback_host = default_settings.BK_API_URL_TMPL.format(api_name=default_settings.BK_APIGW_NAME)
 
     BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
     BKPAAS_ENGINE_REGION = os.getenv("BKPAAS_ENGINE_REGION", "open")

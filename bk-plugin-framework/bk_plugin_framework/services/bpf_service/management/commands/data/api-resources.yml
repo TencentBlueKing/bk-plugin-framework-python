@@ -89,3 +89,30 @@ paths:
           userVerifiedRequired: true
           appVerifiedRequired: false
         disabledStages: []
+  /callback/{token}/:
+    post:
+      operationId: callback
+      description: callback plugin
+      tags: []
+      responses:
+        default:
+          description: ''
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          type: HTTP
+          method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/callback/{token}/
+          {% else %}
+          path: /bk_plugin/callback/{token}/
+          {% endif %}
+          matchSubpath: false
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        authConfig:
+          userVerifiedRequired: false
+        disabledStages: []

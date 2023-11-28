@@ -14,6 +14,7 @@ import time
 import json
 import logging
 
+from django.conf import settings as default_settings
 from celery import current_app
 from cryptography.fernet import Fernet
 
@@ -83,7 +84,9 @@ def prepare_callback(trace_id: str) -> CallbackPreparation:
 
     f = Fernet(settings.BK_PLUGIN_CALLBACK_KEY)
     token = f.encrypt(bytes("{}:{}".format(callback_id, trace_id), encoding="utf8")).decode()
-    callback_url = "{}/bk_plugin/callback/{}/".format(settings.BK_PLUGIN_CALLBACK_HOST, token)
+    callback_url = "{}/{}/callback/{}/".format(
+        settings.BK_PLUGIN_CALLBACK_HOST.rstrip("/"), default_settings.BK_PLUGIN_APIGW_STAGE_NAME, token
+    )
 
     return CallbackPreparation(callback_id, callback_url)
 
