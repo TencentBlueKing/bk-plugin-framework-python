@@ -234,6 +234,30 @@ class SopsExecPlugin(Plugin):
     ...
 ```
 
+### 回调插件使用系统
+
+如果**插件使用系统**支持接收蓝鲸插件的回调协议，则只需要添加两个配置，蓝鲸插件就可以在执行完成后回调**插件使用系统**（回调结果不影响插件任务执行结果），这样做的收益在于可以缓解因为**插件使用系统**不断轮询而带来的请求压力。
+
+```python
+
+from bk_plugin_framework.kit import Plugin, ContextRequire, Field
+from bk_plugin_framework.kit.plugin import PluginCallbackModel
+
+class SopsExecPlugin(Plugin):
+
+    ...
+    class Meta:
+        ...
+        enable_plugin_callback = True
+        ...
+
+    class ContextInputs(ContextRequire):
+        ...
+        plugin_callback_info: PluginCallbackModel = Field(title="任务回调信息")
+        ...
+    ...
+```
+
 
 ## 插件初始化方法(可选)
 
