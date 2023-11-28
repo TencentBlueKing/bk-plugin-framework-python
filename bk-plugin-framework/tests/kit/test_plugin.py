@@ -152,6 +152,7 @@ class TestPlugin:
         assert my_plugin_cls.dict() == {
             "desc": "",
             "version": my_plugin_cls.Meta.version,
+            "enable_plugin_callback": False,
             "inputs": {
                 "type": my_plugin_cls.Inputs.schema()["type"],
                 "properties": my_plugin_cls.Inputs.schema()["properties"],
@@ -175,6 +176,7 @@ class TestPlugin:
         assert my_plugin_cls.dict() == {
             "desc": "",
             "version": my_plugin_cls.Meta.version,
+            "enable_plugin_callback": False,
             "inputs": {
                 "type": my_plugin_cls.Inputs.schema()["type"],
                 "properties": my_plugin_cls.Inputs.schema()["properties"],
