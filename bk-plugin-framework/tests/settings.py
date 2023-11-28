@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 SECRET_KEY = "SECRET_KEY"
 BK_APP_SECRET = "1" * 52
 BK_PLUGIN_APIGW_BACKEND_HOST = ""
+BK_API_URL_TMPL = "{api_name}.apigw.com"
+BK_APIGW_NAME = "APP_CODE"
+BK_PLUGIN_APIGW_STAGE_NAME = "stag"
 
 INSTALLED_APPS = (
     "bk_plugin_framework.runtime.loghub",
