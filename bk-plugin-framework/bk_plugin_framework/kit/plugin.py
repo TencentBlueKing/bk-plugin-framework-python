@@ -84,6 +84,7 @@ class Context:
     def plugin_callback_info(self) -> typing.Optional[PluginCallbackModel]:
         return getattr(self.data, "plugin_callback_info", None)
 
+
 class PluginMeta(type):
     def __new__(cls, name, bases, dct):
         # ensure initialization is only performed for subclasses of Plugin
