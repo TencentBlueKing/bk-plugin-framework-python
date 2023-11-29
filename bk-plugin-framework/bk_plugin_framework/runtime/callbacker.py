@@ -23,7 +23,12 @@ class PluginCallbacker:
     def callback(self, *args, **kwargs):
         try:
             logger.info(f"[plugin callback]: url={self.callback_url}, data={self.callback_data}")
-            response = requests.post(url=self.callback_url, data=json.dumps(self.callback_data), verify=False)
+            response = requests.post(
+                url=self.callback_url,
+                data=json.dumps(self.callback_data),
+                headers={"Content-Type": "application/json"},
+                verify=False,
+            )
             response.raise_for_status()
             if self._check_response_with_result(response.json()) is False:
                 raise HTTPError(f"[plugin callback] response with result False: {response.json()}")
