@@ -31,13 +31,18 @@ def compute_settings(settings: BaseSettings) -> dict:
             hashlib.sha256(default_settings.BK_APP_SECRET.encode("utf-8")).hexdigest()[:32].encode()
         )
     except Exception as e:
-        logger.exception("get CALLBACK_KEY fail")
-        raise Exception(e)
-
-    callback_host = default_settings.BK_API_URL_TMPL.format(api_name=default_settings.BK_APIGW_NAME)
+        logger.exception(f"get CALLBACK_KEY fail: {e}")
+        raise
 
     BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
     BKPAAS_ENGINE_REGION = os.getenv("BKPAAS_ENGINE_REGION", "open")
+
+    try:
+        callback_host = default_settings.BK_API_URL_TMPL.format(api_name=default_settings.BK_APIGW_NAME)
+    except Exception as e:
+        logger.exception(f"set callback_host fail: {e}")
+        if BKPAAS_ENVIRONMENT != "dev":
+            raise
 
     if BKPAAS_ENGINE_REGION == "ieod":
         user_token_key_name = "bk_ticket" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
