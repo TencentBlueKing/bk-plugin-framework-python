@@ -98,7 +98,7 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.0.4"
+version = "2.0.5"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
