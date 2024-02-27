@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bk-plugin-framework"
-version = "2.1.1"
+version = "2.2.0"
 description = "bk plugin python framework"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
