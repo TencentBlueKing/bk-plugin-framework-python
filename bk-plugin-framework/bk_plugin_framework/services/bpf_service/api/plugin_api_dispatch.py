@@ -18,7 +18,6 @@ from django.test import RequestFactory
 from django.urls import resolve, Resolver404
 from django.utils.decorators import method_decorator
 from rest_framework import status
-from rest_framework import permissions
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -29,6 +28,7 @@ from drf_yasg.utils import swagger_auto_schema
 from blueapps.account.decorators import login_exempt
 from apigw_manager.apigw.decorators import apigw_require
 
+from bk_plugin_framework.services.bpf_service.api.permissions import ScopeAllowPermission
 from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
 
 logger = logging.getLogger("bk_plugin")
@@ -67,7 +67,7 @@ class DummyUser(object):
 @method_decorator(apigw_require, name="dispatch")
 class PluginAPIDispatch(APIView):
     authentication_classes = []  # csrf exempt
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [ScopeAllowPermission]
 
     @swagger_auto_schema(
         method="POST",

@@ -72,8 +72,10 @@ class Meta(APIView):
             meta_module = import_module("bk_plugin.meta")
         except ImportError:
             description = ""
+            allow_scope = {}
         else:
             description = getattr(meta_module, "description", "")
+            allow_scope = getattr(meta_module, "allow_scope", {})
 
         return Response(
             {
@@ -85,6 +87,7 @@ class Meta(APIView):
                     "description": description,
                     "framework_version": FRAMEWORK_VERSION,
                     "runtime_version": RUNTIME_VERSION,
+                    "allow_scope": allow_scope,
                 },
                 "message": "",
             }
