@@ -275,7 +275,10 @@ allow_scope = {
 
 上面的配置表示允许插件使用系统业务 1 和业务 2 调用 invoke 接口运行任务，其他的情况接口都会返回 403。
 
-__注意__: 该功能需要插件使用系统支持，在调用 invoke 接口时设置请求头 `Bkplugin-Scope-Type` 和 `Bkplugin-Scope-Value`。 如果不希望进行限制，请不要进行该配置。
+__注意__:
+1. 该功能需要插件使用系统支持，在调用 invoke 接口时设置请求头 `Bkplugin-Scope-Type` 和 `Bkplugin-Scope-Value`。 
+2. 如果不希望进行限制，请不要进行该配置。
+3. 如果插件开放给了特定插件使用系统，但是没有配置 allow_scope，默认全部请求通过。
 
 ## 插件初始化方法(可选)
 
