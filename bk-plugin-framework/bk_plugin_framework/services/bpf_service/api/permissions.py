@@ -26,8 +26,10 @@ class ScopeAllowPermission(BasePermission):
             return True
 
         bk_app_code = request.app.bk_app_code
+
+        # 如果没有进行使用方配置，则默认放行，如果不希望放行在插件开发者中心配置即可
         if bk_app_code not in allow_scope:
-            return False
+            return True
 
         scope_type = request.headers.get("Bkplugin-Scope-Type")
         scope_value = request.headers.get("Bkplugin-Scope-Value")
