@@ -40,8 +40,8 @@ def compute_settings(settings: BaseSettings) -> dict:
     try:
         callback_host = default_settings.BK_API_URL_TMPL.format(api_name=default_settings.BK_APIGW_NAME)
     except Exception as e:
-        logger.exception(f"set callback_host fail: {e}")
         if BKPAAS_ENVIRONMENT != "dev":
+            logger.exception(f"set callback_host fail: {e}")
             raise
 
     if BKPAAS_ENGINE_REGION == "ieod":
