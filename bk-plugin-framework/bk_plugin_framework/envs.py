@@ -43,6 +43,7 @@ def compute_settings(settings: BaseSettings) -> dict:
         if BKPAAS_ENVIRONMENT != "dev":
             logger.exception(f"set callback_host fail: {e}")
             raise
+        callback_host = ""
 
     if BKPAAS_ENGINE_REGION == "ieod":
         user_token_key_name = "bk_ticket" if BKPAAS_ENVIRONMENT == "dev" else "jwt"
