@@ -241,6 +241,7 @@ BK_PLUGIN_APIGW_BACKEND_HOST = json.loads(os.getenv("BKPAAS_DEFAULT_PREALLOCATED
 url_parse = urllib.parse.urlparse(BK_PLUGIN_APIGW_BACKEND_HOST)
 BK_PLUGIN_APIGW_BACKEND_NETLOC = url_parse.netloc
 BK_PLUGIN_APIGW_BACKEND_SUB_PATH = url_parse.path.lstrip("/")
+BK_PLUGIN_APIGW_BACKEND_SCHEME = url_parse.scheme or "http"
 
 BK_APIGW_CORS_ALLOW_ORIGINS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "").split(",") if s]
 BK_APIGW_CORS_ALLOW_METHODS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "").split(",") if s]

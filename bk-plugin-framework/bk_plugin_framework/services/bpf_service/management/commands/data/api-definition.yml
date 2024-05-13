@@ -11,7 +11,7 @@ stage:
     upstreams:
       loadbalance: "roundrobin"
       hosts:
-        - host: "http://{{ settings.BK_PLUGIN_APIGW_BACKEND_NETLOC }}/"
+        - host: "{{ settings.BK_PLUGIN_APIGW_BACKEND_SCHEME }}://{{ settings.BK_PLUGIN_APIGW_BACKEND_NETLOC }}/"
           weight: 100
 
 release:
