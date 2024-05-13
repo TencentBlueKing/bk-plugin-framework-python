@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "bk-plugin-runtime"
-version = "2.0.5"
+version = "2.0.6"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
-redis = "^2.10.5"
-Django = "^2.2.6"
-gunicorn = "^19.6.0"
+python = "^3.6.1,<4.0"
+redis = ">=2.10.5,<4"
+Django = ">=2.2.6,<5"
+gunicorn = ">=19.6.0"
 djangorestframework = "^3.12.4"
 drf-yasg = "^1.20.0"
 raven = "^6.5.0"
