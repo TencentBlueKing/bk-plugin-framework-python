@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "bk-plugin-runtime"
-version = "2.0.6"
+version = "2.0.7"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.6.1,<4.0"
-redis = ">=2.10.5,<4"
+redis = ">=2.10.5,<6"
 Django = ">=2.2.6,<5"
 gunicorn = ">=19.6.0"
 djangorestframework = "^3.12.4"
@@ -16,8 +16,8 @@ raven = "^6.5.0"
 ddtrace = "^0.14.1"
 django-cors-headers = "^3.8.0"
 django-dbconn-retry = "^0.1.5"
-blueapps = {version = "4.5.0", extras = ["opentelemetry"]}
-protobuf="3.19.4"
+blueapps = {version = ">=4.5.0, <5.0", extras = ["opentelemetry"]}
+protobuf=">=3.19.4,<4.0"
 celery = "^4.4.0"
 django-celery-beat = "^2.0.0"
 django-celery-results = "^1.2.1"
