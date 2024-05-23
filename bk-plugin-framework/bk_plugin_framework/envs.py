@@ -14,7 +14,10 @@ import base64
 import hashlib
 import logging
 
-from pydantic import BaseSettings
+try:
+    from pydantic.v1 import BaseSettings
+except ImportError:
+    from pydantic import BaseSettings
 from django.conf import settings as default_settings
 
 logger = logging.getLogger("bk_plugin")

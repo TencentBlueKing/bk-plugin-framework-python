@@ -14,7 +14,10 @@ import re
 import typing
 import inspect
 
-from pydantic import BaseModel
+try:
+    from pydantic.v1 import BaseModel
+except ImportError:
+    from pydantic import BaseModel
 
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.constants import State
