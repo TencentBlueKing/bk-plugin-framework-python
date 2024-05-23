@@ -15,7 +15,11 @@ import typing
 import logging
 
 from celery import current_app
-from pydantic import ValidationError
+
+try:
+    from pydantic.v1 import ValidationError
+except ImportError:
+    from pydantic import ValidationError
 from django.utils.timezone import now
 
 from bk_plugin_framework.kit import Plugin, Context, State, InputsModel, ContextRequire, Callback
