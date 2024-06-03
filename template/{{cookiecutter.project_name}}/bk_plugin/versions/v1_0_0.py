@@ -1,13 +1,12 @@
 import logging
 
-from bk_plugin_framework.kit import ( # noqa
+from bk_plugin_framework.kit import (
     Plugin,
     InputsModel,
     OutputsModel,
     Field,
     ContextRequire,
     Context,
-    State,
 )
 
 logger = logging.getLogger("bk_plugin")

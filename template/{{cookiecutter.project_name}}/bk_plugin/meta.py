@@ -1,1 +1,1 @@
-description = "{{cookiecutter.plugin_desc}}" # noqa
+description = "{{cookiecutter.plugin_desc}}"  # pylint: disable=invalid-name
