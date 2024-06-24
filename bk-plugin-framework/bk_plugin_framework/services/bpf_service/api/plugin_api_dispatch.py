@@ -41,6 +41,7 @@ class PluginAPIDispatchParamsSerializer(serializers.Serializer):
     method = serializers.CharField(help_text="调用方法", required=True)
     username = serializers.CharField(help_text="用户名", required=True)
     data = serializers.DictField(help_text="接口数据", required=False, default={})
+    dumped_data = serializers.CharField(help_text="json dumps后的接口数据", required=False)
 
     def validate(self, values):
         if values.get("dumped_data"):
