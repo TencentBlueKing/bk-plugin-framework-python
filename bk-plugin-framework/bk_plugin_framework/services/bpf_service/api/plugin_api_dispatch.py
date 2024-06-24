@@ -9,7 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-
+import json
 import logging
 import re
 
@@ -41,6 +41,11 @@ class PluginAPIDispatchParamsSerializer(serializers.Serializer):
     method = serializers.CharField(help_text="调用方法", required=True)
     username = serializers.CharField(help_text="用户名", required=True)
     data = serializers.DictField(help_text="接口数据", required=False, default={})
+
+    def validate(self, values):
+        if values.get("dumped_data"):
+            values["data"].update(json.loads(values["dumped_data"]))
+        return values
 
     def validate_url(self, value):
         if not value.startswith("/bk_plugin/plugin_api/"):
@@ -105,13 +110,20 @@ class PluginAPIDispatch(APIView):
             # get apigw jwt info
             custom_headers["HTTP_X_BKAPI_JWT"] = request.META.get("HTTP_X_BKAPI_JWT", "")
 
-            fake_request = getattr(RequestFactory(), request_data["method"].lower())(
-                path=request_data["url"], content_type=request.content_type, data=request_data["data"], **custom_headers
-            )
-
-            # inject upload FILES
-            for f in request.FILES:
-                fake_request.FILES[f] = request.FILES[f]
+            if request.FILES:
+                fake_request = getattr(RequestFactory(), request_data["method"].lower())(
+                    path=request_data["url"], data=request_data["data"], **custom_headers
+                )
+                # inject upload FILES
+                for f in request.FILES:
+                    fake_request.FILES[f] = request.FILES[f]
+            else:
+                fake_request = getattr(RequestFactory(), request_data["method"].lower())(
+                    path=request_data["url"],
+                    content_type=request.content_type,
+                    data=request_data["data"],
+                    **custom_headers
+                )
 
             # inject APIGW jwt
             fake_request.jwt = request.jwt
