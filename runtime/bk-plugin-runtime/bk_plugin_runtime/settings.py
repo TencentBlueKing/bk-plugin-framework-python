@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 """
 
 import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 # URL 配置模块
 
