@@ -32,7 +32,18 @@ python-versions = ">=3.6"
 typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
-tests = ["pytest", "pytest-asyncio", "mypy (>=0.800)"]
+tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
+
+[[package]]
+name = "async-timeout"
+version = "4.0.2"
+description = "Timeout context manager for asyncio programs"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+typing-extensions = {version = ">=3.6.5", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "backoff"
@@ -86,7 +97,7 @@ requests = "*"
 
 [[package]]
 name = "blueapps"
-version = "4.5.0"
+version = "4.14.0"
 description = "development framework for blueking"
 category = "main"
 optional = false
@@ -94,12 +105,11 @@ python-versions = "*"
 
 [package.dependencies]
 bkoauth = ">=0.0.12"
-cryptography = ">=2.7,<3.4"
-Django = ">=2.2.6,<4.0.0"
+cryptography = ">=2.7"
+Django = ">=2.2.6,<5.0.0"
 django-prometheus = {version = ">=2.1.0,<3.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 Mako = ">=1.0.6,<2.0"
-MarkupSafe = ">=1.1.1,<2.0.0"
-mysqlclient = ">=1.4.4,<=2.0.3"
+MarkupSafe = ">=1.1.1,<3.0.0"
 opentelemetry-api = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 opentelemetry-exporter-jaeger = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 opentelemetry-exporter-jaeger-proto-grpc = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
@@ -115,13 +125,17 @@ opentelemetry-instrumentation-requests = {version = ">=0.25b2,<1.0.0", optional 
 opentelemetry-sdk = {version = ">=1.6.2,<2.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 prometheus-client = {version = ">=0.9.0,<1.0.0", optional = true, markers = "extra == \"opentelemetry\""}
 pyCryptodome = ">=3.9.7"
-PyJWT = ">=1.6.1,<2.0"
+PyJWT = ">=1.6.1,<3.0"
 python-json-logger = ">=0.1.7"
 requests = ">=2.22.0,<3.0.0"
-whitenoise = ">=3.3.0,<=5.2.0"
+Werkzeug = ">=1.0.0,<3.0.0"
+whitenoise = ">=3.3.0,<7"
 
 [package.extras]
-opentelemetry = ["opentelemetry-api (>=1.6.2,<2.0.0)", "opentelemetry-sdk (>=1.6.2,<2.0.0)", "opentelemetry-exporter-otlp (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-proto-grpc (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-thrift (>=1.6.2,<2.0.0)", "opentelemetry-instrumentation (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-celery (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-django (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-dbapi (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-redis (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-logging (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-requests (>=0.25b2,<1.0.0)", "prometheus-client (>=0.9.0,<1.0.0)", "django-prometheus (>=2.1.0,<3.0.0)"]
+apigw-manager = ["apigw-manager (>=1.1.5,<3.0.0)"]
+bk-notice = ["bk-notice-sdk (==1.1.1)"]
+bkcrypto = ["bk-crypto-python-sdk (==1.1.1)"]
+opentelemetry = ["django-prometheus (>=2.1.0,<3.0.0)", "opentelemetry-api (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-proto-grpc (>=1.6.2,<2.0.0)", "opentelemetry-exporter-jaeger-thrift (>=1.6.2,<2.0.0)", "opentelemetry-exporter-otlp (>=1.6.2,<2.0.0)", "opentelemetry-instrumentation (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-celery (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-dbapi (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-django (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-logging (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-redis (>=0.25b2,<1.0.0)", "opentelemetry-instrumentation-requests (>=0.25b2,<1.0.0)", "opentelemetry-sdk (>=1.6.2,<2.0.0)", "prometheus-client (>=0.9.0,<1.0.0)"]
 
 [[package]]
 name = "celery"
@@ -140,12 +154,12 @@ vine = "1.3.0"
 [package.extras]
 arangodb = ["pyArango (>=1.3.2)"]
 auth = ["cryptography"]
-azureblockblob = ["azure-storage (==0.36.0)", "azure-common (==1.1.5)", "azure-storage-common (==1.1.0)"]
+azureblockblob = ["azure-common (==1.1.5)", "azure-storage (==0.36.0)", "azure-storage-common (==1.1.0)"]
 brotli = ["brotli (>=1.0.0)", "brotlipy (>=0.7.0)"]
 cassandra = ["cassandra-driver (<3.21.0)"]
 consul = ["python-consul"]
 cosmosdbsql = ["pydocumentdb (==2.3.2)"]
-couchbase = ["couchbase-cffi (<3.0.0)", "couchbase (<3.0.0)"]
+couchbase = ["couchbase (<3.0.0)", "couchbase-cffi (<3.0.0)"]
 couchdb = ["pycouchdb"]
 django = ["Django (>=1.11)"]
 dynamodb = ["boto3 (>=1.9.178)"]
@@ -173,7 +187,7 @@ zstd = ["zstandard"]
 
 [[package]]
 name = "certifi"
-version = "2024.2.2"
+version = "2024.8.30"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -214,22 +228,24 @@ immutables = ">=0.9"
 
 [[package]]
 name = "cryptography"
-version = "3.3.2"
+version = "40.0.2"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
 category = "main"
 optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*"
+python-versions = ">=3.6"
 
 [package.dependencies]
 cffi = ">=1.12"
-six = ">=1.4.1"
 
 [package.extras]
-docs = ["sphinx (>=1.6.5,!=1.8.0,!=3.1.0,!=3.1.1)", "sphinx-rtd-theme"]
-docstest = ["doc8", "pyenchant (>=1.6.11)", "twine (>=1.12.0)", "sphinxcontrib-spelling (>=4.0.1)"]
-pep8test = ["black", "flake8", "flake8-import-order", "pep8-naming"]
+docs = ["sphinx (>=5.3.0)", "sphinx-rtd-theme (>=1.1.1)"]
+docstest = ["pyenchant (>=1.6.11)", "sphinxcontrib-spelling (>=4.0.1)", "twine (>=1.12.0)"]
+pep8test = ["black", "check-manifest", "mypy", "ruff"]
+sdist = ["setuptools-rust (>=0.11.4)"]
 ssh = ["bcrypt (>=3.1.5)"]
-test = ["pytest (>=3.6.0,!=3.9.0,!=3.9.1,!=3.9.2)", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
+test = ["iso8601", "pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-shard (>=0.1.2)", "pytest-subtests", "pytest-xdist"]
+test-randomorder = ["pytest-randomly"]
+tox = ["tox"]
 
 [[package]]
 name = "dataclasses"
@@ -266,7 +282,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 wrapt = ">=1.10,<2"
 
 [package.extras]
-dev = ["tox", "pytest", "pytest-cov", "bump2version (<1)", "sphinx (<2)"]
+dev = ["bump2version (<1)", "pytest", "pytest-cov", "sphinx (<2)", "tox"]
 
 [[package]]
 name = "django"
@@ -323,7 +339,7 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-dbconn-retry"
-version = "0.1.7"
+version = "0.1.8"
 description = "Patch Django to retry a database connection first before failing."
 category = "main"
 optional = false
@@ -436,11 +452,14 @@ tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "idna"
-version = "3.7"
+version = "3.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
+
+[package.extras]
+all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
 name = "immutables"
@@ -454,7 +473,7 @@ python-versions = ">=3.6"
 typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.8\""}
 
 [package.extras]
-test = ["flake8 (>=5.0.4,<5.1.0)", "pycodestyle (>=2.9.1,<2.10.0)", "mypy (==0.971)", "pytest (>=6.2.4,<6.3.0)"]
+test = ["flake8 (>=5.0.4,<5.1.0)", "mypy (==0.971)", "pycodestyle (>=2.9.1,<2.10.0)", "pytest (>=6.2.4,<6.3.0)"]
 
 [[package]]
 name = "importlib-metadata"
@@ -469,9 +488,9 @@ typing-extensions = {version = ">=3.6.4", markers = "python_version < \"3.8\""}
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
 perf = ["ipython"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pep517", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy", "importlib-resources (>=1.3)"]
+testing = ["flufl.flake8", "importlib-resources (>=1.3)", "packaging", "pep517", "pyfakefs", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy", "pytest-perf (>=0.9.2)"]
 
 [[package]]
 name = "importlib-resources"
@@ -485,8 +504,8 @@ python-versions = ">=3.6"
 zipp = {version = ">=3.1.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
+testing = ["pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy"]
 
 [[package]]
 name = "inflection"
@@ -541,11 +560,11 @@ lingua = ["lingua"]
 
 [[package]]
 name = "markupsafe"
-version = "1.1.1"
+version = "2.0.1"
 description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "msgpack-python"
@@ -554,14 +573,6 @@ description = "MessagePack (de)serializer."
 category = "main"
 optional = false
 python-versions = "*"
-
-[[package]]
-name = "mysqlclient"
-version = "2.0.3"
-description = "Python interface to MySQL"
-category = "main"
-optional = false
-python-versions = ">=3.5"
 
 [[package]]
 name = "opentelemetry-api"
@@ -694,7 +705,7 @@ opentelemetry-semantic-conventions = "0.33b0"
 
 [package.extras]
 instruments = ["celery (>=4.0,<6.0)"]
-test = ["pytest", "opentelemetry-test-utils (==0.33b0)", "celery (>=4.0,<6.0)"]
+test = ["celery (>=4.0,<6.0)", "opentelemetry-test-utils (==0.33b0)", "pytest"]
 
 [[package]]
 name = "opentelemetry-instrumentation-dbapi"
@@ -731,7 +742,7 @@ opentelemetry-util-http = "0.33b0"
 [package.extras]
 asgi = ["opentelemetry-instrumentation-asgi (==0.33b0)"]
 instruments = ["django (>=1.10)"]
-test = ["opentelemetry-test-utils (==0.33b0)", "django (>=1.10)"]
+test = ["django (>=1.10)", "opentelemetry-test-utils (==0.33b0)"]
 
 [[package]]
 name = "opentelemetry-instrumentation-logging"
@@ -764,7 +775,7 @@ wrapt = ">=1.12.1"
 
 [package.extras]
 instruments = ["redis (>=2.6)"]
-test = ["opentelemetry-test-utils (==0.33b0)", "opentelemetry-sdk (>=1.3,<2.0)", "redis (>=2.6)"]
+test = ["opentelemetry-sdk (>=1.3,<2.0)", "opentelemetry-test-utils (==0.33b0)", "redis (>=2.6)"]
 
 [[package]]
 name = "opentelemetry-instrumentation-requests"
@@ -782,7 +793,7 @@ opentelemetry-util-http = "0.33b0"
 
 [package.extras]
 instruments = ["requests (>=2.0,<3.0)"]
-test = ["opentelemetry-test-utils (==0.33b0)", "httpretty (>=1.0,<2.0)", "requests (>=2.0,<3.0)"]
+test = ["httpretty (>=1.0,<2.0)", "opentelemetry-test-utils (==0.33b0)", "requests (>=2.0,<3.0)"]
 
 [[package]]
 name = "opentelemetry-instrumentation-wsgi"
@@ -866,7 +877,7 @@ twisted = ["twisted"]
 
 [[package]]
 name = "protobuf"
-version = "3.19.4"
+version = "3.19.6"
 description = "Protocol Buffers"
 category = "main"
 optional = false
@@ -890,16 +901,29 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "pyjwt"
-version = "1.7.1"
+version = "2.4.0"
 description = "JSON Web Token implementation in Python"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [package.extras]
-crypto = ["cryptography (>=1.4)"]
-flake8 = ["flake8", "flake8-import-order", "pep8-naming"]
-test = ["pytest (>=4.0.1,<5.0.0)", "pytest-cov (>=2.6.0,<3.0.0)", "pytest-runner (>=4.2,<5.0.0)"]
+crypto = ["cryptography (>=3.3.1)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.3.1)", "mypy", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
+name = "pymysql"
+version = "1.0.2"
+description = "Pure Python MySQL Driver"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
 
 [[package]]
 name = "pyparsing"
@@ -914,7 +938,7 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "python-crontab"
-version = "3.0.0"
+version = "3.2.0"
 description = "Python Crontab API"
 category = "main"
 optional = false
@@ -948,7 +972,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pytz"
-version = "2024.1"
+version = "2024.2"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
@@ -972,18 +996,25 @@ python-versions = "*"
 
 [package.extras]
 flask = ["Flask (>=0.8)", "blinker (>=1.1)"]
-tests = ["bottle", "celery (>=2.5)", "coverage (<4)", "exam (>=0.5.2)", "flake8 (==3.5.0)", "logbook", "mock", "nose", "pytz", "pytest (>=3.2.0,<3.3.0)", "pytest-timeout (==1.2.1)", "pytest-xdist (==1.18.2)", "pytest-pythonpath (==0.7.2)", "pytest-cov (==2.5.1)", "pytest-flake8 (==1.0.0)", "requests", "tornado (>=4.1,<5.0)", "tox", "webob", "webtest", "wheel", "anyjson", "zconfig", "Flask (>=0.8)", "blinker (>=1.1)", "Flask-Login (>=0.2.0)", "blinker (>=1.1)", "sanic (>=0.7.0)", "aiohttp"]
+tests = ["Flask (>=0.8)", "Flask-Login (>=0.2.0)", "aiohttp", "anyjson", "blinker (>=1.1)", "blinker (>=1.1)", "bottle", "celery (>=2.5)", "coverage (<4)", "exam (>=0.5.2)", "flake8 (==3.5.0)", "logbook", "mock", "nose", "pytest (>=3.2.0,<3.3.0)", "pytest-cov (==2.5.1)", "pytest-flake8 (==1.0.0)", "pytest-pythonpath (==0.7.2)", "pytest-timeout (==1.2.1)", "pytest-xdist (==1.18.2)", "pytz", "requests", "sanic (>=0.7.0)", "tornado (>=4.1,<5.0)", "tox", "webob", "webtest", "wheel", "zconfig"]
 
 [[package]]
 name = "redis"
-version = "3.5.3"
-description = "Python client for Redis key-value store"
+version = "4.3.6"
+description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.6"
+
+[package.dependencies]
+async-timeout = ">=4.0.2"
+importlib-metadata = {version = ">=1.0", markers = "python_version < \"3.8\""}
+packaging = ">=20.4"
+typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
-hiredis = ["hiredis (>=0.1.3)"]
+hiredis = ["hiredis (>=1.0.0)"]
+ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"]
 
 [[package]]
 name = "requests"
@@ -1020,13 +1051,13 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-dev = ["flake8", "build"]
+dev = ["build", "flake8"]
 doc = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "thrift"
-version = "0.20.0"
+version = "0.21.0"
 description = "Python bindings for the Apache Thrift RPC system"
 category = "main"
 optional = false
@@ -1058,15 +1089,15 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "urllib3"
-version = "1.26.18"
+version = "1.26.20"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
 
 [package.extras]
-brotli = ["brotlicffi (>=0.8.0)", "brotli (==1.0.9)", "brotlipy (>=0.6.0)", "brotli (>=1.0.9)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "urllib3-secure-extra", "ipaddress"]
+brotli = ["brotli (==1.0.9)", "brotli (>=1.0.9)", "brotlicffi (>=0.8.0)", "brotlipy (>=0.6.0)"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)", "urllib3-secure-extra"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
@@ -1078,8 +1109,22 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "werkzeug"
+version = "2.0.3"
+description = "The comprehensive WSGI web application library."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+dataclasses = {version = "*", markers = "python_version < \"3.7\""}
+
+[package.extras]
+watchdog = ["watchdog"]
+
+[[package]]
 name = "whitenoise"
-version = "5.2.0"
+version = "5.3.0"
 description = "Radically simplified static file serving for WSGI applications"
 category = "main"
 optional = false
@@ -1105,13 +1150,13 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
+testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "db978e1f7ae2350ba3445f11d4b9bf8d4c45b4f49e9cad7d1a0fbed1888db878"
+content-hash = "4aa819d3b650c464efbed13d5555aa2032e130a529e167875b8b34bb884957bd"
 
 [metadata.files]
 aiocontextvars = []
@@ -1120,17 +1165,43 @@ asgiref = [
     {file = "asgiref-3.4.1-py3-none-any.whl", hash = "sha256:ffc141aa908e6f175673e7b1b3b7af4fdb0ecb738fc5c8b88f69f055c2415214"},
     {file = "asgiref-3.4.1.tar.gz", hash = "sha256:4ef1ab46b484e3c706329cedeff284a5d40824200638503f5768edb6de7d58e9"},
 ]
+async-timeout = []
 backoff = []
 "backports.zoneinfo" = []
 billiard = []
 bkoauth = []
-blueapps = []
+blueapps = [
+    {file = "blueapps-4.14.0.tar.gz", hash = "sha256:f3c08b0c79741004d19705199905d018e127929e655fd94b5bd009c695b414fb"},
+]
 celery = []
-certifi = []
+certifi = [
+    {file = "certifi-2024.8.30-py3-none-any.whl", hash = "sha256:922820b53db7a7257ffbda3f597266d435245903d80737e34f8a45ff3e3230d8"},
+    {file = "certifi-2024.8.30.tar.gz", hash = "sha256:bec941d2aa8195e248a60b31ff9f0558284cf01a52591ceda73ea9afffd69fd9"},
+]
 cffi = []
 charset-normalizer = []
 contextvars = []
-cryptography = []
+cryptography = [
+    {file = "cryptography-40.0.2-cp36-abi3-macosx_10_12_universal2.whl", hash = "sha256:8f79b5ff5ad9d3218afb1e7e20ea74da5f76943ee5edb7f76e56ec5161ec782b"},
+    {file = "cryptography-40.0.2-cp36-abi3-macosx_10_12_x86_64.whl", hash = "sha256:05dc219433b14046c476f6f09d7636b92a1c3e5808b9a6536adf4932b3b2c440"},
+    {file = "cryptography-40.0.2-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:4df2af28d7bedc84fe45bd49bc35d710aede676e2a4cb7fc6d103a2adc8afe4d"},
+    {file = "cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0dcca15d3a19a66e63662dc8d30f8036b07be851a8680eda92d079868f106288"},
+    {file = "cryptography-40.0.2-cp36-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:a04386fb7bc85fab9cd51b6308633a3c271e3d0d3eae917eebab2fac6219b6d2"},
+    {file = "cryptography-40.0.2-cp36-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:adc0d980fd2760c9e5de537c28935cc32b9353baaf28e0814df417619c6c8c3b"},
+    {file = "cryptography-40.0.2-cp36-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:d5a1bd0e9e2031465761dfa920c16b0065ad77321d8a8c1f5ee331021fda65e9"},
+    {file = "cryptography-40.0.2-cp36-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:a95f4802d49faa6a674242e25bfeea6fc2acd915b5e5e29ac90a32b1139cae1c"},
+    {file = "cryptography-40.0.2-cp36-abi3-win32.whl", hash = "sha256:aecbb1592b0188e030cb01f82d12556cf72e218280f621deed7d806afd2113f9"},
+    {file = "cryptography-40.0.2-cp36-abi3-win_amd64.whl", hash = "sha256:b12794f01d4cacfbd3177b9042198f3af1c856eedd0a98f10f141385c809a14b"},
+    {file = "cryptography-40.0.2-pp38-pypy38_pp73-macosx_10_12_x86_64.whl", hash = "sha256:142bae539ef28a1c76794cca7f49729e7c54423f615cfd9b0b1fa90ebe53244b"},
+    {file = "cryptography-40.0.2-pp38-pypy38_pp73-manylinux_2_28_aarch64.whl", hash = "sha256:956ba8701b4ffe91ba59665ed170a2ebbdc6fc0e40de5f6059195d9f2b33ca0e"},
+    {file = "cryptography-40.0.2-pp38-pypy38_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:4f01c9863da784558165f5d4d916093737a75203a5c5286fde60e503e4276c7a"},
+    {file = "cryptography-40.0.2-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:3daf9b114213f8ba460b829a02896789751626a2a4e7a43a28ee77c04b5e4958"},
+    {file = "cryptography-40.0.2-pp39-pypy39_pp73-macosx_10_12_x86_64.whl", hash = "sha256:48f388d0d153350f378c7f7b41497a54ff1513c816bcbbcafe5b829e59b9ce5b"},
+    {file = "cryptography-40.0.2-pp39-pypy39_pp73-manylinux_2_28_aarch64.whl", hash = "sha256:c0764e72b36a3dc065c155e5b22f93df465da9c39af65516fe04ed3c68c92636"},
+    {file = "cryptography-40.0.2-pp39-pypy39_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:cbaba590180cba88cb99a5f76f90808a624f18b169b90a4abb40c1fd8c19420e"},
+    {file = "cryptography-40.0.2-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:7a38250f433cd41df7fcb763caa3ee9362777fdb4dc642b9a349721d2bf47404"},
+    {file = "cryptography-40.0.2.tar.gz", hash = "sha256:c33c0d32b8594fa647d2e01dbccc303478e16fdd7cf98652d5b3ed11aa5e5c99"},
+]
 dataclasses = []
 ddtrace = []
 deprecated = []
@@ -1141,7 +1212,9 @@ django = [
 django-celery-beat = []
 django-celery-results = []
 django-cors-headers = []
-django-dbconn-retry = []
+django-dbconn-retry = [
+    {file = "django_dbconn_retry-0.1.8-py3-none-any.whl", hash = "sha256:be0fcb4d04d23655b431a6a6d9db80fd9f068d269e298caa4a284b6a45cf8ac4"},
+]
 django-prometheus = []
 django-timezone-field = []
 djangorestframework = []
@@ -1149,7 +1222,10 @@ drf-yasg = []
 googleapis-common-protos = []
 grpcio = []
 gunicorn = []
-idna = []
+idna = [
+    {file = "idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"},
+    {file = "idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9"},
+]
 immutables = []
 importlib-metadata = []
 importlib-resources = []
@@ -1158,7 +1234,6 @@ kombu = []
 mako = []
 markupsafe = []
 msgpack-python = []
-mysqlclient = []
 opentelemetry-api = []
 opentelemetry-exporter-jaeger = []
 opentelemetry-exporter-jaeger-proto-grpc = []
@@ -1180,26 +1255,74 @@ opentelemetry-semantic-conventions = []
 opentelemetry-util-http = []
 packaging = []
 prometheus-client = []
-protobuf = []
+protobuf = [
+    {file = "protobuf-3.19.6-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:010be24d5a44be7b0613750ab40bc8b8cedc796db468eae6c779b395f50d1fa1"},
+    {file = "protobuf-3.19.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:11478547958c2dfea921920617eb457bc26867b0d1aa065ab05f35080c5d9eb6"},
+    {file = "protobuf-3.19.6-cp310-cp310-win32.whl", hash = "sha256:559670e006e3173308c9254d63facb2c03865818f22204037ab76f7a0ff70b5f"},
+    {file = "protobuf-3.19.6-cp310-cp310-win_amd64.whl", hash = "sha256:347b393d4dd06fb93a77620781e11c058b3b0a5289262f094379ada2920a3730"},
+    {file = "protobuf-3.19.6-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:a8ce5ae0de28b51dff886fb922012dad885e66176663950cb2344c0439ecb473"},
+    {file = "protobuf-3.19.6-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:90b0d02163c4e67279ddb6dc25e063db0130fc299aefabb5d481053509fae5c8"},
+    {file = "protobuf-3.19.6-cp36-cp36m-win32.whl", hash = "sha256:30f5370d50295b246eaa0296533403961f7e64b03ea12265d6dfce3a391d8992"},
+    {file = "protobuf-3.19.6-cp36-cp36m-win_amd64.whl", hash = "sha256:0c0714b025ec057b5a7600cb66ce7c693815f897cfda6d6efb58201c472e3437"},
+    {file = "protobuf-3.19.6-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:5057c64052a1f1dd7d4450e9aac25af6bf36cfbfb3a1cd89d16393a036c49157"},
+    {file = "protobuf-3.19.6-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:bb6776bd18f01ffe9920e78e03a8676530a5d6c5911934c6a1ac6eb78973ecb6"},
+    {file = "protobuf-3.19.6-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:84a04134866861b11556a82dd91ea6daf1f4925746b992f277b84013a7cc1229"},
+    {file = "protobuf-3.19.6-cp37-cp37m-win32.whl", hash = "sha256:4bc98de3cdccfb5cd769620d5785b92c662b6bfad03a202b83799b6ed3fa1fa7"},
+    {file = "protobuf-3.19.6-cp37-cp37m-win_amd64.whl", hash = "sha256:aa3b82ca1f24ab5326dcf4ea00fcbda703e986b22f3d27541654f749564d778b"},
+    {file = "protobuf-3.19.6-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:2b2d2913bcda0e0ec9a784d194bc490f5dc3d9d71d322d070b11a0ade32ff6ba"},
+    {file = "protobuf-3.19.6-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:d0b635cefebd7a8a0f92020562dead912f81f401af7e71f16bf9506ff3bdbb38"},
+    {file = "protobuf-3.19.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7a552af4dc34793803f4e735aabe97ffc45962dfd3a237bdde242bff5a3de684"},
+    {file = "protobuf-3.19.6-cp38-cp38-win32.whl", hash = "sha256:0469bc66160180165e4e29de7f445e57a34ab68f49357392c5b2f54c656ab25e"},
+    {file = "protobuf-3.19.6-cp38-cp38-win_amd64.whl", hash = "sha256:91d5f1e139ff92c37e0ff07f391101df77e55ebb97f46bbc1535298d72019462"},
+    {file = "protobuf-3.19.6-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:c0ccd3f940fe7f3b35a261b1dd1b4fc850c8fde9f74207015431f174be5976b3"},
+    {file = "protobuf-3.19.6-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:30a15015d86b9c3b8d6bf78d5b8c7749f2512c29f168ca259c9d7727604d0e39"},
+    {file = "protobuf-3.19.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:878b4cd080a21ddda6ac6d1e163403ec6eea2e206cf225982ae04567d39be7b0"},
+    {file = "protobuf-3.19.6-cp39-cp39-win32.whl", hash = "sha256:5a0d7539a1b1fb7e76bf5faa0b44b30f812758e989e59c40f77a7dab320e79b9"},
+    {file = "protobuf-3.19.6-cp39-cp39-win_amd64.whl", hash = "sha256:bbf5cea5048272e1c60d235c7bd12ce1b14b8a16e76917f371c718bd3005f045"},
+    {file = "protobuf-3.19.6-py2.py3-none-any.whl", hash = "sha256:14082457dc02be946f60b15aad35e9f5c69e738f80ebbc0900a19bc83734a5a4"},
+    {file = "protobuf-3.19.6.tar.gz", hash = "sha256:5f5540d57a43042389e87661c6eaa50f47c19c6176e8cf1c4f287aeefeccb5c4"},
+]
 pycparser = []
 pycryptodome = []
-pyjwt = []
+pyjwt = [
+    {file = "PyJWT-2.4.0-py3-none-any.whl", hash = "sha256:72d1d253f32dbd4f5c88eaf1fdc62f3a19f676ccbadb9dbc5d07e951b2b26daf"},
+    {file = "PyJWT-2.4.0.tar.gz", hash = "sha256:d42908208c699b3b973cbeb01a969ba6a96c821eefb1c5bfe4c390c01d67abba"},
+]
+pymysql = [
+    {file = "PyMySQL-1.0.2-py3-none-any.whl", hash = "sha256:41fc3a0c5013d5f039639442321185532e3e2c8924687abe6537de157d403641"},
+    {file = "PyMySQL-1.0.2.tar.gz", hash = "sha256:816927a350f38d56072aeca5dfb10221fe1dc653745853d30a216637f5d7ad36"},
+]
 pyparsing = []
-python-crontab = []
+python-crontab = [
+    {file = "python_crontab-3.2.0-py3-none-any.whl", hash = "sha256:82cb9b6a312d41ff66fd3caf3eed7115c28c195bfb50711bc2b4b9592feb9fe5"},
+    {file = "python_crontab-3.2.0.tar.gz", hash = "sha256:40067d1dd39ade3460b2ad8557c7651514cd3851deffff61c5c60e1227c5c36b"},
+]
 python-dateutil = []
 python-json-logger = []
-pytz = []
+pytz = [
+    {file = "pytz-2024.2-py2.py3-none-any.whl", hash = "sha256:31c7c1817eb7fae7ca4b8c7ee50c72f93aa2dd863de768e1ef4245d426aa0725"},
+    {file = "pytz-2024.2.tar.gz", hash = "sha256:2aa355083c50a0f93fa581709deac0c9ad65cca8a9e9beac660adcbd493c798a"},
+]
 pyyaml = []
 raven = []
 redis = []
 requests = []
 six = []
 sqlparse = []
-thrift = []
+thrift = [
+    {file = "thrift-0.21.0.tar.gz", hash = "sha256:5e6f7c50f936ebfa23e924229afc95eb219f8c8e5a83202dd4a391244803e402"},
+]
 typing-extensions = []
 uritemplate = []
-urllib3 = []
+urllib3 = [
+    {file = "urllib3-1.26.20-py2.py3-none-any.whl", hash = "sha256:0ed14ccfbf1c30a9072c7ca157e4319b70d65f623e91e7b32fadb2853431016e"},
+    {file = "urllib3-1.26.20.tar.gz", hash = "sha256:40c2dc0c681e47eb8f90e7e27bf6ff7df2e677421fd46756da1161c39ca70d32"},
+]
 vine = []
-whitenoise = []
+werkzeug = []
+whitenoise = [
+    {file = "whitenoise-5.3.0-py2.py3-none-any.whl", hash = "sha256:d963ef25639d1417e8a247be36e6aedd8c7c6f0a08adcb5a89146980a96b577c"},
+    {file = "whitenoise-5.3.0.tar.gz", hash = "sha256:d234b871b52271ae7ed6d9da47ffe857c76568f11dd30e28e18c5869dbd11e12"},
+]
 wrapt = []
 zipp = []
