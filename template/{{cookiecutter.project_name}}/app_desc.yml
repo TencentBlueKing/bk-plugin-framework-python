@@ -1,43 +1,86 @@
-spec_version: 2
+specVersion: 3
 modules:
-  default:
+  - name: default
+    isDefault: true
     language: python
-    is_default: true
-    processes:
-      web:
-        command: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 8 --max-requests=1000
-      schedule:
-        command: celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO
-      beat:
-        command: celery beat -A blueapps.core.celery -l INFO
-    env_variables:
-      - key: PIP_VERSION
-        value: 21.0
-        description: pip version control
-      - key: BK_APIGW_MANAGER_URL_TMPL
-        value: {{cookiecutter.apigw_manager_url_tmpl}}
-        description: pip version control
-      - key: BK_APIGW_MANAGER_MAINTAINERS
-        value: {{cookiecutter.init_apigw_maintainer}}
-        description: plugin apigw managers
-      - key: BK_INIT_SUPERUSER
-        value: {{cookiecutter.init_admin}}
-        description: plugin admin panel init superuser
-      - key: BK_SOPS_APP_CODE
-        value: bksops
-        description: bk-sops app code
-      - key: DJANGO_SETTINGS_MODULE
-        value: bk_plugin_runtime.settings
-        description: django settings module path
-      - key: BK_APP_CONFIG_PATH
-        value: bk_plugin_runtime.config
-        description: blueapps config path
-      - key: BK_APIGW_CORS_ALLOW_ORIGINS
-        value: {{cookiecutter.apigw_cors_allow_origins}}
-        description: apigw cors strategie allow origins
-      - key: BK_APIGW_CORS_ALLOW_METHODS
-        value: {{cookiecutter.apigw_cors_allow_methods}}
-        description: apigw cors strategie allow methods
-      - key: BK_APIGW_CORS_ALLOW_HEADERS
-        value: {{cookiecutter.apigw_cors_allow_headers}}
-        description: apigw cors strategie allow headers
+    spec:
+      processes:
+        - name: web
+          procCommand: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 8 --max-requests=1000
+          services:
+            - name: web
+              exposedType:
+                name: bk/http
+              targetPort: 5000
+              port: 80
+            - name: metrics
+              targetPort: 5001
+              port: 5001
+        - name: schedule
+          procCommand: celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO
+          services:
+            - name: metrics
+              targetPort: 5001
+              port: 5001
+        - name: beat
+          procCommand: celery beat -A blueapps.core.celery -l INFO
+          services:
+            - name: metrics
+              targetPort: 5001
+              port: 5001
+        - name: c-monitor
+          procCommand: celery-prometheus-exporter --broker amqp://$RABBITMQ_USER:$RABBITMQ_PASSWORD@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_VHOST --addr 0.0.0.0:5001 --queue-list plugin_schedule plugin_callback schedule_delete
+          services:
+            - name: metrics
+              targetPort: 5001
+              port: 5001
+      configuration:
+        env:
+          - name: PIP_VERSION
+            value: 21.2.2
+            description: pip version control
+          - name: BK_APIGW_MANAGER_URL_TMPL
+            value: {{cookiecutter.apigw_manager_url_tmpl}}
+            description: pip version control
+          - name: BK_APIGW_MANAGER_MAINTAINERS
+            value: {{cookiecutter.init_apigw_maintainer}}
+            description: plugin apigw managers
+          - name: BK_INIT_SUPERUSER
+            value: {{cookiecutter.init_admin}}
+            description: plugin admin panel init superuser
+          - name: BK_SOPS_APP_CODE
+            value: bksops
+            description: bk-sops app code
+          - name: DJANGO_SETTINGS_MODULE
+            value: bk_plugin_runtime.settings
+            description: django settings module path
+          - name: BK_APP_CONFIG_PATH
+            value: bk_plugin_runtime.config
+            description: blueapps config path
+          - name: BK_APIGW_CORS_ALLOW_ORIGINS
+            value: {{cookiecutter.apigw_cors_allow_origins}}
+            description: apigw cors strategie allow origins
+          - name: BK_APIGW_CORS_ALLOW_METHODS
+            value: {{cookiecutter.apigw_cors_allow_methods}}
+            description: apigw cors strategie allow methods
+          - name: BK_APIGW_CORS_ALLOW_HEADERS
+            value: {{cookiecutter.apigw_cors_allow_headers}}
+            description: apigw cors strategie allow headers
+          - name: ENABLE_METRICS
+            value: 1
+            description: enable metrics
+      observability:
+        monitoring:
+          metrics:
+            - process: web
+              serviceName: metrics
+              path: /metrics/
+            - process: c-monitor
+              serviceName: metrics
+              path: /metrics/
+            - process: beat
+              serviceName: metrics
+              path: /metrics/
+            - process: schedule
+              serviceName: metrics
+              path: /metrics/
