@@ -97,7 +97,7 @@ requests = "*"
 
 [[package]]
 name = "blueapps"
-version = "4.14.0"
+version = "4.15.1"
 description = "development framework for blueking"
 category = "main"
 optional = false
@@ -1156,7 +1156,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "4aa819d3b650c464efbed13d5555aa2032e130a529e167875b8b34bb884957bd"
+content-hash = "efa18dab1b87df5dfb66c9d606251c6c55eb75a6f5b636cacf436b358ce14acf"
 
 [metadata.files]
 aiocontextvars = []
@@ -1171,7 +1171,7 @@ backoff = []
 billiard = []
 bkoauth = []
 blueapps = [
-    {file = "blueapps-4.14.0.tar.gz", hash = "sha256:f3c08b0c79741004d19705199905d018e127929e655fd94b5bd009c695b414fb"},
+    {file = "blueapps-4.15.1.tar.gz", hash = "sha256:77d3194615c1a23555f6bdc18288cdc377821e9f732723f307e8ed7fdaa1e034"},
 ]
 celery = []
 certifi = [
