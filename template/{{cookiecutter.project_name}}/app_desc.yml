@@ -6,7 +6,7 @@ modules:
     spec:
       processes:
         - name: web
-          procCommand: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 1 --max-requests=1000
+          procCommand: gunicorn bk_plugin_runtime.wsgi --timeout 120 -k gthread --threads 16 -w 8 --max-requests=1000
           services:
             - name: web
               exposedType:
