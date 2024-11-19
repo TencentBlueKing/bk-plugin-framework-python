@@ -22,7 +22,7 @@ vine = ">=1.1.3,<5.0.0a1"
 
 [[package]]
 name = "apigw-manager"
-version = "3.1.1"
+version = "3.1.2"
 description = "The SDK for managing blueking gateway resource."
 category = "main"
 optional = false
@@ -129,14 +129,14 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.0.8"
+version = "2.0.9"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
 python-versions = "<4.0.0,>=3.6.1"
 
 [package.dependencies]
-blueapps = {version = ">=4.5.0,<5.0", extras = ["opentelemetry"]}
+blueapps = {version = ">=4.15.1,<5.0", extras = ["opentelemetry"]}
 celery = ">=4.4.0,<5.0.0"
 ddtrace = ">=0.14.1,<0.15.0"
 Django = ">=2.2.6,<5"
@@ -221,7 +221,7 @@ d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
 name = "blueapps"
-version = "4.14.0"
+version = "4.15.1"
 description = "development framework for blueking"
 category = "main"
 optional = false
@@ -1474,13 +1474,13 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "8d037bd44f62cc86db82630da894d00b20e3e34a1758c57c21b788efeabafa19"
+content-hash = "75d66465f3387a3f828b6271898465c4839444046f749c4fcafb54a26c4e12b7"
 
 [metadata.files]
 aiocontextvars = []
 amqp = []
 apigw-manager = [
-    {file = "apigw_manager-3.1.1-py3-none-any.whl", hash = "sha256:1e893a2d0167b0d57b5131d3dd0e1009b9657a00d1c93efa86db8f76a17e32bd"},
+    {file = "apigw_manager-3.1.2-py3-none-any.whl", hash = "sha256:0bff95951ebd7623d34e905a33f621937deb6bf126026c7f36269269d2751b9f"},
 ]
 appdirs = []
 asgiref = [
@@ -1493,15 +1493,15 @@ backoff = []
 "backports.zoneinfo" = []
 billiard = []
 bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-2.0.8.tar.gz", hash = "sha256:6c4ac1c6ad4d576b51f6fee840434557466c9ca20ea8472fa47d472ffcfce497"},
-    {file = "bk_plugin_runtime-2.0.8-py3-none-any.whl", hash = "sha256:dea4b8f4bd1a9edbcbb99717306d7fe6348ac4ae9d69b6cece915bc7ade98916"},
+    {file = "bk-plugin-runtime-2.0.9.tar.gz", hash = "sha256:f9a5dbebb980571201c0c7ddcf31795b7d8b05dd63e52ed4b077793d67360cbf"},
+    {file = "bk_plugin_runtime-2.0.9-py3-none-any.whl", hash = "sha256:500ef500781126b5c740af9a6db25fa25c2ca505e7888634df7abe2f8395f411"},
 ]
 bkapi-bk-apigateway = []
 bkapi-client-core = []
 bkoauth = []
 black = []
 blueapps = [
-    {file = "blueapps-4.14.0.tar.gz", hash = "sha256:f3c08b0c79741004d19705199905d018e127929e655fd94b5bd009c695b414fb"},
+    {file = "blueapps-4.15.1.tar.gz", hash = "sha256:77d3194615c1a23555f6bdc18288cdc377821e9f732723f307e8ed7fdaa1e034"},
 ]
 celery = []
 certifi = []
