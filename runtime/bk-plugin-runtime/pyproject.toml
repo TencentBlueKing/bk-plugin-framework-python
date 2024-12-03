@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bk-plugin-runtime"
-version = "2.0.9"
+version = "2.0.10"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -18,7 +18,7 @@ ddtrace = "^0.14.1"
 django-cors-headers = "^3.8.0"
 django-dbconn-retry = "^0.1.5"
 blueapps = {version = ">=4.15.1, <5.0", extras = ["opentelemetry"]}
-protobuf=">=3.19.4,<4.0"
+protobuf=">=3.19.4,<6.0"
 celery = "^4.4.0"
 django-celery-beat = "^2.0.0"
 django-celery-results = "^1.2.1"
