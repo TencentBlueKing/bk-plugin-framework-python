@@ -129,7 +129,7 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.0.9"
+version = "2.0.10"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
@@ -147,7 +147,7 @@ django-dbconn-retry = ">=0.1.5,<0.2.0"
 djangorestframework = ">=3.12.4,<4.0.0"
 drf-yasg = ">=1.20.0,<2.0.0"
 gunicorn = ">=19.6.0"
-protobuf = ">=3.19.4,<4.0"
+protobuf = ">=3.19.4,<6.0"
 pymysql = ">=1,<2"
 raven = ">=6.5.0,<7.0.0"
 redis = ">=2.10.5,<6"
@@ -1474,7 +1474,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1,<4.0"
-content-hash = "75d66465f3387a3f828b6271898465c4839444046f749c4fcafb54a26c4e12b7"
+content-hash = "e9c55e569b8d33ddd74f819185d7aa09dcedcc71ae275b88f75d6314a79408ac"
 
 [metadata.files]
 aiocontextvars = []
@@ -1493,8 +1493,8 @@ backoff = []
 "backports.zoneinfo" = []
 billiard = []
 bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-2.0.9.tar.gz", hash = "sha256:f9a5dbebb980571201c0c7ddcf31795b7d8b05dd63e52ed4b077793d67360cbf"},
-    {file = "bk_plugin_runtime-2.0.9-py3-none-any.whl", hash = "sha256:500ef500781126b5c740af9a6db25fa25c2ca505e7888634df7abe2f8395f411"},
+    {file = "bk-plugin-runtime-2.0.10.tar.gz", hash = "sha256:47a9a9794a9523d943384ec3f7caa8b3c95196f45e084454da4bbbff1a6d0b22"},
+    {file = "bk_plugin_runtime-2.0.10-py3-none-any.whl", hash = "sha256:d867396ae15e7427de13b59f3b0c29adfb416d2c8798627b6126a823c491682e"},
 ]
 bkapi-bk-apigateway = []
 bkapi-client-core = []
