@@ -129,7 +129,7 @@ python-versions = "*"
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.0.10"
+version = "2.0.11"
 description = "bk plugin python django runtime"
 category = "main"
 optional = false
@@ -1492,10 +1492,7 @@ attrs = []
 backoff = []
 "backports.zoneinfo" = []
 billiard = []
-bk-plugin-runtime = [
-    {file = "bk-plugin-runtime-2.0.10.tar.gz", hash = "sha256:47a9a9794a9523d943384ec3f7caa8b3c95196f45e084454da4bbbff1a6d0b22"},
-    {file = "bk_plugin_runtime-2.0.10-py3-none-any.whl", hash = "sha256:d867396ae15e7427de13b59f3b0c29adfb416d2c8798627b6126a823c491682e"},
-]
+bk-plugin-runtime = []
 bkapi-bk-apigateway = []
 bkapi-client-core = []
 bkoauth = []

@@ -28,10 +28,10 @@ class Command(BaseCommand):
         print("[bk-plugin-framework]call sync_apigw_strategies with definition: %s" % definition_file_path)
         call_command("sync_apigw_strategies", file=definition_file_path)
 
-        if getattr(settings, "BK_APIGW_CORS_ALLOW_ORIGINS"):
-            strategy_cors_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/api-strategy-cors.yml")
-            print("[bk-plugin-framework]call sync_apigw_strategies cors with strategy: %s" % strategy_cors_file_path)
-            call_command("sync_apigw_strategies", file=strategy_cors_file_path)
+        # if getattr(settings, "BK_APIGW_CORS_ALLOW_ORIGINS"):
+        #     strategy_cors_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/api-strategy-cors.yml")
+        #     print("[bk-plugin-framework]call sync_apigw_strategies cors with strategy: %s" % strategy_cors_file_path)
+        #     call_command("sync_apigw_strategies", file=strategy_cors_file_path)
 
         print("[bk-plugin-framework]call create_version_and_release_apigw with definition: %s" % definition_file_path)
         call_command(
