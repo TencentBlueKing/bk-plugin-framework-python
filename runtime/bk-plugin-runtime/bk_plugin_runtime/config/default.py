@@ -243,6 +243,6 @@ BK_PLUGIN_APIGW_BACKEND_NETLOC = url_parse.netloc
 BK_PLUGIN_APIGW_BACKEND_SUB_PATH = url_parse.path.lstrip("/")
 BK_PLUGIN_APIGW_BACKEND_SCHEME = url_parse.scheme or "http"
 
-BK_APIGW_CORS_ALLOW_ORIGINS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "").split(",") if s]
-BK_APIGW_CORS_ALLOW_METHODS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "").split(",") if s]
-BK_APIGW_CORS_ALLOW_HEADERS = [s for s in os.getenv("BK_APIGW_CORS_ALLOW_HEADERS", "").split(",") if s]
+BK_APIGW_CORS_ALLOW_ORIGINS = os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "")
+BK_APIGW_CORS_ALLOW_METHODS = os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "")
+BK_APIGW_CORS_ALLOW_HEADERS = os.getenv("BK_APIGW_CORS_ALLOW_HEADERS", "")
