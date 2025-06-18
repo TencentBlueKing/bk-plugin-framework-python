@@ -13,27 +13,12 @@ modules:
                 name: bk/http
               targetPort: 5000
               port: 80
-            - name: metrics
-              targetPort: 5001
-              port: 5001
         - name: schedule
           procCommand: celery worker -A blueapps.core.celery -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO
-          services:
-            - name: metrics
-              targetPort: 5001
-              port: 5001
         - name: beat
           procCommand: celery beat -A blueapps.core.celery -l INFO
-          services:
-            - name: metrics
-              targetPort: 5001
-              port: 5001
         - name: c-monitor
           procCommand: celery-prometheus-exporter --broker amqp://$RABBITMQ_USER:$RABBITMQ_PASSWORD@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_VHOST --addr 0.0.0.0:5001 --queue-list plugin_schedule plugin_callback schedule_delete
-          services:
-            - name: metrics
-              targetPort: 5001
-              port: 5001
       configuration:
         env:
           - name: PIP_VERSION
@@ -66,21 +51,3 @@ modules:
           - name: BK_APIGW_CORS_ALLOW_HEADERS
             value: {{cookiecutter.apigw_cors_allow_headers}}
             description: apigw cors strategie allow headers
-          - name: ENABLE_METRICS
-            value: 1
-            description: enable metrics
-      observability:
-        monitoring:
-          metrics:
-            - process: web
-              serviceName: metrics
-              path: /metrics/
-            - process: c-monitor
-              serviceName: metrics
-              path: /metrics/
-            - process: beat
-              serviceName: metrics
-              path: /metrics/
-            - process: schedule
-              serviceName: metrics
-              path: /metrics/
