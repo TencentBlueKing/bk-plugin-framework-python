@@ -7,7 +7,7 @@ stage:
   vars: {}
   {% endif %}
   proxy_http:
-    timeout: 60
+    timeout: '{{ settings.BK_APIGW_DEFAULT_TIMEOUT }}'
     upstreams:
       loadbalance: "roundrobin"
       hosts:
