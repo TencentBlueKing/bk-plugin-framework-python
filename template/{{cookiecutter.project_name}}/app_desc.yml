@@ -51,3 +51,6 @@ modules:
           - name: BK_APIGW_CORS_ALLOW_HEADERS
             value: {{cookiecutter.apigw_cors_allow_headers}}
             description: apigw cors strategie allow headers
+          - name: BK_APIGW_DEFAULT_TIMEOUT
+            value: {{cookiecutter.bk_apigw_default_timeout}}
+            description: apigw default timeout
