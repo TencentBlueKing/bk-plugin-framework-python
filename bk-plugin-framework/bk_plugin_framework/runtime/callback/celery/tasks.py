@@ -14,7 +14,7 @@ import logging
 import random
 import time
 
-from celery import task, current_app
+from celery import shared_task, current_app
 
 from bk_plugin_framework.kit import State
 from bk_plugin_framework.metrics import BK_PLUGIN_CALLBACK_EXCEPTION_COUNT, HOSTNAME, BK_PLUGIN_CALLBACK_TIME
@@ -35,7 +35,7 @@ def _set_schedule_state(trace_id: str, state: State):
         logger.exception("[execute] set schedule state error")
 
 
-@task(ignore_result=True)
+@shared_task(ignore_result=True)
 def callback(trace_id: str, callback_id: str, callback_data: str):
     with get_schedule_lock(trace_id) as lock:
         if not lock.locked:

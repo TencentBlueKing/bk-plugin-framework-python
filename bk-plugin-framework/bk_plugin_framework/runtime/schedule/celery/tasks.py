@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 import logging
 
-from celery import task
+from celery import shared_task
 
 from bk_plugin_framework.kit import State
 from bk_plugin_framework.utils import local
@@ -31,7 +31,7 @@ def _set_schedule_state(trace_id: str, state: State):
         logger.exception("[execute] set schedule state error")
 
 
-@task(ignore_result=True)
+@shared_task(ignore_result=True)
 def schedule(trace_id: str):
     local.set_trace_id(trace_id)
 
@@ -56,7 +56,7 @@ def schedule(trace_id: str):
         _set_schedule_state(trace_id=trace_id, state=State.FAIL)
 
 
-@task(ignore_result=True)
+@shared_task(ignore_result=True)
 def delete_expired_schedule():
     logger.info("[delete_expired_schedule] start to delete expire schedule")
     rows = Schedule.objects.delete_expired_schedule(settings.SCHEDULE_PERSISTENT_DAYS)
