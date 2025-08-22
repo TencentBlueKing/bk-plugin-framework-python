@@ -10,7 +10,7 @@ python = "^3.8.0,<4.0"
 pydantic = ">=1.0,<3"
 werkzeug = ">=2.0.0, <4.0"
 apigw-manager = {version = ">=1.0.6, <4", extras = ["extra"]}
-bk-plugin-runtime = "2.0.12"
+bk-plugin-runtime = { path = "../runtime/bk-plugin-runtime" }
 jsonschema = ">=2.5.0,<5.0.0"
 
 [tool.poetry.dev-dependencies]

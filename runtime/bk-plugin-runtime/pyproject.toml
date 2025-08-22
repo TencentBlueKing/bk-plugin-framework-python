@@ -4,6 +4,7 @@ version = "2.0.12"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
+packages = [{ include = "bk_plugin_runtime" }]
 
 [tool.poetry.dependencies]
 python = "^3.8.0,<4.0"
@@ -19,9 +20,9 @@ django-cors-headers = "^3.8.0"
 django-dbconn-retry = "^0.1.5"
 blueapps = {version = ">=4.15.1, <5.0", extras = ["opentelemetry"]}
 protobuf=">=3.19.4,<6.0"
-celery = "==5.4.0"
-django-celery-beat = "==2.7.0"
-django-celery-results = "==2.5.1"
+celery = "^5.4.0"
+django-celery-beat = "^2.7.0"
+django-celery-results = "^2.5.1"
 
 [tool.poetry.dev-dependencies]
 
