@@ -197,27 +197,27 @@ files = [
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.1.0rc1"
+version = "2.1.0rc2"
 description = "bk plugin python django runtime"
 optional = false
 python-versions = "<4.0.0,>=3.8.0"
 groups = ["main"]
 files = [
-    {file = "bk_plugin_runtime-2.1.0rc1-py3-none-any.whl", hash = "sha256:cc30c6e47dde96e03e8cc13359ec0186753c34246ff9de286713aadd674dc0d5"},
-    {file = "bk_plugin_runtime-2.1.0rc1.tar.gz", hash = "sha256:dae48354efcc7a55fc2a733054252afcddefba107ba680a75da538ba2c69fbf4"},
+    {file = "bk_plugin_runtime-2.1.0rc2-py3-none-any.whl", hash = "sha256:1fb09a44675578c91fba509f12617d46c8a260166ade192500cd6b5e3ac45859"},
+    {file = "bk_plugin_runtime-2.1.0rc2.tar.gz", hash = "sha256:019de280b2cd7923da4a0d8e7ba3defa0c88ee4c5d30cac63f8f1c19cdb357d4"},
 ]
 
 [package.dependencies]
 blueapps = {version = ">=4.15.1,<5.0", extras = ["opentelemetry"]}
-celery = "5.4.0"
+celery = ">=5.4.0,<6.0.0"
 ddtrace = ">=0.14.1,<0.15.0"
-Django = ">=2.2.6,<5"
-django-celery-beat = "2.7.0"
-django-celery-results = "2.5.1"
-django-cors-headers = ">=3.8.0,<4.0.0"
+Django = ">=4.2,<5.0"
+django-celery-beat = ">=2.7.0,<3.0.0"
+django-celery-results = ">=2.5.1,<3.0.0"
+django-cors-headers = ">=4.0.0,<5.0.0"
 django-dbconn-retry = ">=0.1.5,<0.2.0"
-djangorestframework = ">=3.12.4,<4.0.0"
-drf-yasg = ">=1.20.0,<2.0.0"
+djangorestframework = ">=3.15,<4.0"
+drf-yasg = ">=1.21.5,<2.0.0"
 gunicorn = ">=19.6.0"
 protobuf = ">=3.19.4,<6.0"
 pymysql = ">=1,<2"
@@ -928,20 +928,21 @@ dev = ["PyTest", "PyTest-Cov", "bump2version (<1)", "setuptools ; python_version
 
 [[package]]
 name = "django"
-version = "3.2.25"
-description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
+version = "4.2.23"
+description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "Django-3.2.25-py3-none-any.whl", hash = "sha256:a52ea7fcf280b16f7b739cec38fa6d3f8953a5456986944c3ca97e79882b4e38"},
-    {file = "Django-3.2.25.tar.gz", hash = "sha256:7ca38a78654aee72378594d63e51636c04b8e28574f5505dff630895b5472777"},
+    {file = "django-4.2.23-py3-none-any.whl", hash = "sha256:dafbfaf52c2f289bd65f4ab935791cb4fb9a198f2a5ba9faf35d7338a77e9803"},
+    {file = "django-4.2.23.tar.gz", hash = "sha256:42fdeaba6e6449d88d4f66de47871015097dc6f1b87910db00a91946295cfae4"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.3.2,<4"
-pytz = "*"
-sqlparse = ">=0.2.2"
+asgiref = ">=3.6.0,<4"
+"backports.zoneinfo" = {version = "*", markers = "python_version < \"3.9\""}
+sqlparse = ">=0.3.1"
+tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
 argon2 = ["argon2-cffi (>=19.1.0)"]
@@ -986,18 +987,37 @@ Django = ">=3.2.18"
 
 [[package]]
 name = "django-cors-headers"
-version = "3.14.0"
+version = "4.4.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 groups = ["main"]
+markers = "python_version < \"3.13\""
 files = [
-    {file = "django_cors_headers-3.14.0-py3-none-any.whl", hash = "sha256:684180013cc7277bdd8702b80a3c5a4b3fcae4abb2bf134dceb9f5dfe300228e"},
-    {file = "django_cors_headers-3.14.0.tar.gz", hash = "sha256:5fbd58a6fb4119d975754b2bc090f35ec160a8373f276612c675b00e8a138739"},
+    {file = "django_cors_headers-4.4.0-py3-none-any.whl", hash = "sha256:5c6e3b7fe870876a1efdfeb4f433782c3524078fa0dc9e0195f6706ce7a242f6"},
+    {file = "django_cors_headers-4.4.0.tar.gz", hash = "sha256:92cf4633e22af67a230a1456cb1b7a02bb213d6536d2dcb2a4a24092ea9cebc2"},
 ]
 
 [package.dependencies]
-Django = ">=3.2"
+asgiref = ">=3.6"
+django = ">=3.2"
+
+[[package]]
+name = "django-cors-headers"
+version = "4.7.0"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "python_version >= \"3.13\""
+files = [
+    {file = "django_cors_headers-4.7.0-py3-none-any.whl", hash = "sha256:f1c125dcd58479fe7a67fe2499c16ee38b81b397463cf025f0e2c42937421070"},
+    {file = "django_cors_headers-4.7.0.tar.gz", hash = "sha256:6fdf31bf9c6d6448ba09ef57157db2268d515d94fc5c89a0a1028e1fc03ee52b"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=4.2"
 
 [[package]]
 name = "django-dbconn-retry"
@@ -4191,4 +4211,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8.0,<4.0"
-content-hash = "647490a6ec2c36d20d5342451502fa07fd1685875765bc23989bd6b137257669"
+content-hash = "6b1bae644dc1d727dbbfd40df27196a54965db613fa1add5e7946ef21f5acfd7"
