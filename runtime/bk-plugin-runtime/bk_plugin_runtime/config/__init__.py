@@ -15,10 +15,15 @@ from __future__ import absolute_import
 __all__ = ["celery_app", "RUN_VER", "APP_CODE", "SECRET_KEY", "BK_URL", "BASE_DIR"]
 
 import os
+import pymysql
 
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
 from blueapps.core.celery import celery_app
+from django.utils.functional import cached_property
+from django.db.backends.mysql.features import DatabaseFeatures
+
+pymysql.install_as_MySQLdb()
 
 # app 基本信息
 
@@ -47,3 +52,15 @@ BK_URL = None
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 兼容低版本 MySQL
+class PatchFeatures:
+    @cached_property
+    def minimum_database_version(self):
+        if self.connection.mysql_is_mariadb:
+            return (10, 4)
+        else:
+            return (5, 7)
+
+# 目前 Django 仅是对 5.7 做了软性的不兼容改动，在没有使用 8.0 特异的功能时，对 5.7 版本的使用无影响
+DatabaseFeatures.minimum_database_version = PatchFeatures.minimum_database_version

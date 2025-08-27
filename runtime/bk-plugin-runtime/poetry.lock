@@ -550,20 +550,19 @@ dev = ["PyTest", "PyTest-Cov", "bump2version (<1)", "setuptools", "tox"]
 
 [[package]]
 name = "django"
-version = "4.2.23"
-description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
+version = "3.2.25"
+description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.6"
 files = [
-    {file = "django-4.2.23-py3-none-any.whl", hash = "sha256:dafbfaf52c2f289bd65f4ab935791cb4fb9a198f2a5ba9faf35d7338a77e9803"},
-    {file = "django-4.2.23.tar.gz", hash = "sha256:42fdeaba6e6449d88d4f66de47871015097dc6f1b87910db00a91946295cfae4"},
+    {file = "Django-3.2.25-py3-none-any.whl", hash = "sha256:a52ea7fcf280b16f7b739cec38fa6d3f8953a5456986944c3ca97e79882b4e38"},
+    {file = "Django-3.2.25.tar.gz", hash = "sha256:7ca38a78654aee72378594d63e51636c04b8e28574f5505dff630895b5472777"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.6.0,<4"
-"backports.zoneinfo" = {version = "*", markers = "python_version < \"3.9\""}
-sqlparse = ">=0.3.1"
-tzdata = {version = "*", markers = "sys_platform == \"win32\""}
+asgiref = ">=3.3.2,<4"
+pytz = "*"
+sqlparse = ">=0.2.2"
 
 [package.extras]
 argon2 = ["argon2-cffi (>=19.1.0)"]
@@ -631,17 +630,16 @@ files = [
 
 [[package]]
 name = "django-prometheus"
-version = "2.4.1"
+version = "2.4.0"
 description = "Django middlewares to monitor your application with Prometheus.io."
 optional = false
 python-versions = "*"
 files = [
-    {file = "django_prometheus-2.4.1-py2.py3-none-any.whl", hash = "sha256:7fe5af7f7c9ad9cd8a429fe0f3f1bf651f0e244f77162147869eab7ec09cc5e7"},
-    {file = "django_prometheus-2.4.1.tar.gz", hash = "sha256:073628243d2a6de6a8a8c20e5b512872dfb85d66e1b60b28bcf1eca0155dad95"},
+    {file = "django_prometheus-2.4.0-py2.py3-none-any.whl", hash = "sha256:5b46b5f07b02ba8dd7abdb03a3c39073e8fd9120e2293a1ecb949bbb865378ac"},
+    {file = "django_prometheus-2.4.0.tar.gz", hash = "sha256:67da5c73d8e859aa73f6e11f52341c482691b17f8bd9844157cff6cdf51ce9bc"},
 ]
 
 [package.dependencies]
-Django = ">=4.2,<6.0"
 prometheus-client = ">=0.7"
 
 [[package]]
@@ -661,18 +659,18 @@ Django = ">=3.2,<6.0"
 
 [[package]]
 name = "djangorestframework"
-version = "3.15.2"
+version = "3.15.1"
 description = "Web APIs for Django, made easy."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.6"
 files = [
-    {file = "djangorestframework-3.15.2-py3-none-any.whl", hash = "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20"},
-    {file = "djangorestframework-3.15.2.tar.gz", hash = "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad"},
+    {file = "djangorestframework-3.15.1-py3-none-any.whl", hash = "sha256:3ccc0475bce968608cf30d07fb17d8e52d1d7fc8bfe779c905463200750cbca6"},
+    {file = "djangorestframework-3.15.1.tar.gz", hash = "sha256:f88fad74183dfc7144b2756d0d2ac716ea5b4c7c9840995ac3bfd8ec034333c1"},
 ]
 
 [package.dependencies]
 "backports.zoneinfo" = {version = "*", markers = "python_version < \"3.9\""}
-django = ">=4.2"
+django = ">=3.0"
 
 [[package]]
 name = "drf-yasg"
@@ -1968,4 +1966,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.0,<4.0"
-content-hash = "d93735b1e7432ca3a32c7ca2d9701a26f7dba61f3346f4eb8055ad4c857cd00d"
+content-hash = "db91ade583afe5f7fed9cdd126f39b0c4ad3016d91fb3dd65bf99009d1bcf53c"

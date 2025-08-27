@@ -18,7 +18,7 @@ from blueapps.conf.log import get_logging_config_dict
 from blueapps.conf.default_settings import *  # noqa
 
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-# 默认关闭可观侧性
+# 默认关闭可观测性
 ENABLE_OTEL_METRICS = os.getenv("ENABLE_METRICS", False)
 
 # 请在这里加入你的自定义 APP
