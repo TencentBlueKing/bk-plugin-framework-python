@@ -17,15 +17,12 @@ __all__ = ["celery_app", "RUN_VER", "APP_CODE", "SECRET_KEY", "BK_URL", "BASE_DI
 import os
 
 import django
-import pymysql
 
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
 from blueapps.core.celery import celery_app
 from django.utils.functional import cached_property
 from django.db.backends.mysql.features import DatabaseFeatures
-
-pymysql.install_as_MySQLdb()
 
 # app 基本信息
 
@@ -63,6 +60,8 @@ class PatchFeatures:
         if self.connection.mysql_is_mariadb:
             return 10, 4
         elif django_version < (4, 0):
+            import pymysql
+            pymysql.install_as_MySQLdb()
             return 5, 7
         else:
             return 8, 0
