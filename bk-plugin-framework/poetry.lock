@@ -197,21 +197,21 @@ files = [
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.1.0rc2"
+version = "2.1.0rc3"
 description = "bk plugin python django runtime"
 optional = false
 python-versions = "<4.0.0,>=3.8.0"
 groups = ["main"]
 files = [
-    {file = "bk_plugin_runtime-2.1.0rc2-py3-none-any.whl", hash = "sha256:1fb09a44675578c91fba509f12617d46c8a260166ade192500cd6b5e3ac45859"},
-    {file = "bk_plugin_runtime-2.1.0rc2.tar.gz", hash = "sha256:019de280b2cd7923da4a0d8e7ba3defa0c88ee4c5d30cac63f8f1c19cdb357d4"},
+    {file = "bk_plugin_runtime-2.1.0rc3-py3-none-any.whl", hash = "sha256:7485cdc8dc2d4ac399c4ed0bf27878a32d2696e0c41e7de7b3e4529d99392605"},
+    {file = "bk_plugin_runtime-2.1.0rc3.tar.gz", hash = "sha256:36050b75f3688d7fb60ee745fae45d67380d61ab1648eb817cc7124bdb14ca22"},
 ]
 
 [package.dependencies]
 blueapps = {version = ">=4.15.1,<5.0", extras = ["opentelemetry"]}
 celery = ">=5.4.0,<6.0.0"
 ddtrace = ">=0.14.1,<0.15.0"
-Django = ">=4.2,<5.0"
+Django = ">=2.2.6,<5"
 django-celery-beat = ">=2.7.0,<3.0.0"
 django-celery-results = ">=2.5.1,<3.0.0"
 django-cors-headers = ">=4.0.0,<5.0.0"
@@ -4211,4 +4211,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8.0,<4.0"
-content-hash = "6b1bae644dc1d727dbbfd40df27196a54965db613fa1add5e7946ef21f5acfd7"
+content-hash = "528db5761ef379de01b2c6a6e170e49379a32d212adfc582103ede2ebe0737cb"
