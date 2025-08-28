@@ -58,12 +58,8 @@ class PatchFeatures:
         django_version = django.VERSION
         if self.connection.mysql_is_mariadb:
             return 10, 4
-        elif django_version < (4, 0):
-            import pymysql
-            pymysql.install_as_MySQLdb()
-            return 5, 7
         else:
-            return 8, 0
+            return 5, 7
 
 # 目前 Django 仅是对 5.7 做了软性的不兼容改动，在没有使用 8.0 特异的功能时，对 5.7 版本的使用无影响
 DatabaseFeatures.minimum_database_version = PatchFeatures.minimum_database_version
