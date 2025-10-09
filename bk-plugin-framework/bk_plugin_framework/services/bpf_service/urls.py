@@ -18,6 +18,7 @@ from bk_plugin_framework.services.bpf_service import api
 from bk_plugin_framework.envs import settings
 
 PLUGIN_API_URLS_MODULE = "bk_plugin.apis.urls"
+PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"
 
 urlpatterns = [
     path(r"meta/", api.Meta.as_view()),
@@ -40,3 +41,12 @@ except ModuleNotFoundError:
 else:
     sys.stdout.write("[!]plugin api urls module found\n")
     urlpatterns.append(path(r"plugin_api/", include(PLUGIN_API_URLS_MODULE)))
+
+# add plugin openapi
+try:
+    importlib.import_module(PLUGIN_OPENAPI_URLS_MODULE)
+except ModuleNotFoundError:
+    sys.stdout.write("[!]can not find plugin openapi urls module, skip it\n")
+else:
+    sys.stdout.write("[!]plugin openapi urls module found\n")
+    urlpatterns.append(path(r"openapi/", include(PLUGIN_OPENAPI_URLS_MODULE)))

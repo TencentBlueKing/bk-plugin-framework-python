@@ -89,6 +89,34 @@ paths:
           userVerifiedRequired: true
           appVerifiedRequired: false
         disabledStages: []
+  /bk_plugin/openapi/:
+    x-bk-apigateway-method-any:
+      operationId: plugin_openapi
+      description: ''
+      tags: []
+      responses:
+        default:
+          description: ''
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: true
+        backend:
+          type: HTTP
+          method: any
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/openapi/
+          {% else %}
+          path: /bk_plugin/openapi/
+          {% endif %}
+          matchSubpath: true
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+        disabledStages: []
   /callback/{token}/:
     post:
       operationId: callback
