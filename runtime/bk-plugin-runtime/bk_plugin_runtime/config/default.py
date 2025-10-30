@@ -73,6 +73,12 @@ MIDDLEWARE += (  # noqa
     "bk_plugin_framework.services.bpf_service.middlewares.TraceIDInjectMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
     "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",  # JWT 透传的应用信息
+    "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",  # JWT 透传的用户信息
+)
+
+# 用户认证
+AUTHENTICATION_BACKENDS += (
+    "apigw_manager.apigw.authentication.UserModelBackend",
 )
 
 # 所有环境的日志级别可以在这里配置
