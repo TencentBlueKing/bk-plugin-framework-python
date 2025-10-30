@@ -18,7 +18,6 @@ import os
 
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
-import django
 from blueapps.core.celery import celery_app
 from django.utils.functional import cached_property
 from django.db.backends.mysql.features import DatabaseFeatures

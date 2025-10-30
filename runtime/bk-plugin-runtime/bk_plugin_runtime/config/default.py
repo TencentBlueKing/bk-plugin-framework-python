@@ -77,8 +77,8 @@ MIDDLEWARE += (  # noqa
 )
 
 # 用户认证
-AUTHENTICATION_BACKENDS += (
-    "apigw_manager.apigw.authentication.UserModelBackend",
+AUTHENTICATION_BACKENDS += (  # noqa
+    "bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",
 )
 
 # 所有环境的日志级别可以在这里配置
