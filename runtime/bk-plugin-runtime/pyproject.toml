@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bk-plugin-runtime"
-version = "2.1.0"
+version = "2.1.1rc0"
 description = "bk plugin python django runtime"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
