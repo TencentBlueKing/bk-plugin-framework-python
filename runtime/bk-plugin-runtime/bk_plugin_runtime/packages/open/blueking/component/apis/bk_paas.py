@@ -9,7 +9,8 @@ class CollectionsBkPaas(object):
         self.client = client
 
         self.get_app_info = ComponentAPI(
-            client=self.client, method='GET',
-            path='/api/c/compapi{bk_api_ver}/bk_paas/get_app_info/',
-            description=u'获取应用信息'
+            client=self.client,
+            method="GET",
+            path="/api/c/compapi{bk_api_ver}/bk_paas/get_app_info/",
+            description="获取应用信息",
         )

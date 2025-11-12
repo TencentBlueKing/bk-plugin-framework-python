@@ -77,9 +77,7 @@ MIDDLEWARE += (  # noqa
 )
 
 # 用户认证
-AUTHENTICATION_BACKENDS += (  # noqa
-    "bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",
-)
+AUTHENTICATION_BACKENDS += ("bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",)  # noqa
 
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
@@ -132,8 +130,8 @@ TIME_ZONE = "Asia/Shanghai"
 LANGUAGE_CODE = "zh-hans"
 
 LANGUAGES = (
-    ("en", u"English"),
-    ("zh-hans", u"简体中文"),
+    ("en", "English"),
+    ("zh-hans", "简体中文"),
 )
 
 """

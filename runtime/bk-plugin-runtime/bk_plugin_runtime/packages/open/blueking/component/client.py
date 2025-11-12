@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Component API Client
-"""
+"""Component API Client"""
 import json
 import logging
 import random

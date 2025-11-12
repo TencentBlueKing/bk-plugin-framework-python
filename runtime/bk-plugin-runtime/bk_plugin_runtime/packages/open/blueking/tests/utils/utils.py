@@ -11,14 +11,14 @@ def get_user_model():
 
 def load_tests_settings():
     return {
-        'valid_app': {
-            'bk_app_code': '',
-            'bk_app_secret': '',
+        "valid_app": {
+            "bk_app_code": "",
+            "bk_app_secret": "",
         },
-        'bk_user': {
-            'bk_username': 'admin',
-            'bk_token': '',
-        }
+        "bk_user": {
+            "bk_username": "admin",
+            "bk_token": "",
+        },
     }
 
 
