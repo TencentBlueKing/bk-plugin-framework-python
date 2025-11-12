@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django project settings
-"""
+"""Django project settings"""
 
 
 try:

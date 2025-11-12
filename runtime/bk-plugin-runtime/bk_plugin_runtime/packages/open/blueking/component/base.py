@@ -72,7 +72,7 @@ class ComponentAPI(object):
             resp = self.client.request(self.method, self.url, params=params, data=data)
         except Exception as e:
             logger.exception("Error occurred when requesting method=%s url=%s", self.method, self.url)
-            raise ComponentAPIException(self, u"Request component error, Exception: %s" % str(e))
+            raise ComponentAPIException(self, "Request component error, Exception: %s" % str(e))
 
         # Parse result
         if resp.status_code != self.HTTP_STATUS_OK:
@@ -84,8 +84,8 @@ class ComponentAPI(object):
             if not json_resp["result"]:
                 # 组件返回错误时，记录相应的 request_id
                 log_message = (
-                    u"Component return error message: %(message)s, request_id=%(request_id)s, "
-                    u"url=%(url)s, params=%(params)s, data=%(data)s, response=%(response)s"
+                    "Component return error message: %(message)s, request_id=%(request_id)s, "
+                    "url=%(url)s, params=%(params)s, data=%(data)s, response=%(response)s"
                 ) % {
                     "request_id": json_resp.get("request_id"),
                     "message": json_resp["message"],

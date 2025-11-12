@@ -80,4 +80,5 @@ def callback(trace_id: str, callback_id: str, callback_data: str):
             _set_schedule_state(trace_id=trace_id, state=State.FAIL)
 
         BK_PLUGIN_CALLBACK_TIME.labels(hostname=HOSTNAME, version=schedule.plugin_version).observe(
-            time.perf_counter() - start)
+            time.perf_counter() - start
+        )

@@ -129,14 +129,16 @@ BK_PLUGIN_SCHEDULE_TIME = Histogram(
 
 # 正在执行的 EXECUTE 数量
 BK_PLUGIN_EXECUTE_RUNNING_PROCESSES = Gauge(
-    name="bk_plugin_execute_running_processes", documentation="count running state processes",
-    labelnames=["hostname", "version"]
+    name="bk_plugin_execute_running_processes",
+    documentation="count running state processes",
+    labelnames=["hostname", "version"],
 )
 
 # 正在执行的 SCHEDULE 数量
 BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES = Gauge(
-    name="bk_plugin_schedule_running_processes", documentation="count running state schedules",
-    labelnames=["hostname", "version"]
+    name="bk_plugin_schedule_running_processes",
+    documentation="count running state schedules",
+    labelnames=["hostname", "version"],
 )
 
 # CALLBACK 异常次数

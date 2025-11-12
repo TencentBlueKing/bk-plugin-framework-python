@@ -30,9 +30,7 @@ def get_env_or_raise(key):
     value = os.environ.get(key)
     if not value:
         raise RuntimeError(
-            (
-                'Environment variable "{}" not found, you must set this variable to run this application.'
-            ).format(key)
+            ('Environment variable "{}" not found, you must set this variable to run this application.').format(key)
         )
     return value
 

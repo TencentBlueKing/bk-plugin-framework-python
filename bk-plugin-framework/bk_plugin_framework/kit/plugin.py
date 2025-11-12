@@ -50,6 +50,26 @@ class ContextRequire(BaseModel):
     pass
 
 
+class CredentialModel:
+    """凭证模型基类，用于声明插件需要的凭证"""
+
+    pass
+
+
+class Credential(BaseModel):
+    """凭证定义类，用于声明插件需要的凭证"""
+
+    key: str
+    name: str = ""
+    description: str = ""
+
+    def __init__(self, key: str, name: str = "", description: str = "", **kwargs):
+        # 如果 name 为空，使用 key 作为 name
+        if not name:
+            name = key
+        super().__init__(key=key, name=name, description=description, **kwargs)
+
+
 class Callback(object):
     def __init__(self, callback_id: str = "", callback_data: dict = {}):
         self.id = callback_id
@@ -66,6 +86,7 @@ class Context:
         callback: Callback = None,
         outputs: typing.Optional[dict] = None,
         storage: typing.Optional[dict] = None,
+        credentials: typing.Optional[dict] = None,
     ):
         self.trace_id = trace_id
         self.data = data
@@ -74,6 +95,7 @@ class Context:
         self.callback = callback
         self.storage = storage or {}
         self.outputs = outputs or {}
+        self.credentials = credentials or {}
 
     @property
     def schedule_context(self) -> dict:
@@ -140,6 +162,28 @@ class PluginMeta(type):
                 "plugin deinition error, {}'s ContextInputs is not subclass of {}".format(new_cls, ContextRequire)
             )
 
+        # credentials validation (class attribute, similar to ContextInputs)
+        credentials_cls = getattr(new_cls, "Credentials", None)
+        if credentials_cls:
+            # Check if Credentials class inherits from CredentialModel
+            if not issubclass(credentials_cls, CredentialModel):
+                raise TypeError(
+                    "plugin deinition error, {}'s Credentials is not subclass of {}".format(new_cls, CredentialModel)
+                )
+
+            # Validate each Credential instance in the Credentials class
+            for attr_name in dir(credentials_cls):
+                if attr_name.startswith("_"):
+                    continue
+                attr_value = getattr(credentials_cls, attr_name)
+                if isinstance(attr_value, Credential):
+                    if not attr_value.key:
+                        raise ValueError(
+                            "plugin deinition error, Credentials.{}.key cannot be empty in {}".format(
+                                attr_name, new_cls
+                            )
+                        )
+
         # inputs form check
         inputs_form_cls = getattr(new_cls, "InputsForm", None)
         if inputs_form_cls and not issubclass(inputs_form_cls, FormModel):
@@ -200,6 +244,7 @@ class Plugin(metaclass=PluginMeta):
             "desc": getattr(cls.Meta, "desc", ""),
             "version": cls.Meta.version,
             "enable_plugin_callback": getattr(cls.Meta, "enable_plugin_callback", False),
+            "credentials": cls._EMPTY_SCHEMA,
             "inputs": cls._EMPTY_SCHEMA,
             "outputs": cls._EMPTY_SCHEMA,
             "context_inputs": cls._EMPTY_SCHEMA,
@@ -227,4 +272,18 @@ class Plugin(metaclass=PluginMeta):
         if context_cls:
             data["context_inputs"] = cls._trim_schema(context_cls.schema())
 
+        # Extract credentials from Credentials class
+        credentials_cls = getattr(cls, "Credentials", None)
+        if credentials_cls:
+            credentials_list = []
+            for attr_name in dir(credentials_cls):
+                if attr_name.startswith("_"):
+                    continue
+                attr_value = getattr(credentials_cls, attr_name)
+                if isinstance(attr_value, Credential):
+                    credentials_list.append(attr_value)
+
+            data["credentials"] = [
+                {"key": c.key, "name": c.name, "description": c.description} for c in credentials_list
+            ]
         return data
