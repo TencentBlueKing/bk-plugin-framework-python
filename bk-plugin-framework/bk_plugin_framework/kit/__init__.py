@@ -23,4 +23,6 @@ from bk_plugin_framework.kit.plugin import (  # noqa
     State,
     Callback,
     FormModel,
+    Credential,
+    CredentialModel,
 )

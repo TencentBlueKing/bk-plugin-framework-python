@@ -21,6 +21,8 @@ from bk_plugin_framework.kit import (
     Callback,
     Context,
     State,
+    Credential,
+    CredentialModel,
 )
 from bk_plugin_framework.runtime.callback.api import CallbackPreparation
 
@@ -153,6 +155,7 @@ class TestPlugin:
             "desc": "",
             "version": my_plugin_cls.Meta.version,
             "enable_plugin_callback": False,
+            "credentials": my_plugin_cls._EMPTY_SCHEMA,
             "inputs": {
                 "type": my_plugin_cls.Inputs.schema()["type"],
                 "properties": my_plugin_cls.Inputs.schema()["properties"],
@@ -177,6 +180,7 @@ class TestPlugin:
             "desc": "",
             "version": my_plugin_cls.Meta.version,
             "enable_plugin_callback": False,
+            "credentials": my_plugin_cls._EMPTY_SCHEMA,
             "inputs": {
                 "type": my_plugin_cls.Inputs.schema()["type"],
                 "properties": my_plugin_cls.Inputs.schema()["properties"],
@@ -194,3 +198,77 @@ class TestPlugin:
                 "renderform": my_plugin_cls.renderform,
             },
         }
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_dict_with_credentials(self):
+        class PluginWithCredentials(Plugin):
+            class Meta:
+                version = "1.0.2"
+
+            class Inputs(InputsModel):
+                a: int
+
+            class ContextInputs(ContextRequire):
+                b: str
+
+            class Credentials(CredentialModel):
+                api_key = Credential(key="api_key", name="API Key", description="API Key for authentication")
+                api_secret = Credential(key="api_secret", name="API Secret", description="API Secret")
+
+        result = PluginWithCredentials.dict()
+        assert "credentials" in result
+        assert isinstance(result["credentials"], list)
+        assert len(result["credentials"]) == 2
+        assert result["credentials"][0]["key"] == "api_key"
+        assert result["credentials"][0]["name"] == "API Key"
+        assert result["credentials"][1]["key"] == "api_secret"
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_credentials_validation_invalid_subclass(self):
+        with pytest.raises(TypeError, match="Credentials is not subclass of"):
+            class InvalidCredentialsPlugin(Plugin):
+                class Meta:
+                    version = "1.0.3"
+
+                class Credentials:  # Not inheriting from CredentialModel
+                    api_key = Credential(key="api_key")
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_credentials_validation_empty_key(self):
+        with pytest.raises(ValueError, match="key cannot be empty"):
+            class EmptyKeyPlugin(Plugin):
+                class Meta:
+                    version = "1.0.4"
+
+                class Credentials(CredentialModel):
+                    api_key = Credential(key="")  # Empty key
+
+    def test_context_with_credentials(self):
+        class ContextInputs(ContextRequire):
+            a: int
+
+        credentials = {"api_key": "test_key", "api_secret": "test_secret"}
+        context = Context(
+            trace_id="test_trace",
+            data=ContextInputs(a=1),
+            state=State.EMPTY,
+            invoke_count=1,
+            credentials=credentials,
+        )
+
+        assert context.credentials == credentials
+        assert context.credentials.get("api_key") == "test_key"
+        assert context.credentials.get("api_secret") == "test_secret"
+
+    def test_context_without_credentials(self):
+        class ContextInputs(ContextRequire):
+            a: int
+
+        context = Context(
+            trace_id="test_trace",
+            data=ContextInputs(a=1),
+            state=State.EMPTY,
+            invoke_count=1,
+        )
+
+        assert context.credentials == {}

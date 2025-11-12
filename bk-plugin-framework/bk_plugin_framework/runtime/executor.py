@@ -90,7 +90,11 @@ class BKPluginExecutor:
     @setup_gauge(BK_PLUGIN_EXECUTE_RUNNING_PROCESSES)
     @setup_histogram(BK_PLUGIN_EXECUTE_TIME)
     def execute(
-        self, plugin_cls: Plugin, inputs: typing.Dict[str, typing.Any], context_inputs: typing.Dict[str, typing.Any]
+        self,
+        plugin_cls: Plugin,
+        inputs: typing.Dict[str, typing.Any],
+        context_inputs: typing.Dict[str, typing.Any],
+        credentials: typing.Optional[typing.Dict[str, typing.Any]] = None,
     ) -> ExecuteResult:
 
         # user inputs validation
@@ -109,7 +113,12 @@ class BKPluginExecutor:
 
         # domain object initialization
         context = Context(
-            trace_id=self.trace_id, data=valid_context_inputs, state=State.EMPTY, invoke_count=1, outputs={}
+            trace_id=self.trace_id,
+            data=valid_context_inputs,
+            state=State.EMPTY,
+            invoke_count=1,
+            outputs={},
+            credentials=credentials or {},
         )
         plugin = plugin_cls()
         # run execute method
@@ -141,8 +150,10 @@ class BKPluginExecutor:
 
             # prepare persistent data for schedule
             try:
+                schedule_context = context.schedule_context.copy()
+                schedule_context["credentials"] = context.credentials
                 schedule_data = self._dump_schedule_data(
-                    inputs=inputs, context=context.schedule_context, outputs=context.outputs
+                    inputs=inputs, context=schedule_context, outputs=context.outputs
                 )
             except Exception as e:
                 logger.exception("[execute] schedule data json dumps error")
@@ -235,6 +246,7 @@ class BKPluginExecutor:
             ),
             outputs=schedule_data["context"]["outputs"],
             storage=schedule_data["context"]["storage"],
+            credentials=schedule_data["context"].get("credentials", {}),
         )
         plugin = plugin_cls()
         err = ""
@@ -256,8 +268,10 @@ class BKPluginExecutor:
 
         context.data = context_inputs_cls(**schedule_data["context"]["data"])
         try:
+            schedule_context = context.schedule_context.copy()
+            schedule_context["credentials"] = context.credentials
             schedule_data = self._dump_schedule_data(
-                inputs=schedule_data["inputs"], context=context.schedule_context, outputs=context.outputs
+                inputs=schedule_data["inputs"], context=schedule_context, outputs=context.outputs
             )
         except Exception:
             logger.exception("[execute] schedule data json dumps error")

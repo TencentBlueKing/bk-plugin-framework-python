@@ -20,6 +20,8 @@ from bk_plugin_framework.kit import (
     ContextRequire,
     Context,
     State,
+    Credential,
+    CredentialModel,
 )
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 
@@ -181,7 +183,7 @@ class TestBKPluginExecutor:
             trace_id=executor.trace_id,
             state=State.POLL.value,
             plugin_version=plugin_cls.Meta.version,
-            data='{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}',  # noqa
+            data='{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}',  # noqa
         )
         current_app.tasks[executor.SCHEDULE_TASK_NAME].apply_async.assert_called_once_with(
             kwargs={"trace_id": executor.trace_id},
@@ -200,7 +202,7 @@ class TestBKPluginExecutor:
     def test_schedule__plugin_inputs_validation_err(self, executor_1, plugin_cls):
         schedule = MagicMock()
         schedule.data = (
-            '{"inputs": {}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+            '{"inputs": {}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         )
 
         executor_1.schedule(plugin_cls, schedule)
@@ -209,7 +211,7 @@ class TestBKPluginExecutor:
 
     def test_schedule__plugin_context_validation_err(self, executor_1, plugin_cls):
         schedule = MagicMock()
-        schedule.data = '{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {}, "credentials": {}}, "outputs": {}}'  # noqa
 
         executor_1.schedule(plugin_cls, schedule)
 
@@ -218,7 +220,7 @@ class TestBKPluginExecutor:
     def test_schedule__plugin_execute_raise_expected_err(self, executor, plugin_cls):
         schedule = MagicMock()
         schedule.invoke_count = 1
-        schedule.data = '{"inputs": {"success": false, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": false, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         Schedule = MagicMock()
         now = MagicMock(return_value="now")
 
@@ -227,18 +229,21 @@ class TestBKPluginExecutor:
                 executor.schedule(plugin_cls, schedule)
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
-        Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.FAIL.value,
-            invoke_count=2,
-            data=schedule.data,
-            finish_at="now",
-            err="plugin schedule failed: fail",
-        )
+        # The data will be updated with credentials included
+        update_call = Schedule.objects.filter(trace_id=schedule.trace_id).update.call_args
+        assert update_call is not None
+        assert update_call.kwargs["state"] == State.FAIL.value
+        assert update_call.kwargs["invoke_count"] == 2
+        assert update_call.kwargs["finish_at"] == "now"
+        assert update_call.kwargs["err"] == "plugin schedule failed: fail"
+        # Verify credentials is included in the data
+        updated_data = json.loads(update_call.kwargs["data"])
+        assert "credentials" in updated_data["context"]
 
     def test_schedule__plugin_execute_raise_unexpected_err(self, executor, plugin_cls):
         schedule = MagicMock()
         schedule.invoke_count = 1
-        schedule.data = '{"inputs": {"success": true, "poll": true, "raise_unexpected_err": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true, "poll": true, "raise_unexpected_err": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         Schedule = MagicMock()
         now = MagicMock(return_value="now")
 
@@ -254,7 +259,7 @@ class TestBKPluginExecutor:
     def test_schedule__plugin_execute_waiting_poll(self, executor, plugin_cls):
         schedule = MagicMock()
         schedule.invoke_count = 1
-        schedule.data = '{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true, "poll": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         Schedule = MagicMock()
         current_app = MagicMock()
 
@@ -263,9 +268,13 @@ class TestBKPluginExecutor:
                 executor.schedule(plugin_cls, schedule)
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
-        Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.POLL.value, invoke_count=2, data=schedule.data
-        )
+        # The data will be updated with credentials included
+        update_call = Schedule.objects.filter(trace_id=schedule.trace_id).update.call_args
+        assert update_call is not None
+        assert update_call.kwargs["state"] == State.POLL.value
+        assert update_call.kwargs["invoke_count"] == 2
+        updated_data = json.loads(update_call.kwargs["data"])
+        assert "credentials" in updated_data["context"]
         current_app.tasks[executor.SCHEDULE_TASK_NAME].apply_async.assert_called_once_with(
             kwargs={"trace_id": executor.trace_id},
             countdown=1,
@@ -276,7 +285,7 @@ class TestBKPluginExecutor:
         schedule = MagicMock()
         schedule.invoke_count = 1
         schedule.state = State.CALLBACK.value
-        schedule.data = '{"inputs": {"success": true, "poll": true, "callback": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true, "poll": true, "callback": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         Schedule = MagicMock()
         current_app = MagicMock()
         callback_info = {"callback_id": "callback_id", "callback_data": {"result": True, "data": {}}}
@@ -285,14 +294,18 @@ class TestBKPluginExecutor:
                 executor.schedule(plugin_cls, schedule, callback_info)
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
-        Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.CALLBACK.value, invoke_count=2, data=schedule.data
-        )
+        # The data will be updated with credentials included
+        update_call = Schedule.objects.filter(trace_id=schedule.trace_id).update.call_args
+        assert update_call is not None
+        assert update_call.kwargs["state"] == State.CALLBACK.value
+        assert update_call.kwargs["invoke_count"] == 2
+        updated_data = json.loads(update_call.kwargs["data"])
+        assert "credentials" in updated_data["context"]
 
     def test_schedule__plugin_execute_success(self, executor, plugin_cls):
         schedule = MagicMock()
         schedule.invoke_count = 1
-        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
         Schedule = MagicMock()
         now = MagicMock(return_value="now")
 
@@ -301,13 +314,18 @@ class TestBKPluginExecutor:
                 executor.schedule(plugin_cls, schedule)
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
-        Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.SUCCESS.value, invoke_count=2, data=schedule.data, finish_at="now"
-        )
+        # The data will be updated with credentials included
+        update_call = Schedule.objects.filter(trace_id=schedule.trace_id).update.call_args
+        assert update_call is not None
+        assert update_call.kwargs["state"] == State.SUCCESS.value
+        assert update_call.kwargs["invoke_count"] == 2
+        assert update_call.kwargs["finish_at"] == "now"
+        updated_data = json.loads(update_call.kwargs["data"])
+        assert "credentials" in updated_data["context"]
 
     def test_schedule__plugin_execute_success_dump_data_err(self, executor_2, plugin_cls):
         schedule = MagicMock()
-        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'  # noqa
 
         executor_2.schedule(plugin_cls, schedule)
 
@@ -323,7 +341,7 @@ class TestBKPluginExecutor:
     def test_schedule__plugin_inputs_and_context_not_define(self, executor, empty_plugin_cls):
         schedule = MagicMock()
         schedule.invoke_count = 1
-        schedule.data = '{"inputs": {}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'
+        schedule.data = '{"inputs": {}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}, "credentials": {}}, "outputs": {}}'
         Schedule = MagicMock()
         now = MagicMock(return_value="now")
 
@@ -332,9 +350,121 @@ class TestBKPluginExecutor:
                 executor.schedule(empty_plugin_cls, schedule)
 
         Schedule.objects.filter.assert_called_once_with(trace_id=schedule.trace_id)
-        Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
-            state=State.SUCCESS.value,
-            invoke_count=2,
-            data='{"inputs": {}, "context": {"storage": {}, "outputs": {}, "data": {}}, "outputs": {}}',
-            finish_at="now",
+        # The data will be updated with credentials included
+        update_call = Schedule.objects.filter(trace_id=schedule.trace_id).update.call_args
+        assert update_call is not None
+        assert update_call.kwargs["state"] == State.SUCCESS.value
+        assert update_call.kwargs["invoke_count"] == 2
+        assert update_call.kwargs["finish_at"] == "now"
+        updated_data = json.loads(update_call.kwargs["data"])
+        assert "credentials" in updated_data["context"]
+        assert updated_data["context"]["data"] == {}
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_execute__with_credentials(self, executor):
+        class PluginWithCredentials(Plugin):
+            class Meta:
+                version = "1.0.5"
+
+            class Inputs(InputsModel):
+                success: bool
+
+            class ContextInputs(ContextRequire):
+                b: str
+
+            class Credentials(CredentialModel):
+                api_key = Credential(key="api_key", name="API Key")
+
+            def execute(self, inputs: InputsModel, context: Context):
+                assert context.credentials.get("api_key") == "test_key"
+                if inputs.success:
+                    return
+                else:
+                    raise self.Error("fail")
+
+        credentials = {"api_key": "test_key"}
+        result = executor.execute(
+            PluginWithCredentials, {"success": True}, {"b": "1"}, credentials=credentials
         )
+
+        assert result.state is State.SUCCESS
+        assert result.outputs == {}
+        assert result.err is None
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_execute__credentials_passed_to_context(self, executor):
+        class PluginWithCredentials(Plugin):
+            class Meta:
+                version = "1.0.6"
+
+            class Inputs(InputsModel):
+                success: bool
+
+            class ContextInputs(ContextRequire):
+                b: str
+
+            class Credentials(CredentialModel):
+                api_key = Credential(key="api_key")
+                api_secret = Credential(key="api_secret")
+
+            def execute(self, inputs: InputsModel, context: Context):
+                assert "api_key" in context.credentials
+                assert "api_secret" in context.credentials
+                assert context.credentials["api_key"] == "key_value"
+                assert context.credentials["api_secret"] == "secret_value"
+                if inputs.success:
+                    return
+                else:
+                    raise self.Error("fail")
+
+        credentials = {"api_key": "key_value", "api_secret": "secret_value"}
+        result = executor.execute(
+            PluginWithCredentials, {"success": True}, {"b": "1"}, credentials=credentials
+        )
+
+        assert result.state is State.SUCCESS
+
+    @patch("bk_plugin_framework.hub.load_form_module_path", MagicMock(return_value="tests"))
+    def test_schedule__credentials_persisted(self, executor):
+        class PluginWithCredentials(Plugin):
+            class Meta:
+                version = "1.0.7"
+
+            class Inputs(InputsModel):
+                success: bool
+                poll: bool = False
+
+            class ContextInputs(ContextRequire):
+                b: str
+
+            class Credentials(CredentialModel):
+                api_key = Credential(key="api_key")
+
+            def execute(self, inputs: InputsModel, context: Context):
+                assert context.credentials.get("api_key") == "persisted_key"
+                if inputs.success:
+                    if inputs.poll:
+                        self.wait_poll(1)
+                    return
+                else:
+                    raise self.Error("fail")
+
+        credentials = {"api_key": "persisted_key"}
+        schedule_obj = MagicMock()
+        Schedule = MagicMock()
+        Schedule.objects.create = MagicMock(return_value=schedule_obj)
+        current_app = MagicMock()
+
+        with patch("bk_plugin_framework.runtime.executor.Schedule", Schedule):
+            with patch("bk_plugin_framework.runtime.executor.current_app", current_app):
+                result = executor.execute(
+                    PluginWithCredentials, {"success": True, "poll": True}, {"b": "1"}, credentials=credentials
+                )
+
+        assert result.state is State.POLL
+        # Verify credentials are included in schedule data
+        create_call_args = Schedule.objects.create.call_args
+        assert create_call_args is not None
+        schedule_data = json.loads(create_call_args.kwargs["data"])
+        assert "credentials" in schedule_data["context"]
+        assert schedule_data["context"]["credentials"]["api_key"] == "persisted_key"

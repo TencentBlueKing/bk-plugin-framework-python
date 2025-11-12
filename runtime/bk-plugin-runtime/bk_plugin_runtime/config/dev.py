@@ -37,10 +37,7 @@ DEBUG = True
 
 # 本地开发数据库默认使用sqlite3
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": APP_CODE  # noqa
-    },
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": APP_CODE},  # noqa
 }
 # 本地开发是否使用mysql数据库
 BK_PLUGIN_DEV_USE_MYSQL = os.getenv("BK_PLUGIN_DEV_USE_MYSQL")
