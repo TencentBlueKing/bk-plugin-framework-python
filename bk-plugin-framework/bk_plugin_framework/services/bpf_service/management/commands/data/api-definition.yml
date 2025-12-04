@@ -23,5 +23,13 @@ stage:
       max_age: 86400
       allow_credential: true
 
+{% if settings.BK_APIGW_GRANTED_APPS %}
+grant_permissions:
+  {% for app_code in settings.BK_APIGW_GRANTED_APPS %}
+  - bk_app_code: {{ app_code }}
+    grant_dimension: "gateway"
+  {% endfor %}
+{% endif %}
+
 release:
   comment: "auto release by bk-plugin-runtime"

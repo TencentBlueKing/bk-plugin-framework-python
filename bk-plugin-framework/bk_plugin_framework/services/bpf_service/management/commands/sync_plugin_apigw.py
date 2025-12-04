@@ -27,6 +27,8 @@ class Command(BaseCommand):
         call_command("sync_apigw_resources", file=resources_file_path)
         print("[bk-plugin-framework]call sync_apigw_strategies with definition: %s" % definition_file_path)
         call_command("sync_apigw_strategies", file=definition_file_path)
+        print("[bk-plugin-framework]call grant_apigw_permissions with definition: %s" % definition_file_path)
+        call_command("grant_apigw_permissions", file=definition_file_path)
 
         # if getattr(settings, "BK_APIGW_CORS_ALLOW_ORIGINS"):
         #     strategy_cors_file_path = os.path.join(__file__.rsplit("/", 1)[0], "data/api-strategy-cors.yml")
