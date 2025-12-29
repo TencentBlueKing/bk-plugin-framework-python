@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,8 +9,6 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-from __future__ import absolute_import
-
 __all__ = ["celery_app", "RUN_VER", "APP_CODE", "SECRET_KEY", "BK_URL", "BASE_DIR"]
 
 import os
@@ -19,8 +16,8 @@ import os
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
 from blueapps.core.celery import celery_app
-from django.utils.functional import cached_property
 from django.db.backends.mysql.features import DatabaseFeatures
+from django.utils.functional import cached_property
 
 # app 基本信息
 
@@ -30,9 +27,7 @@ def get_env_or_raise(key):
     value = os.environ.get(key)
     if not value:
         raise RuntimeError(
-            (
-                'Environment variable "{}" not found, you must set this variable to run this application.'
-            ).format(key)
+            ('Environment variable "{}" not found, you must set this variable to run this application.').format(key)
         )
     return value
 

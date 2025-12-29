@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,12 +9,12 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-import os
 import json
+import os
 import urllib
 
-from blueapps.conf.log import get_logging_config_dict
 from blueapps.conf.default_settings import *  # noqa
+from blueapps.conf.log import get_logging_config_dict
 
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
 # 默认关闭可观侧性
@@ -38,8 +37,12 @@ if ENABLE_OTEL_METRICS:
 if BKPAAS_ENVIRONMENT == "dev":
     INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
 
-from bk_plugin_framework.runtime.schedule.celery import queues as schedule_queues  # noqa
-from bk_plugin_framework.runtime.callback.celery import queues as callback_queues  # noqa
+from bk_plugin_framework.runtime.callback.celery import (  # noqa
+    queues as callback_queues,
+)
+from bk_plugin_framework.runtime.schedule.celery import (  # noqa
+    queues as schedule_queues,
+)
 
 CELERY_QUEUES = schedule_queues.CELERY_QUEUES
 CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
@@ -77,9 +80,7 @@ MIDDLEWARE += (  # noqa
 )
 
 # 用户认证
-AUTHENTICATION_BACKENDS += (  # noqa
-    "bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",
-)
+AUTHENTICATION_BACKENDS += ("bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",)  # noqa
 
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
@@ -132,8 +133,8 @@ TIME_ZONE = "Asia/Shanghai"
 LANGUAGE_CODE = "zh-hans"
 
 LANGUAGES = (
-    ("en", u"English"),
-    ("zh-hans", u"简体中文"),
+    ("en", "English"),
+    ("zh-hans", "简体中文"),
 )
 
 """
@@ -173,8 +174,8 @@ if locals().get("DISABLED_APPS"):
 
 ROOT_URLCONF = "bk_plugin_runtime.urls"
 
-from blueapps.core.celery import celery_app  # noqa
 from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
+from blueapps.core.celery import celery_app  # noqa
 
 celery_app.conf.beat_schedule = SCHEDULE
 
@@ -254,6 +255,5 @@ BK_APIGW_CORS_ALLOW_METHODS = os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "")
 BK_APIGW_CORS_ALLOW_HEADERS = os.getenv("BK_APIGW_CORS_ALLOW_HEADERS", "")
 BK_APIGW_DEFAULT_TIMEOUT = int(os.getenv("BK_APIGW_DEFAULT_TIMEOUT", "60"))
 BK_APIGW_GRANTED_APPS = [BK_APP_CODE] + [
-    each.strip() for each in os.getenv("BK_APIGW_GRANTED_APPS", "").split(",")
-    if each.strip()
+    each.strip() for each in os.getenv("BK_APIGW_GRANTED_APPS", "").split(",") if each.strip()
 ]

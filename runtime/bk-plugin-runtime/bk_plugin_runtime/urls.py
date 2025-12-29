@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -11,11 +10,11 @@ specific language governing permissions and limitations under the License.
 """
 
 from django.conf import settings
-from django.urls import include, re_path
 from django.contrib import admin
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
+from django.urls import include, re_path
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
