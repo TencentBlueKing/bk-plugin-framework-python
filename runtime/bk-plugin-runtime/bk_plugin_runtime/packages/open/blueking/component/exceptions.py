@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 class ComponentBaseException(Exception):
     pass
 
@@ -14,5 +11,5 @@ class ComponentAPIException(ComponentBaseException):
         self.resp = resp
 
         if self.resp is not None:
-            error_message = "%s, resp=%s" % (error_message, self.resp.text)
-        super(ComponentAPIException, self).__init__(error_message)
+            error_message = "{}, resp={}".format(error_message, self.resp.text)
+        super().__init__(error_message)

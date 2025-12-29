@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,15 +8,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-import os
+
 import base64
 import hashlib
 import logging
+import os
 
 try:
     from pydantic.v1 import BaseSettings
 except ImportError:
     from pydantic import BaseSettings
+
 from django.conf import settings as default_settings
 
 logger = logging.getLogger("bk_plugin")

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -14,13 +13,14 @@ try:
     from pydantic.v1 import Field
 except ImportError:
     from pydantic import Field  # noqa
+
 from bk_plugin_framework.kit.plugin import (  # noqa
-    Plugin,
-    InputsModel,
-    Context,
-    OutputsModel,
-    ContextRequire,
-    State,
     Callback,
+    Context,
+    ContextRequire,
     FormModel,
+    InputsModel,
+    OutputsModel,
+    Plugin,
+    State,
 )

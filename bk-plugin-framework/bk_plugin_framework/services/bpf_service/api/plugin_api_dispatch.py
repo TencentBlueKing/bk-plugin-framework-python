@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,27 +8,29 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+
 import json
 import logging
 import re
-
 from urllib.parse import urlsplit
+
+from apigw_manager.apigw.decorators import apigw_require
+from bk_plugin_framework.services.bpf_service.api.permissions import (
+    ScopeAllowPermission,
+)
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
+from blueapps.account.decorators import login_exempt
 from django.test import RequestFactory
-from django.urls import resolve, Resolver404
+from django.urls import Resolver404, resolve
 from django.utils.decorators import method_decorator
-from rest_framework import status
-from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from drf_yasg.utils import swagger_auto_schema
-
-from blueapps.account.decorators import login_exempt
-from apigw_manager.apigw.decorators import apigw_require
-
-from bk_plugin_framework.services.bpf_service.api.permissions import ScopeAllowPermission
-from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 logger = logging.getLogger("bk_plugin")
 
@@ -64,7 +65,7 @@ class PluginAPIDispatchResponseSerializer(StandardResponseSerializer):
     data = serializers.DictField(help_text="DATA API 返回的数据")
 
 
-class DummyUser(object):
+class DummyUser:
     def __init__(self, username):
         self.username = username
 
@@ -97,7 +98,7 @@ class PluginAPIDispatch(APIView):
 
         try:
             parsed = urlsplit(request_data["url"])
-            logger.info("url(%s) parsed: %s" % (request_data["url"], parsed))
+            logger.info("url({}) parsed: {}".format(request_data["url"], parsed))
 
             matched = resolve(parsed.path, urlconf=None)
             view_func, kwargs = matched.func, matched.kwargs

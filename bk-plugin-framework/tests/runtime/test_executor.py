@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,16 +8,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-import json
-import pytest
 
+import json
 from unittest.mock import MagicMock, patch
 
+import pytest
 from bk_plugin_framework.kit import (
-    Plugin,
-    InputsModel,
-    ContextRequire,
     Context,
+    ContextRequire,
+    InputsModel,
+    Plugin,
     State,
 )
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
