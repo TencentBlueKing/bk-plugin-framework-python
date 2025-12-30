@@ -13,18 +13,23 @@ import json
 import logging
 
 from bk_plugin_framework.runtime.schedule.models import Schedule as ScheduleModel
+from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.serializers import (
     StandardResponseSerializer,
 )
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 logger = logging.getLogger("root")
+
+
+class ScheduleParamsSerializer(serializers.Serializer):
+    trace_id = serializers.CharField(help_text="插件调用 trace id")
 
 
 class ScheduleResponseSerializer(StandardResponseSerializer):
@@ -48,10 +53,10 @@ class Schedule(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    @swagger_auto_schema(
-        method="GET",
-        operation_summary="Get plugin schedule detail with trace_id",
-        responses={200: ScheduleResponseSerializer},
+    @extend_schema(
+        summary="获取插件调度详情",
+        request=ScheduleParamsSerializer,
+        responses={200: enveloper(ScheduleResponseSerializer)},
     )
     @action(methods=["GET"], detail=True)
     def get(self, request, trace_id):
