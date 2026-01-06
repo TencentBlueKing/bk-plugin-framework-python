@@ -12,8 +12,9 @@ specific language governing permissions and limitations under the License.
 import logging
 from logging import LogRecord
 
-from bk_plugin_framework.utils import local
 from django.core.exceptions import AppRegistryNotReady
+
+from bk_plugin_framework.utils import local
 
 
 class TraceContextLogHandler(logging.Handler):

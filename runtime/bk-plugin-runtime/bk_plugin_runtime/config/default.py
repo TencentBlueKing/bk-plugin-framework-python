@@ -46,12 +46,8 @@ if ENABLE_OTEL_METRICS:
 if BKPAAS_ENVIRONMENT == "dev":
     INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
 
-from bk_plugin_framework.runtime.callback.celery import (  # noqa
-    queues as callback_queues,
-)
-from bk_plugin_framework.runtime.schedule.celery import (  # noqa
-    queues as schedule_queues,
-)
+from bk_plugin_framework.runtime.callback.celery import queues as callback_queues  # noqa
+from bk_plugin_framework.runtime.schedule.celery import queues as schedule_queues  # noqa
 
 CELERY_QUEUES = schedule_queues.CELERY_QUEUES
 CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
@@ -185,8 +181,9 @@ if locals().get("DISABLED_APPS"):
 
 ROOT_URLCONF = "bk_plugin_runtime.urls"
 
-from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
 from blueapps.core.celery import celery_app  # noqa
+
+from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
 
 celery_app.conf.beat_schedule = SCHEDULE
 
