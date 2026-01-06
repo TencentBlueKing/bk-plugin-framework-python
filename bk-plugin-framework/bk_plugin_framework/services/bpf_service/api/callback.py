@@ -14,6 +14,7 @@ import logging
 import traceback
 
 from apigw_manager.apigw.decorators import apigw_require
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
 from bk_plugin_framework.serializers import enveloper
 from blueapps.account.decorators import login_exempt
@@ -45,6 +46,15 @@ class PluginCallback(APIView):
         summary="插件回调",
         request=PluginCallbackParamsSerializer,
         responses={200: enveloper(PluginCallbackResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=True,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="插件调用",
+            match_subpath=False,
+        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, token):

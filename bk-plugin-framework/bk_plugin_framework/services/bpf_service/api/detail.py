@@ -11,13 +11,15 @@ specific language governing permissions and limitations under the License.
 
 import logging
 
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from bk_plugin_framework.hub import VersionHub
+from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.serializers import (
     StandardResponseSerializer,
 )
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -65,10 +67,18 @@ class DetailResponseSerializer(StandardResponseSerializer):
 class Detail(APIView):
     permission_classes = [permissions.AllowAny]
 
-    @swagger_auto_schema(
-        method="GET",
-        operation_summary="Get plugin detail for specific version",
-        responses={200: DetailResponseSerializer},
+    @extend_schema(
+        summary="Get plugin detail for specific version",
+        responses={200: enveloper(DetailResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=True,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="插件调用",
+            match_subpath=False,
+        ),
     )
     @action(methods=["GET"], detail=True)
     def get(self, request, version):

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 import logging
 
 from apigw_manager.apigw.decorators import apigw_require
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.serializers import enveloper
@@ -60,6 +61,15 @@ class Invoke(APIView):
         summary="插件调用",
         request=InvokeParamsSerializer,
         responses={200: enveloper(InvokeResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=True,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="插件调用",
+            match_subpath=False,
+        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, version):
