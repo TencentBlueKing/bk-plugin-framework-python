@@ -25,6 +25,8 @@ repos:
         args:
           - "--profile"
           - "black"
+          - "--known-first-party"
+          - "bk_plugin_framework,bk_plugin_runtime"
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
