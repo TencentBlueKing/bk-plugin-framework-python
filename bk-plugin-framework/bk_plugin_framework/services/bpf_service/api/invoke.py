@@ -13,6 +13,15 @@ import logging
 
 from apigw_manager.apigw.decorators import apigw_require
 from apigw_manager.drf.utils import gen_apigateway_resource_config
+from blueapps.account.decorators import login_exempt
+from django.utils.decorators import method_decorator
+from drf_spectacular.utils import extend_schema
+from rest_framework import serializers, status
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.serializers import enveloper
@@ -22,14 +31,6 @@ from bk_plugin_framework.services.bpf_service.api.permissions import (
 from bk_plugin_framework.services.bpf_service.api.serializers import (
     StandardResponseSerializer,
 )
-from blueapps.account.decorators import login_exempt
-from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
-from rest_framework import serializers, status
-from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 logger = logging.getLogger("bk_plugin")
 

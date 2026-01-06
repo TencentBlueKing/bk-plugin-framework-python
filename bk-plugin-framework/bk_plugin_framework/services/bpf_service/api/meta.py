@@ -13,12 +13,6 @@ import logging
 from importlib import import_module
 
 from apigw_manager.drf.utils import gen_apigateway_resource_config
-from bk_plugin_framework import __version__ as bpf_version
-from bk_plugin_framework.hub import VersionHub
-from bk_plugin_framework.serializers import enveloper
-from bk_plugin_framework.services.bpf_service.api.serializers import (
-    StandardResponseSerializer,
-)
 from blueapps.account.decorators import login_exempt
 from django.conf import settings
 from django.utils.decorators import method_decorator
@@ -27,6 +21,13 @@ from rest_framework import permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from bk_plugin_framework import __version__ as bpf_version
+from bk_plugin_framework.hub import VersionHub
+from bk_plugin_framework.serializers import enveloper
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
 
 logger = logging.getLogger("root")
 

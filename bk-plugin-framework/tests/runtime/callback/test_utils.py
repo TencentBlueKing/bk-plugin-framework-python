@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 import uuid
 
 import pytest
+
 from bk_plugin_framework.runtime.callback.api import (
     CallbackPreparation,
     parse_callback_token,

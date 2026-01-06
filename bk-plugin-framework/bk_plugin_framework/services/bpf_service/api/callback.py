@@ -15,8 +15,6 @@ import traceback
 
 from apigw_manager.apigw.decorators import apigw_require
 from apigw_manager.drf.utils import gen_apigateway_resource_config
-from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
-from bk_plugin_framework.serializers import enveloper
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
@@ -24,6 +22,9 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
+from bk_plugin_framework.serializers import enveloper
 
 logger = logging.getLogger("bk_plugin")
 
