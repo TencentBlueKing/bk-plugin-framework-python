@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 import json
 import logging
 
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from bk_plugin_framework.runtime.schedule.models import Schedule as ScheduleModel
 from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.serializers import (
@@ -57,6 +58,15 @@ class Schedule(APIView):
         summary="获取插件调度详情",
         request=ScheduleParamsSerializer,
         responses={200: enveloper(ScheduleResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=True,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="插件调用",
+            match_subpath=False,
+        ),
     )
     @action(methods=["GET"], detail=True)
     def get(self, request, trace_id):
