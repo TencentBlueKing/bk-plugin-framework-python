@@ -24,20 +24,17 @@ modules:
           procCommand: celery-prometheus-exporter --broker amqp://$RABBITMQ_USER:$RABBITMQ_PASSWORD@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_VHOST --addr 0.0.0.0:5001 --queue-list plugin_schedule plugin_callback schedule_delete
       configuration:
         env:
-          - name: PYTHONPATH
-            value: /app
-            description: 将项目根目录添加到Python路径，使Python能直接引用本地的bk_plugin_runtime和bk_plugin_framework
           - name: PIP_VERSION
             value: 21.2.2
             description: pip version control
           - name: BK_APIGW_MANAGER_URL_TMPL
-            value: http://{api_name}.apigw.o.woa.com
+            value: {{cookiecutter.apigw_manager_url_tmpl}}
             description: pip version control
           - name: BK_APIGW_MANAGER_MAINTAINERS
-            value: simonyi
+            value: {{cookiecutter.init_apigw_maintainer}}
             description: plugin apigw managers
           - name: BK_INIT_SUPERUSER
-            value: simonyi
+            value: {{cookiecutter.init_admin}}
             description: plugin admin panel init superuser
           - name: BK_SOPS_APP_CODE
             value: bksops
@@ -49,14 +46,14 @@ modules:
             value: bk_plugin_runtime.config
             description: blueapps config path
           - name: BK_APIGW_CORS_ALLOW_ORIGINS
-            value: ''
+            value: {{cookiecutter.apigw_cors_allow_origins}}
             description: apigw cors strategie allow origins
           - name: BK_APIGW_CORS_ALLOW_METHODS
-            value: GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS
+            value: {{cookiecutter.apigw_cors_allow_methods}}
             description: apigw cors strategie allow methods
           - name: BK_APIGW_CORS_ALLOW_HEADERS
-            value: Accept,Cache-Control,Content-Type,Keep-Alive,Origin,User-Agent,X-Requested-With
+            value: {{cookiecutter.apigw_cors_allow_headers}}
             description: apigw cors strategie allow headers
           - name: BK_APIGW_DEFAULT_TIMEOUT
-            value: 60
+            value: {{cookiecutter.bk_apigw_default_timeout}}
             description: apigw default timeout
