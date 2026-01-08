@@ -17,6 +17,7 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -72,6 +73,7 @@ class Invoke(APIView):
             match_subpath=False,
         ),
     )
+    @action(methods=["POST"], detail=True)
     def post(self, request, version):
         plugin_cls = VersionHub.all_plugins().get(version)
         if not plugin_cls:
