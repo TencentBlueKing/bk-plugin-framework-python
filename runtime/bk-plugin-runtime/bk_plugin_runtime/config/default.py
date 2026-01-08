@@ -247,6 +247,7 @@ def preprocessing_filter_internal_apis(endpoints):
         "/bk_plugin/detail",
         "/bk_plugin/meta",
         "/bk_plugin/logs",
+        "/bk_plugin/schedule",
     ]
     filtered = []
     for path, path_regex, method, callback in endpoints:
