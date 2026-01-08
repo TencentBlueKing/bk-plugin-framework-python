@@ -19,12 +19,11 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
-from bk_plugin_framework.serializers import enveloper
+from bk_plugin_framework.serializers import standard_response_enveloper
 
 logger = logging.getLogger("bk_plugin")
 
@@ -45,8 +44,9 @@ class PluginCallback(APIView):
 
     @extend_schema(
         summary="插件回调",
+        operation_id="callback",
         request=PluginCallbackParamsSerializer,
-        responses={200: enveloper(PluginCallbackResponseSerializer)},
+        responses={200: standard_response_enveloper(PluginCallbackResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
@@ -57,7 +57,6 @@ class PluginCallback(APIView):
             match_subpath=False,
         ),
     )
-    @action(methods=["POST"], detail=True)
     def post(self, request, token):
         logger.info("[plugin callback]token=({}),body={}".format(token, request.body))
 

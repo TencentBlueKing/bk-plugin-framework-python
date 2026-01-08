@@ -16,12 +16,11 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework.runtime.loghub.models import LogEntry
-from bk_plugin_framework.serializers import enveloper
+from bk_plugin_framework.serializers import standard_response_enveloper
 from bk_plugin_framework.services.bpf_service.api.serializers import (
     StandardResponseSerializer,
 )
@@ -46,7 +45,7 @@ class Logs(APIView):
 
     @extend_schema(
         summary="Get plugin execution log with trace_id",
-        responses={200: enveloper(LogsResponseSerializer)},
+        responses={200: standard_response_enveloper(LogsResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
@@ -57,6 +56,5 @@ class Logs(APIView):
             match_subpath=False,
         ),
     )
-    @action(methods=["GET"], detail=True)
     def get(self, request, trace_id):
         return Response({"result": True, "data": {"log": LogEntry.objects.get_plain_log(trace_id)}, "message": ""})

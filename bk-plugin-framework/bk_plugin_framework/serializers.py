@@ -2,7 +2,7 @@ from drf_spectacular.utils import extend_schema_serializer
 from rest_framework import serializers
 
 
-def enveloper(serializer_class, many: bool = False):
+def standard_response_enveloper(serializer_class, many: bool = False):
     """统一响应包装器"""
     component_name = "Enveloped{}{}".format(
         serializer_class.__name__.replace("Serializer", ""),
