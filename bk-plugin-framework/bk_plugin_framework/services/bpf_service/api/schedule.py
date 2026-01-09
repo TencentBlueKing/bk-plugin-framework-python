@@ -59,7 +59,6 @@ class Schedule(APIView):
         summary="获取插件调度详情",
         operation_id="plugin_schedule",
         parameters=[ScheduleParamsSerializer],
-        request=ScheduleParamsSerializer,
         responses={200: standard_response_enveloper(ScheduleResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
