@@ -63,7 +63,8 @@ class Meta(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
-        summary="Get plugin meta info",
+        summary="获取插件元信息",
+        operation_id="plugin_meta_info",
         responses={200: standard_response_enveloper(MetaResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
@@ -71,7 +72,7 @@ class Meta(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="插件调用",
+            description_en="Get plugin meta info",
             match_subpath=False,
         ),
     )

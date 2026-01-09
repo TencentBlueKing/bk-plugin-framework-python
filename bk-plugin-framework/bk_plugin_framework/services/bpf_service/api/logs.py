@@ -45,7 +45,8 @@ class Logs(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
-        summary="Get plugin execution log with trace_id",
+        summary="获取插件执行日志",
+        operation_id="plugin_logs",
         responses={200: standard_response_enveloper(LogsResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
@@ -53,7 +54,7 @@ class Logs(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="插件调用",
+            description_en="Get plugin execution log with trace_id",
             match_subpath=False,
         ),
     )

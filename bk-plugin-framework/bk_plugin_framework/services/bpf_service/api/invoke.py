@@ -59,7 +59,7 @@ class Invoke(APIView):
     permission_classes = [ScopeAllowPermission]
 
     @extend_schema(
-        summary="插件调用",
+        summary="调用指定版本插件",
         operation_id="invoke",
         request=InvokeParamsSerializer,
         responses={200: standard_response_enveloper(InvokeResponseSerializer)},
@@ -69,7 +69,7 @@ class Invoke(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="插件调用",
+            description_en="Invoke specific version plugin",
             match_subpath=False,
         ),
     )
