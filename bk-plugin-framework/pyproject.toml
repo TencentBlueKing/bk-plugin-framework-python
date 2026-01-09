@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bk-plugin-framework"
-version = "2.3.3"
+version = "2.3.4rc0"
 description = "bk plugin python framework"
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ python = "^3.8.0,<4.0"
 pydantic = ">=1.0,<3"
 werkzeug = ">=2.0.0, <4.0"
 apigw-manager = {version = ">=1.0.6, <4", extras = ["extra"]}
-bk-plugin-runtime = "2.1.2"
+bk-plugin-runtime = "2.1.3rc0"
 jsonschema = ">=2.5.0,<5.0.0"
 drf-spectacular = "^0.29.0"
 
