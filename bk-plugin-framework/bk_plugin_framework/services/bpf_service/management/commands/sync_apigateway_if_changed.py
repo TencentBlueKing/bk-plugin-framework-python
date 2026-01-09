@@ -102,7 +102,7 @@ class Command(BaseCommand):
 
     def _append_plugin_api_resource(self):
         """在 resources.yaml 的 paths 节点下追加 plugin_api 资源配置"""
-        filepath = "/app/bk_plugin_runtime/resources.yaml"
+        filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if not os.path.exists(filepath):
             self.stdout.write(self.style.WARNING(f"[Sync] {filepath} not found, skip appending plugin_api"))
             return
@@ -175,7 +175,7 @@ class Command(BaseCommand):
 
     def _calculate_resources_hash(self):
         """计算 resources.yaml 的哈希值"""
-        filepath = "/app/bk_plugin_runtime/resources.yaml"
+        filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if os.path.exists(filepath):
             with open(filepath) as f:
                 content = f.read()
