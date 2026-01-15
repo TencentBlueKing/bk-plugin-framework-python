@@ -56,6 +56,7 @@ class Schedule(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
+        exclude=True,
         summary="获取插件调度详情",
         operation_id="plugin_schedule",
         parameters=[ScheduleParamsSerializer],

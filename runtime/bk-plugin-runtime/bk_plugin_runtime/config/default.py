@@ -238,37 +238,6 @@ REST_FRAMEWORK = {
 }
 
 
-def preprocessing_filter_internal_apis(endpoints):
-    """
-    预处理钩子：排除不需要注册到 API 网关的内部 API
-    """
-    # 需要排除的 API 路径模式
-    excluded_patterns = [
-        "/bk_plugin/detail",
-        "/bk_plugin/meta",
-        "/bk_plugin/logs",
-        "/bk_plugin/schedule",
-    ]
-    filtered = []
-    for path, path_regex, method, callback in endpoints:
-        # 检查路径是否匹配排除模式
-        should_exclude = any(pattern in path for pattern in excluded_patterns)
-        if not should_exclude:
-            filtered.append((path, path_regex, method, callback))
-    return filtered
-
-
-# drf_spectacular settings
-SPECTACULAR_SETTINGS = {
-    "TITLE": "BK Plugin API",
-    "DESCRIPTION": "蓝鲸插件服务 API",
-    "VERSION": "1.0.0",
-    # 预处理钩子：排除内部 API
-    "PREPROCESSING_HOOKS": [
-        "bk_plugin_runtime.config.default.preprocessing_filter_internal_apis",
-    ],
-}
-
 # 网关是否公开，公开则其他开发者可见/可申请权限
 BK_APIGW_IS_PUBLIC = str(env.bool("BK_APIGW_IS_PUBLIC", default=True)).lower()
 # if BK_APIGW_IS_OFFICIAL is True, the BK_APIGW_NAME should be start with `bk-`
