@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 import os
 
 import MySQLdb
-
 from bk_plugin_runtime.config import RUN_VER
 
 if RUN_VER == "open":

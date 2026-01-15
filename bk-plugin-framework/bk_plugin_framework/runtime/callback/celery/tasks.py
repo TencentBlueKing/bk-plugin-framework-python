@@ -14,8 +14,6 @@ import logging
 import random
 import time
 
-from celery import current_app, shared_task
-
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.kit import State
@@ -28,6 +26,7 @@ from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.runtime.schedule.models import Schedule
 from bk_plugin_framework.runtime.schedule.utils import get_schedule_lock
 from bk_plugin_framework.utils import local
+from celery import current_app, shared_task
 
 logger = logging.getLogger("bk_plugin")
 

@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from bk_plugin_framework.kit import (
     Callback,
     Context,

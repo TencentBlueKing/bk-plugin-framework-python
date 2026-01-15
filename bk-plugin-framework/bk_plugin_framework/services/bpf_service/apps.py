@@ -11,9 +11,8 @@ specific language governing permissions and limitations under the License.
 
 from importlib import import_module
 
-from django.apps import AppConfig
-
 from bk_plugin_framework.utils.module_load import discover_plugins
+from django.apps import AppConfig
 
 
 class BpfServiceConfig(AppConfig):

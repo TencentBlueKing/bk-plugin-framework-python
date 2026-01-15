@@ -13,7 +13,6 @@ import uuid
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from bk_plugin_framework.runtime.schedule.utils import get_schedule_lock
 
 

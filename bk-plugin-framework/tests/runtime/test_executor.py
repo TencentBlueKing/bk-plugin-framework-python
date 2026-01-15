@@ -13,7 +13,6 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from bk_plugin_framework.kit import (
     Context,
     ContextRequire,

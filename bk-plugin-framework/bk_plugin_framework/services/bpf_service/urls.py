@@ -12,10 +12,9 @@ specific language governing permissions and limitations under the License.
 import importlib
 import sys
 
-from django.urls import include, path
-
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.services.bpf_service import api
+from django.urls import include, path
 
 PLUGIN_API_URLS_MODULE = "bk_plugin.apis.urls"
 PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"

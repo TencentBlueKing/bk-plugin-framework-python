@@ -14,13 +14,12 @@ import logging
 import time
 import uuid
 
-from celery import current_app
-from cryptography.fernet import Fernet
-from django.conf import settings as default_settings
-
 from bk_plugin_framework.constants import State
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.runtime.schedule.models import Schedule
+from celery import current_app
+from cryptography.fernet import Fernet
+from django.conf import settings as default_settings
 
 logger = logging.getLogger("bk_plugin")
 

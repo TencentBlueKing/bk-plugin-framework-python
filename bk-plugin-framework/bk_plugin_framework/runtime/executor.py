@@ -20,8 +20,6 @@ try:
 except ImportError:
     from pydantic import ValidationError
 
-from django.utils.timezone import now
-
 from bk_plugin_framework.kit import (
     Callback,
     Context,
@@ -46,6 +44,7 @@ from bk_plugin_framework.metrics import (
 )
 from bk_plugin_framework.runtime.callbacker import PluginCallbacker
 from bk_plugin_framework.runtime.schedule.models import Schedule
+from django.utils.timezone import now
 
 logger = logging.getLogger("bk_plugin")
 

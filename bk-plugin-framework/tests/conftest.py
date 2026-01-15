@@ -10,7 +10,6 @@ specific language governing permissions and limitations under the License.
 """
 
 import pytest
-
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.utils import local
 

@@ -16,6 +16,13 @@ from urllib.parse import urlsplit
 
 from apigw_manager.apigw.decorators import apigw_require
 from apigw_manager.drf.utils import gen_apigateway_resource_config
+from bk_plugin_framework.serializers import enveloper
+from bk_plugin_framework.services.bpf_service.api.permissions import (
+    ScopeAllowPermission,
+)
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
 from blueapps.account.decorators import login_exempt
 from django.test import RequestFactory
 from django.urls import Resolver404, resolve
@@ -26,14 +33,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from bk_plugin_framework.serializers import enveloper
-from bk_plugin_framework.services.bpf_service.api.permissions import (
-    ScopeAllowPermission,
-)
-from bk_plugin_framework.services.bpf_service.api.serializers import (
-    StandardResponseSerializer,
-)
 
 logger = logging.getLogger("bk_plugin")
 

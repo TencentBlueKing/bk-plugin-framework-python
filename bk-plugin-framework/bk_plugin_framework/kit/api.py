@@ -12,15 +12,14 @@ specific language governing permissions and limitations under the License.
 import json
 
 from apigw_manager.apigw.decorators import apigw_require
+from bk_plugin_framework.envs import settings
+from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
+from bk_plugin_framework.kit.decorators import inject_user_token, login_exempt
 from bkoauth import get_app_access_token
 from django.conf import settings as default_settings
 from django.utils.decorators import method_decorator
 from rest_framework.request import Request
 from rest_framework.views import APIView
-
-from bk_plugin_framework.envs import settings
-from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
-from bk_plugin_framework.kit.decorators import inject_user_token, login_exempt
 
 custom_authentication_classes = (
     [
