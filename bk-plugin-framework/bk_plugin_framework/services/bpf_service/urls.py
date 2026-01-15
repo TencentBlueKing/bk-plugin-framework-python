@@ -23,10 +23,7 @@ PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"
 urlpatterns = [
     path(r"meta/", api.Meta.as_view()),
     path(r"detail/<str:version>", api.Detail.as_view()),
-    path(r"invoke/<str:version>", api.Invoke.as_view()),
     path(r"schedule/<str:trace_id>", api.Schedule.as_view()),
-    path(r"plugin_api_dispatch/", api.PluginAPIDispatch.as_view()),
-    path(r"callback/<str:token>/", api.PluginCallback.as_view()),
 ]
 
 # add log api

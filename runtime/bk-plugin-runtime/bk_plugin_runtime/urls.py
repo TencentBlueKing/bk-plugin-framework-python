@@ -11,10 +11,12 @@ specific language governing permissions and limitations under the License.
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, re_path
+from django.urls import include, path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+
+from bk_plugin_framework.services.bpf_service import api
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,6 +29,9 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path(r"plugin_api_dispatch/", api.PluginAPIDispatch.as_view()),
+    path(r"callback/<str:token>/", api.PluginCallback.as_view()),
+    path(r"invoke/<str:version>/", api.Invoke.as_view()),
     re_path(r"^admin/", admin.site.urls),
     re_path(r"^account/", include("blueapps.account.urls")),
     re_path(r"^i18n/", include("django.conf.urls.i18n")),
