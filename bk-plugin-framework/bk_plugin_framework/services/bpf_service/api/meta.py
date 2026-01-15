@@ -63,7 +63,6 @@ class Meta(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
-        exclude=True,
         summary="获取插件元信息",
         operation_id="plugin_meta_info",
         responses={200: standard_response_enveloper(MetaResponseSerializer)},

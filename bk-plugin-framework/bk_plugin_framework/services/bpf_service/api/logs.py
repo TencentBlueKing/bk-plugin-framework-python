@@ -45,7 +45,6 @@ class Logs(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
-        exclude=True,
         summary="获取插件执行日志",
         operation_id="plugin_logs",
         responses={200: standard_response_enveloper(LogsResponseSerializer)},
