@@ -17,13 +17,14 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
-from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.permissions import (
     ScopeAllowPermission,
 )
@@ -59,9 +60,8 @@ class Invoke(APIView):
 
     @extend_schema(
         summary="插件调用",
-        operation_id="invoke",
         request=InvokeParamsSerializer,
-        responses={200: standard_response_enveloper(InvokeResponseSerializer)},
+        responses={200: enveloper(InvokeResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
@@ -72,6 +72,7 @@ class Invoke(APIView):
             match_subpath=False,
         ),
     )
+    @action(methods=["POST"], detail=True)
     def post(self, request, version):
         plugin_cls = VersionHub.all_plugins().get(version)
         if not plugin_cls:

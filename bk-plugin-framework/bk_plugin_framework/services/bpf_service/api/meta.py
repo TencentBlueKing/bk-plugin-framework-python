@@ -18,12 +18,13 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework import __version__ as bpf_version
 from bk_plugin_framework.hub import VersionHub
-from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.serializers import (
     StandardResponseSerializer,
 )
@@ -63,7 +64,7 @@ class Meta(APIView):
 
     @extend_schema(
         summary="Get plugin meta info",
-        responses={200: standard_response_enveloper(MetaResponseSerializer)},
+        responses={200: enveloper(MetaResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
@@ -74,6 +75,7 @@ class Meta(APIView):
             match_subpath=False,
         ),
     )
+    @action(methods=["GET"], detail=True)
     def get(self, request):
         try:
             meta_module = import_module("bk_plugin.meta")

@@ -22,11 +22,12 @@ from django.urls import Resolver404, resolve
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.permissions import (
     ScopeAllowPermission,
 )
@@ -80,9 +81,8 @@ class PluginAPIDispatch(APIView):
 
     @extend_schema(
         summary="插件API分发",
-        operation_id="plugin_api_dispatch",
         request=PluginAPIDispatchParamsSerializer,
-        responses={200: standard_response_enveloper(PluginAPIDispatchResponseSerializer)},
+        responses={200: enveloper(PluginAPIDispatchResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
@@ -93,6 +93,7 @@ class PluginAPIDispatch(APIView):
             match_subpath=False,
         ),
     )
+    @action(methods=["POST"], detail=True)
     def post(self, request):
         data_serializer = PluginAPIDispatchParamsSerializer(data=request.data)
         try:
