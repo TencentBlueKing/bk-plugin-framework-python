@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,21 +10,18 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-import inspect
 import re
 import typing
+import inspect
 
 try:
     from pydantic.v1 import BaseModel
 except ImportError:
     from pydantic import BaseModel
 
-from bk_plugin_framework.constants import State
 from bk_plugin_framework.hub import VersionHub
-from bk_plugin_framework.runtime.callback.api import (
-    CallbackPreparation,
-    prepare_callback,
-)
+from bk_plugin_framework.constants import State
+from bk_plugin_framework.runtime.callback.api import prepare_callback, CallbackPreparation
 
 VALID_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9][a-z0-9]*$")
 
@@ -52,7 +50,7 @@ class ContextRequire(BaseModel):
     pass
 
 
-class Callback:
+class Callback(object):
     def __init__(self, callback_id: str = "", callback_data: dict = {}):
         self.id = callback_id
         self.data = callback_data

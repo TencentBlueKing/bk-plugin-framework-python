@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bk_plugin_framework.utils.validations import validate_allow_scope
 
 

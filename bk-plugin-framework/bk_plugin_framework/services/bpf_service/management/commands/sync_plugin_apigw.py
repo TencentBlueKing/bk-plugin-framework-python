@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -12,8 +13,8 @@ specific language governing permissions and limitations under the License.
 import os
 
 from django.conf import settings
-from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 
 
 class Command(BaseCommand):

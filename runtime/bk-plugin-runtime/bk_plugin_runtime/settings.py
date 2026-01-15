@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,7 +11,6 @@ specific language governing permissions and limitations under the License.
 """
 
 import os
-
 import pymysql
 
 pymysql.install_as_MySQLdb()
@@ -33,7 +33,7 @@ DJANGO_CONF_MODULE = "bk_plugin_runtime.config.{env}".format(env=ENVIRONMENT)
 try:
     _module = __import__(DJANGO_CONF_MODULE, globals(), locals(), ["*"])
 except ImportError as e:
-    raise ImportError("Could not import config '{}' (Is it on sys.path?): {}".format(DJANGO_CONF_MODULE, e))
+    raise ImportError("Could not import config '%s' (Is it on sys.path?): %s" % (DJANGO_CONF_MODULE, e))
 
 for _setting in dir(_module):
     if _setting == _setting.upper():

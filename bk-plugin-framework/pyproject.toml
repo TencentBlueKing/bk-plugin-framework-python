@@ -12,9 +12,8 @@ werkzeug = ">=2.0.0, <4.0"
 apigw-manager = {version = ">=1.0.6, <4", extras = ["extra"]}
 bk-plugin-runtime = "2.1.2"
 jsonschema = ">=2.5.0,<5.0.0"
-drf-spectacular = "^0.29.0"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
 black = "^20.8b1"
 pytest-django = "^4.5.2"

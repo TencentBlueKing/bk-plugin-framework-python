@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 import json
 import logging
 
-from .conf import COMPONENT_SYSTEM_HOST
 from .exceptions import ComponentAPIException
+from .conf import COMPONENT_SYSTEM_HOST
+
 
 logger = logging.getLogger("component")
 
 
-class ComponentAPI:
+class ComponentAPI(object):
     """Single API for Component"""
 
     HTTP_STATUS_OK = 200
@@ -36,7 +38,7 @@ class ComponentAPI:
             log_message = [
                 e.error_message,
             ]
-            log_message.append("url={url}".format(url=e.api_obj.url))
+            log_message.append("url=%(url)s" % {"url": e.api_obj.url})
             if e.resp:
                 log_message.append("content: %s" % e.resp.text)
 
@@ -70,7 +72,7 @@ class ComponentAPI:
             resp = self.client.request(self.method, self.url, params=params, data=data)
         except Exception as e:
             logger.exception("Error occurred when requesting method=%s url=%s", self.method, self.url)
-            raise ComponentAPIException(self, "Request component error, Exception: %s" % str(e))
+            raise ComponentAPIException(self, u"Request component error, Exception: %s" % str(e))
 
         # Parse result
         if resp.status_code != self.HTTP_STATUS_OK:
@@ -82,8 +84,8 @@ class ComponentAPI:
             if not json_resp["result"]:
                 # 组件返回错误时，记录相应的 request_id
                 log_message = (
-                    "Component return error message: %(message)s, request_id=%(request_id)s, "
-                    "url=%(url)s, params=%(params)s, data=%(data)s, response=%(response)s"
+                    u"Component return error message: %(message)s, request_id=%(request_id)s, "
+                    u"url=%(url)s, params=%(params)s, data=%(data)s, response=%(response)s"
                 ) % {
                     "request_id": json_resp.get("request_id"),
                     "message": json_resp["message"],

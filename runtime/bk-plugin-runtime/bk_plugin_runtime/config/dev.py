@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,7 +11,6 @@ specific language governing permissions and limitations under the License.
 """
 
 import os
-
 import MySQLdb
 from bk_plugin_runtime.config import RUN_VER
 
@@ -37,7 +37,10 @@ DEBUG = True
 
 # 本地开发数据库默认使用sqlite3
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": APP_CODE},  # noqa
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": APP_CODE  # noqa
+    },
 }
 # 本地开发是否使用mysql数据库
 BK_PLUGIN_DEV_USE_MYSQL = os.getenv("BK_PLUGIN_DEV_USE_MYSQL")

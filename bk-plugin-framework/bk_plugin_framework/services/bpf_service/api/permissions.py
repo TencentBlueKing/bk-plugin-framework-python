@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from importlib import import_module
 
-from bk_plugin_framework.utils.validations import validate_allow_scope
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
+
+from bk_plugin_framework.utils.validations import validate_allow_scope
 
 try:
     meta_module = import_module("bk_plugin.meta")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -8,18 +9,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-
 import json
 
-from apigw_manager.apigw.decorators import apigw_require
-from bk_plugin_framework.envs import settings
-from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
-from bk_plugin_framework.kit.decorators import inject_user_token, login_exempt
-from bkoauth import get_app_access_token
-from django.conf import settings as default_settings
 from django.utils.decorators import method_decorator
-from rest_framework.request import Request
+from django.conf import settings as default_settings
 from rest_framework.views import APIView
+from rest_framework.request import Request
+from bkoauth import get_app_access_token
+from apigw_manager.apigw.decorators import apigw_require
+
+from bk_plugin_framework.envs import settings
+from bk_plugin_framework.kit.decorators import login_exempt, inject_user_token
+from bk_plugin_framework.kit.authentication import CsrfExemptSessionAuthentication
 
 custom_authentication_classes = (
     [

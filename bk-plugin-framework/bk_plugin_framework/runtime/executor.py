@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,8 +11,8 @@ specific language governing permissions and limitations under the License.
 """
 
 import json
-import logging
 import typing
+import logging
 
 from celery import current_app
 
@@ -19,32 +20,25 @@ try:
     from pydantic.v1 import ValidationError
 except ImportError:
     from pydantic import ValidationError
+from django.utils.timezone import now
 
-from bk_plugin_framework.kit import (
-    Callback,
-    Context,
-    ContextRequire,
-    InputsModel,
-    Plugin,
-    State,
-)
+from bk_plugin_framework.kit import Plugin, Context, State, InputsModel, ContextRequire, Callback
 from bk_plugin_framework.kit.plugin import PluginCallbackModel
 from bk_plugin_framework.metrics import (
-    BK_PLUGIN_EXECUTE_EXCEPTION_COUNT,
-    BK_PLUGIN_EXECUTE_FAILED_COUNT,
-    BK_PLUGIN_EXECUTE_RUNNING_PROCESSES,
-    BK_PLUGIN_EXECUTE_TIME,
-    BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT,
-    BK_PLUGIN_SCHEDULE_FAILED_COUNT,
-    BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES,
-    BK_PLUGIN_SCHEDULE_TIME,
     HOSTNAME,
+    BK_PLUGIN_EXECUTE_FAILED_COUNT,
+    BK_PLUGIN_EXECUTE_EXCEPTION_COUNT,
+    BK_PLUGIN_SCHEDULE_FAILED_COUNT,
+    BK_PLUGIN_SCHEDULE_EXCEPTION_COUNT,
     setup_gauge,
     setup_histogram,
+    BK_PLUGIN_EXECUTE_RUNNING_PROCESSES,
+    BK_PLUGIN_EXECUTE_TIME,
+    BK_PLUGIN_SCHEDULE_RUNNING_PROCESSES,
+    BK_PLUGIN_SCHEDULE_TIME,
 )
 from bk_plugin_framework.runtime.callbacker import PluginCallbacker
 from bk_plugin_framework.runtime.schedule.models import Schedule
-from django.utils.timezone import now
 
 logger = logging.getLogger("bk_plugin")
 
@@ -185,9 +179,7 @@ class BKPluginExecutor:
 
                 return ExecuteResult(state=State.FAIL, outputs=None, err="schedule task dispatch error: %s" % str(e))
 
-            logger.info(
-                "[execute] task delay success, task_id: {}, count_down: {}".format(task_id, plugin.poll_interval)
-            )
+            logger.info("[execute] task delay success, task_id: %s, count_down: %s" % (task_id, plugin.poll_interval))
 
         return ExecuteResult(state=state, outputs=context.outputs, err=None)
 
@@ -323,7 +315,7 @@ class BKPluginExecutor:
                     queue="plugin_schedule",
                 )
                 logger.info(
-                    "[schedule] task delay success, task_id: {}, count_down: {}".format(task_id, plugin.poll_interval)
+                    "[schedule] task delay success, task_id: %s, count_down: %s" % (task_id, plugin.poll_interval)
                 )
         except Exception:
             logger.exception("[schedule] schedule task dispatch error")

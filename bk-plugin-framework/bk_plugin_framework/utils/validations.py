@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import logging
 
 import jsonschema
+
 
 logger = logging.getLogger("bk-plugin-framework")
 
