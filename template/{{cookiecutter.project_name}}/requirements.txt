@@ -27,3 +27,4 @@ opentelemetry-sdk==1.25.0
 opentelemetry-semantic-conventions==0.46b0
 opentelemetry-util-http==0.46b0
 # add your custom requirements below this line
+django-environ==0.11.2
