@@ -66,7 +66,7 @@ class Invoke(APIView):
         extensions=gen_apigateway_resource_config(
             is_public=True,
             allow_apply_permission=True,
-            user_verified_required=True,
+            user_verified_required=False,
             app_verified_required=True,
             resource_permission_required=True,
             description_en="Invoke specific version plugin",
