@@ -4,23 +4,54 @@ echo "do migrate"
 python bin/manage.py migrate --no-input
 
 echo "[Sync] BEGIN ====================="
-
-# 使用智能同步命令，仅在接口定义发生变化时才同步到API网关
-# 该命令会自动：
-# 1. 生成 definition.yaml 和 resources.yaml
-# 2. 计算文件哈希值并与上次同步的哈希值对比
-# 3. 仅在哈希值变化时执行 sync_drf_apigateway
-# 4. 获取 API 网关公钥
-#
-# 如需强制同步，可添加 --force 参数：
-# python bin/manage.py sync_apigateway_if_changed --force
-
-python bin/manage.py sync_apigateway_if_changed
+echo "[Sync] generate definition.yaml"
+python bin/manage.py generate_definition_yaml
 if [ $? -ne 0 ]
 then
-    echo "sync_apigateway_if_changed fail"
-    exit 1
+	echo "run generate_definition_yaml fail, please run this command on your development env to find out the reason"
+	exit 1
+fi
+
+
+if [ -f /app/definition.yaml ]
+then
+    echo "[Sync] the /app/definition.yaml content:"
+	cat /app/definition.yaml
+	echo "===================="
+fi
+
+
+echo "[Sync] generate resources.yaml"
+python bin/manage.py generate_resources_yaml
+if [ $? -ne 0 ]
+then
+	echo "run generate_resources_yaml fail, please run this command on your development env to find out the reason"
+	exit 1
+fi
+
+if [ -f /app/resources.yaml ]
+then
+	echo "[Sync] the /app/resources.yaml content:"
+	cat /app/resources.yaml
+	echo "===================="
+fi
+
+echo "[Sync] sync to apigateway"
+python bin/manage.py sync_drf_apigateway
+if [ $? -ne 0 ]
+then
+	echo "run sync_drf_apigateway fail"
+	exit 1
+fi
+
+echo "[Sync] fetch the public key"
+python bin/manage.py fetch_apigw_public_key
+if [ $? -ne 0 ]
+then
+	echo "run fetch_apigw_public_key fail"
+	exit 1
 fi
 
 echo "[Sync] DONE ====================="
 # DO NOT MODIFY THIS SECTION !!!
+

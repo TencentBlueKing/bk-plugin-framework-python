@@ -19,7 +19,6 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -58,7 +57,6 @@ class PluginCallback(APIView):
             match_subpath=False,
         ),
     )
-    @action(methods=["POST"], detail=True)
     def post(self, request, token):
         logger.info("[plugin callback]token=({}),body={}".format(token, request.body))
 

@@ -12,8 +12,6 @@ specific language governing permissions and limitations under the License.
 import hashlib
 import os
 
-import yaml
-from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
@@ -57,9 +55,6 @@ class Command(BaseCommand):
             )
             raise SystemExit(1)
 
-        # 1.1 追加 plugin_api 资源配置
-        self._append_plugin_api_resource()
-
         # 2. 计算当前哈希值（仅计算 resources.yaml）
         current_hash = self._calculate_resources_hash()
         self.stdout.write(f"[Sync] Current resources.yaml hash: {current_hash[:16]}...")
@@ -99,71 +94,6 @@ class Command(BaseCommand):
         # 7. 更新哈希值
         self._save_sync_hash(current_hash, success=True)
         self.stdout.write(self.style.SUCCESS("[Sync] API gateway sync completed successfully"))
-
-    def _append_plugin_api_resource(self):
-        """在 resources.yaml 的 paths 节点下追加 plugin_api 资源配置"""
-        filepath = "/app/bk_plugin_runtime/resources.yaml"
-        if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(f"[Sync] {filepath} not found, skip appending plugin_api"))
-            return
-
-        try:
-            # 读取现有内容，检查是否已存在
-            with open(filepath) as f:
-                content = f.read()
-
-            plugin_api_path = "/bk_plugin/plugin_api/:"
-            if plugin_api_path in content:
-                self.stdout.write("[Sync] plugin_api resource already exists, skip appending")
-                return
-
-            # 根据 settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH 决定 backend path
-            if getattr(settings, "BK_PLUGIN_APIGW_BACKEND_SUB_PATH", False):
-                backend_path = "/{env.api_sub_path}bk_plugin/plugin_api/"
-            else:
-                backend_path = "/bk_plugin/plugin_api/"
-
-            # 使用 YAML 解析来正确插入
-            data = yaml.safe_load(content)
-
-            if "paths" not in data:
-                self.stdout.write(self.style.WARNING("[Sync] 'paths' not found in resources.yaml, skip appending"))
-                return
-
-            # 在 paths 下添加 plugin_api 路径
-            data["paths"]["/bk_plugin/plugin_api/"] = {
-                "x-bk-apigateway-method-any": {
-                    "operationId": "plugin_api",
-                    "description": "",
-                    "tags": [],
-                    "responses": {"default": {"description": ""}},
-                    "x-bk-apigateway-resource": {
-                        "isPublic": True,
-                        "allowApplyPermission": True,
-                        "matchSubpath": True,
-                        "backend": {
-                            "type": "HTTP",
-                            "method": "any",
-                            "path": backend_path,
-                            "matchSubpath": True,
-                            "timeout": 0,
-                            "upstreams": {},
-                            "transformHeaders": {},
-                        },
-                        "authConfig": {"userVerifiedRequired": True, "appVerifiedRequired": False},
-                        "disabledStages": [],
-                    },
-                }
-            }
-
-            # 写回文件（使用 yaml.dump 保持格式）
-            with open(filepath, "w") as f:
-                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-
-            self.stdout.write(self.style.SUCCESS("[Sync] plugin_api resource appended to resources.yaml"))
-
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f"[Sync] Failed to append plugin_api resource: {e}"))
 
     def _print_yaml_content(self, filepath, name):
         """打印 YAML 文件内容"""

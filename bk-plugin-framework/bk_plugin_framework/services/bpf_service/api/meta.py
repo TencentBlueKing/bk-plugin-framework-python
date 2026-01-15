@@ -18,7 +18,6 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -75,7 +74,6 @@ class Meta(APIView):
             match_subpath=False,
         ),
     )
-    @action(methods=["GET"], detail=True)
     def get(self, request):
         try:
             meta_module = import_module("bk_plugin.meta")

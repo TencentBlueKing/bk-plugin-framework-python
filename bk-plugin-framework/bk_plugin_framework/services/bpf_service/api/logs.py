@@ -16,7 +16,6 @@ from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -57,6 +56,5 @@ class Logs(APIView):
             match_subpath=False,
         ),
     )
-    @action(methods=["GET"], detail=True)
     def get(self, request, trace_id):
         return Response({"result": True, "data": {"log": LogEntry.objects.get_plain_log(trace_id)}, "message": ""})
