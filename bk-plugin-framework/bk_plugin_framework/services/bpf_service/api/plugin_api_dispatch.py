@@ -15,7 +15,6 @@ import re
 from urllib.parse import urlsplit
 
 from apigw_manager.apigw.decorators import apigw_require
-from apigw_manager.drf.utils import gen_apigateway_resource_config
 from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.permissions import (
     ScopeAllowPermission,
@@ -82,15 +81,6 @@ class PluginAPIDispatch(APIView):
         summary="插件API分发",
         request=PluginAPIDispatchParamsSerializer,
         responses={200: enveloper(PluginAPIDispatchResponseSerializer)},
-        extensions=gen_apigateway_resource_config(
-            is_public=True,
-            allow_apply_permission=True,
-            user_verified_required=True,
-            app_verified_required=True,
-            resource_permission_required=True,
-            description_en="插件调用",
-            match_subpath=False,
-        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request):

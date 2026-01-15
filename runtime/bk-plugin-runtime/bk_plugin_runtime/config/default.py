@@ -12,33 +12,24 @@ specific language governing permissions and limitations under the License.
 import json
 import os
 import urllib
-from urllib.parse import urlparse
 
-# 必须在导入 blueapps 之前导入 django-environ，避免与 blueapps.conf.environ 模块冲突
-import environ as django_environ
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
 
-# environ
-env = django_environ.Env()
-# load environment variables from .env file
-django_environ.Env.read_env()
-
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-# 默认关闭可观测性
+# 默认关闭可观侧性
 ENABLE_OTEL_METRICS = os.getenv("ENABLE_METRICS", False)
 
 # 请在这里加入你的自定义 APP
 INSTALLED_APPS += (  # noqa
+    "rest_framework",
+    "drf_yasg",
     "bk_plugin_framework.runtime.loghub",
     "bk_plugin_framework.runtime.schedule",
     "bk_plugin_framework.runtime.callback",
     "bk_plugin_framework.services.bpf_service",
-    "rest_framework",
-    "drf_spectacular",
-    "django_dbconn_retry",
-    "apigw_manager.drf",
     "apigw_manager.apigw",
+    "django_dbconn_retry",
 )
 if ENABLE_OTEL_METRICS:
     INSTALLED_APPS += ("blueapps.opentelemetry.instrument_app",)  # noqa
@@ -89,10 +80,8 @@ MIDDLEWARE += (  # noqa
 )
 
 # 用户认证
-AUTHENTICATION_BACKENDS += (
-    "bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",
-    "apigw_manager.apigw.authentication.UserModelBackend",
-)  # noqa
+AUTHENTICATION_BACKENDS += ("bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",)  # noqa
+
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
 
@@ -232,88 +221,6 @@ def logging_addition_settings(logging_dict):
             )
             break
 
-
-# drf settings
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "apigw_manager.drf.authentication.ApiGatewayJWTAuthentication",
-    ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "apigw_manager.drf.permission.ApiGatewayPermission",
-    ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-}
-
-
-def preprocessing_filter_internal_apis(endpoints):
-    """
-    预处理钩子：排除不需要注册到 API 网关的内部 API
-    """
-    # 需要排除的 API 路径模式
-    excluded_patterns = [
-        "/bk_plugin/detail",
-        "/bk_plugin/meta",
-        "/bk_plugin/logs",
-    ]
-    filtered = []
-    for path, path_regex, method, callback in endpoints:
-        # 检查路径是否匹配排除模式
-        should_exclude = any(pattern in path for pattern in excluded_patterns)
-        if not should_exclude:
-            filtered.append((path, path_regex, method, callback))
-    return filtered
-
-
-# drf_spectacular settings
-SPECTACULAR_SETTINGS = {
-    "TITLE": "BK Plugin API",
-    "DESCRIPTION": "蓝鲸插件服务 API",
-    "VERSION": "1.0.0",
-    # 预处理钩子：排除内部 API
-    "PREPROCESSING_HOOKS": [
-        "bk_plugin_runtime.config.default.preprocessing_filter_internal_apis",
-    ],
-}
-
-# 网关是否公开，公开则其他开发者可见/可申请权限
-BK_APIGW_IS_PUBLIC = str(env.bool("BK_APIGW_IS_PUBLIC", default=True)).lower()
-# if BK_APIGW_IS_OFFICIAL is True, the BK_APIGW_NAME should be start with `bk-`
-BK_APIGW_IS_OFFICIAL = 1 if env.bool("BK_APIGW_IS_OFFICIAL", default=False) else 10
-# 网关管理员，请将负责人加入列表中
-BK_APIGW_MAINTAINERS = env.list("BK_APIGW_MAINTAINERS", default=["admin"])
-# 网关接口最大超时时间
-BK_APIGW_STAG_BACKEND_TIMEOUT = 60
-
-
-# analysis the app environment and address via bkpaas env vars
-bkpaas_default_preallocated_urls = env.json("BKPAAS_DEFAULT_PREALLOCATED_URLS")
-bkpaas_environment = env.str("BKPAAS_ENVIRONMENT")
-app_address = bkpaas_default_preallocated_urls.get(bkpaas_environment)
-parsed_url = urlparse(app_address)
-app_scheme = parsed_url.scheme
-app_domain = parsed_url.netloc
-app_subpath = parsed_url.path.rstrip("/")
-
-BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
-BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
-
-
-# while deploy app on staging env, it would sync to the stage=stag of the gateway
-# while deploy app on production env, it would sync to the stage=prod of the gateway
-BK_APIGW_STAGE_NAME = bkpaas_environment
-BK_APIGW_STAGE_DESCRIPTION = "生产环境" if bkpaas_environment == "prod" else "预发布环境"
-BK_APIGW_STAGE_DESCRIPTION_EN = "Production Env" if bkpaas_environment == "prod" else "Staging Env"
-# 声明网关不同环境的环境变量
-stag_env_vars = {"foo": "bar"}
-prod_env_vars = {
-    # "foo": "bar"
-}
-BK_APIGW_STAGE_ENV_VARS = prod_env_vars if bkpaas_environment == "prod" else stag_env_vars
-
-# 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
-BK_APIGW_RELEASE_DOC_LANGUAGE = env.str("BK_APIGW_RELEASE_DOC_LANGUAGE", default="")
-# 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
-# BK_APIGW_RESOURCE_DOCS_BASE_DIR = env.str("BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=BASE_DIR / "docs")
 
 # BK SOPS RELATE
 BK_SOPS_APP_CODE = os.getenv("BK_SOPS_APP_CODE")
