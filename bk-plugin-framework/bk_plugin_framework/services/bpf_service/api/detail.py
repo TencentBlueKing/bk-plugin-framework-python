@@ -69,8 +69,7 @@ class Detail(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
-        summary="获取指定版本的插件详情",
-        operation_id="plugin_detail",
+        summary="Get plugin detail for specific version",
         responses={200: standard_response_enveloper(DetailResponseSerializer)},
         extensions=gen_apigateway_resource_config(
             is_public=True,
@@ -78,7 +77,7 @@ class Detail(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="Get plugin detail for specific version",
+            description_en="插件调用",
             match_subpath=False,
         ),
     )

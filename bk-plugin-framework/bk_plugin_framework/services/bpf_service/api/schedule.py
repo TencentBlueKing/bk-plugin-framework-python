@@ -57,8 +57,6 @@ class Schedule(APIView):
 
     @extend_schema(
         summary="获取插件调度详情",
-        operation_id="plugin_schedule",
-        parameters=[ScheduleParamsSerializer],
         request=ScheduleParamsSerializer,
         responses={200: standard_response_enveloper(ScheduleResponseSerializer)},
         extensions=gen_apigateway_resource_config(
@@ -67,7 +65,7 @@ class Schedule(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="Get plugin schedule detail with trace_id",
+            description_en="插件调用",
             match_subpath=False,
         ),
     )

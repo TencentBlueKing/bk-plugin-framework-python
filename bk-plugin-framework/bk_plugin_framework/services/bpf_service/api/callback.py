@@ -54,7 +54,7 @@ class PluginCallback(APIView):
             user_verified_required=True,
             app_verified_required=True,
             resource_permission_required=True,
-            description_en="plugin callback",
+            description_en="插件调用",
             match_subpath=False,
         ),
     )
