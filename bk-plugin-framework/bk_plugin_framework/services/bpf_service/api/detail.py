@@ -69,6 +69,7 @@ class Detail(APIView):
     permission_classes = [permissions.AllowAny]
 
     @extend_schema(
+        exclude=True,
         summary="获取指定版本的插件详情",
         operation_id="plugin_detail",
         responses={200: standard_response_enveloper(DetailResponseSerializer)},
