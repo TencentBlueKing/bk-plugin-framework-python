@@ -15,11 +15,9 @@ import traceback
 
 from apigw_manager.apigw.decorators import apigw_require
 from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
-from bk_plugin_framework.serializers import enveloper
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
-from rest_framework import serializers
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -27,24 +25,14 @@ from rest_framework.views import APIView
 logger = logging.getLogger("bk_plugin")
 
 
-class PluginCallbackParamsSerializer(serializers.Serializer):
-    token = serializers.CharField(help_text="插件回调token", required=True)
-
-
-class PluginCallbackResponseSerializer(serializers.Serializer):
-    result = serializers.BooleanField(help_text="回调结果，True表示成功，False表示失败")
-    message = serializers.CharField(help_text="回调结果信息", required=False)
-
-
 @method_decorator(login_exempt, name="dispatch")
 @method_decorator(apigw_require, name="dispatch")
 class PluginCallback(APIView):
     authentication_classes = []  # csrf exempt
 
-    @extend_schema(
-        summary="插件回调",
-        request=PluginCallbackParamsSerializer,
-        responses={200: enveloper(PluginCallbackResponseSerializer)},
+    @swagger_auto_schema(
+        method="POST",
+        operation_summary="plugin callback",
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, token):

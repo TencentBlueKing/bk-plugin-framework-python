@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 
 def enveloper(serializer_class, many: bool = False):
-    """统一响应包装器"""
+    """统一响应包装器（参考您的模式）"""
     component_name = "Enveloped{}{}".format(
         serializer_class.__name__.replace("Serializer", ""),
         "List" if many else "",

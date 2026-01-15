@@ -14,7 +14,6 @@ import logging
 from apigw_manager.apigw.decorators import apigw_require
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
-from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.permissions import (
     ScopeAllowPermission,
 )
@@ -23,7 +22,7 @@ from bk_plugin_framework.services.bpf_service.api.serializers import (
 )
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -56,10 +55,11 @@ class Invoke(APIView):
     authentication_classes = []  # csrf exempt
     permission_classes = [ScopeAllowPermission]
 
-    @extend_schema(
-        summary="插件调用",
-        request=InvokeParamsSerializer,
-        responses={200: enveloper(InvokeResponseSerializer)},
+    @swagger_auto_schema(
+        method="POST",
+        operation_summary="Invoke specific version plugin",
+        request_body=InvokeParamsSerializer,
+        responses={200: InvokeResponseSerializer},
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, version):

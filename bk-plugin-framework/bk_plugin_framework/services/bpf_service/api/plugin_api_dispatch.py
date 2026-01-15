@@ -15,7 +15,6 @@ import re
 from urllib.parse import urlsplit
 
 from apigw_manager.apigw.decorators import apigw_require
-from bk_plugin_framework.serializers import enveloper
 from bk_plugin_framework.services.bpf_service.api.permissions import (
     ScopeAllowPermission,
 )
@@ -26,7 +25,7 @@ from blueapps.account.decorators import login_exempt
 from django.test import RequestFactory
 from django.urls import Resolver404, resolve
 from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -77,10 +76,11 @@ class PluginAPIDispatch(APIView):
     authentication_classes = []  # csrf exempt
     permission_classes = [ScopeAllowPermission]
 
-    @extend_schema(
-        summary="插件API分发",
-        request=PluginAPIDispatchParamsSerializer,
-        responses={200: enveloper(PluginAPIDispatchResponseSerializer)},
+    @swagger_auto_schema(
+        method="POST",
+        operation_summary="Plugin API dispatch",
+        request_body=PluginAPIDispatchParamsSerializer,
+        responses={200: PluginAPIDispatchResponseSerializer},
     )
     @action(methods=["POST"], detail=True)
     def post(self, request):
