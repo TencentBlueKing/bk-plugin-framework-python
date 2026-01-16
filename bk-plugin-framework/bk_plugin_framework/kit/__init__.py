@@ -15,7 +15,7 @@ except ImportError:
     from pydantic import Field  # noqa
 
 from bk_plugin_framework.kit.plugin import Context  # noqa
-from bk_plugin_framework.kit.plugin import (
+from bk_plugin_framework.kit.plugin import (  # noqa
     Callback,
     ContextRequire,
     FormModel,
