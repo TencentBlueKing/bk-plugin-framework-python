@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 import logging
 
-from .client import ComponentClient
 from . import conf
+from .client import ComponentClient
 
 logger = logging.getLogger("component")
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,23 +8,24 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-import uuid
-import time
+
 import json
 import logging
+import time
+import uuid
 
-from django.conf import settings as default_settings
 from celery import current_app
 from cryptography.fernet import Fernet
+from django.conf import settings as default_settings
 
+from bk_plugin_framework.constants import State
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.runtime.schedule.models import Schedule
-from bk_plugin_framework.constants import State
 
 logger = logging.getLogger("bk_plugin")
 
 
-class CallbackPreparation(object):
+class CallbackPreparation:
     def __init__(self, callback_id: str, callback_url: str):
         self.id = callback_id
         self.url = callback_url
