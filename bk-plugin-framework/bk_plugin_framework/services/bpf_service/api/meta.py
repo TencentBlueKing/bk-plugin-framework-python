@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -13,16 +12,14 @@ specific language governing permissions and limitations under the License.
 import logging
 from importlib import import_module
 
-from django.utils.decorators import method_decorator
-from django.conf import settings
-from rest_framework import permissions
-from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
 from blueapps.account.decorators import login_exempt
-
+from django.conf import settings
+from django.utils.decorators import method_decorator
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from bk_plugin_framework import __version__ as bpf_version
 from bk_plugin_framework.hub import VersionHub

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -9,15 +8,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-import uuid
+
 import json
+import uuid
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from bk_plugin_framework.kit import State
-from bk_plugin_framework.utils import local
 from bk_plugin_framework.runtime.callback.celery import tasks
+from bk_plugin_framework.utils import local
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ def callback_data():
     return json.dumps({"result": "True", "data": {}})
 
 
-class MockScheduleLock(object):
+class MockScheduleLock:
     def __init__(self, trace_id: str, locked: bool):
         self.trace_id = trace_id
         self.locked = locked
@@ -62,7 +62,7 @@ class TestCallbackTask:
         random = MagicMock()
         random.randint = MagicMock(return_value=2)
 
-        class CurrentApp(object):
+        class CurrentApp:
             def __init__(self):
                 self.tasks = {"bk_plugin_framework.runtime.callback.celery.tasks.callback": task}
 
