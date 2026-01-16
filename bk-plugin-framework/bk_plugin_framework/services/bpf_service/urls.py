@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -10,12 +9,13 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-import sys
 import importlib
+import sys
 
-from django.urls import path, include
-from bk_plugin_framework.services.bpf_service import api
+from django.urls import include, path
+
 from bk_plugin_framework.envs import settings
+from bk_plugin_framework.services.bpf_service import api
 
 PLUGIN_API_URLS_MODULE = "bk_plugin.apis.urls"
 PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"
