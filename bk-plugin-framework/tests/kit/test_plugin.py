@@ -13,15 +13,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from bk_plugin_framework.kit import (
-    Callback,
-    Context,
-    ContextRequire,
-    InputsModel,
-    OutputsModel,
-    Plugin,
-    State,
-)
+from bk_plugin_framework.kit import Callback, Context, ContextRequire, InputsModel, OutputsModel, Plugin, State
 from bk_plugin_framework.runtime.callback.api import CallbackPreparation
 
 

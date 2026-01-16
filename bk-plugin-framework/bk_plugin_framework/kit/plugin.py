@@ -20,10 +20,7 @@ except ImportError:
 
 from bk_plugin_framework.constants import State
 from bk_plugin_framework.hub import VersionHub
-from bk_plugin_framework.runtime.callback.api import (
-    CallbackPreparation,
-    prepare_callback,
-)
+from bk_plugin_framework.runtime.callback.api import CallbackPreparation, prepare_callback
 
 VALID_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9][a-z0-9]*$")
 

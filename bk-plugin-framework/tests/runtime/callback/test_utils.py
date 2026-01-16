@@ -13,11 +13,7 @@ import uuid
 
 import pytest
 
-from bk_plugin_framework.runtime.callback.api import (
-    CallbackPreparation,
-    parse_callback_token,
-    prepare_callback,
-)
+from bk_plugin_framework.runtime.callback.api import CallbackPreparation, parse_callback_token, prepare_callback
 
 
 @pytest.fixture

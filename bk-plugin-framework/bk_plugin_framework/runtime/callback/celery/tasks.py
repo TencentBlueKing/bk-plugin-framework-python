@@ -19,11 +19,7 @@ from celery import current_app, shared_task
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.kit import State
-from bk_plugin_framework.metrics import (
-    BK_PLUGIN_CALLBACK_EXCEPTION_COUNT,
-    BK_PLUGIN_CALLBACK_TIME,
-    HOSTNAME,
-)
+from bk_plugin_framework.metrics import BK_PLUGIN_CALLBACK_EXCEPTION_COUNT, BK_PLUGIN_CALLBACK_TIME, HOSTNAME
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.runtime.schedule.models import Schedule
 from bk_plugin_framework.runtime.schedule.utils import get_schedule_lock

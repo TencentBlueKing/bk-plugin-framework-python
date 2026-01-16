@@ -14,13 +14,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from bk_plugin_framework.kit import (
-    Context,
-    ContextRequire,
-    InputsModel,
-    Plugin,
-    State,
-)
+from bk_plugin_framework.kit import Context, ContextRequire, InputsModel, Plugin, State
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 
 

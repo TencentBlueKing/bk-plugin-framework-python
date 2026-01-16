@@ -22,14 +22,7 @@ except ImportError:
 
 from django.utils.timezone import now
 
-from bk_plugin_framework.kit import (
-    Callback,
-    Context,
-    ContextRequire,
-    InputsModel,
-    Plugin,
-    State,
-)
+from bk_plugin_framework.kit import Callback, Context, ContextRequire, InputsModel, Plugin, State
 from bk_plugin_framework.kit.plugin import PluginCallbackModel
 from bk_plugin_framework.metrics import (
     BK_PLUGIN_EXECUTE_EXCEPTION_COUNT,

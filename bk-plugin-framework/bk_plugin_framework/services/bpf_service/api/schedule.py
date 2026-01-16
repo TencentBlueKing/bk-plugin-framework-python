@@ -12,26 +12,18 @@ specific language governing permissions and limitations under the License.
 import json
 import logging
 
-from apigw_manager.drf.utils import gen_apigateway_resource_config
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_spectacular.utils import extend_schema
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework.runtime.schedule.models import Schedule as ScheduleModel
-from bk_plugin_framework.serializers import standard_response_enveloper
-from bk_plugin_framework.services.bpf_service.api.serializers import (
-    StandardResponseSerializer,
-)
+from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
 
 logger = logging.getLogger("root")
-
-
-class ScheduleParamsSerializer(serializers.Serializer):
-    trace_id = serializers.CharField(help_text="插件调用 trace id")
 
 
 class ScheduleResponseSerializer(StandardResponseSerializer):
@@ -55,20 +47,10 @@ class Schedule(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    @extend_schema(
-        summary="获取插件调度详情",
-        operation_id="plugin_schedule",
-        parameters=[ScheduleParamsSerializer],
-        responses={200: standard_response_enveloper(ScheduleResponseSerializer)},
-        extensions=gen_apigateway_resource_config(
-            is_public=True,
-            allow_apply_permission=True,
-            user_verified_required=True,
-            app_verified_required=True,
-            resource_permission_required=True,
-            description_en="Get plugin schedule detail with trace_id",
-            match_subpath=False,
-        ),
+    @swagger_auto_schema(
+        method="GET",
+        operation_summary="Get plugin schedule detail with trace_id",
+        responses={200: ScheduleResponseSerializer},
     )
     @action(methods=["GET"], detail=True)
     def get(self, request, trace_id):
