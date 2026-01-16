@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - PaaS平台 (BlueKing - PaaS System) available.
 Copyright (C) 2022 THL A29 Limited, a Tencent company. All rights reserved.
@@ -14,12 +13,12 @@ import logging
 
 from celery import shared_task
 
-from bk_plugin_framework.kit import State
-from bk_plugin_framework.utils import local
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.hub import VersionHub
+from bk_plugin_framework.kit import State
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
 from bk_plugin_framework.runtime.schedule.models import Schedule
+from bk_plugin_framework.utils import local
 
 logger = logging.getLogger("bk_plugin")
 
