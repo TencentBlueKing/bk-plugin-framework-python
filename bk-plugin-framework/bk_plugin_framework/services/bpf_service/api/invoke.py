@@ -12,9 +12,10 @@ specific language governing permissions and limitations under the License.
 import logging
 
 from apigw_manager.apigw.decorators import apigw_require
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -23,8 +24,13 @@ from rest_framework.views import APIView
 
 from bk_plugin_framework.hub import VersionHub
 from bk_plugin_framework.runtime.executor import BKPluginExecutor
-from bk_plugin_framework.services.bpf_service.api.permissions import ScopeAllowPermission
-from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
+from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.services.bpf_service.api.permissions import (
+    ScopeAllowPermission,
+)
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
 
 logger = logging.getLogger("bk_plugin")
 
@@ -52,11 +58,21 @@ class Invoke(APIView):
     authentication_classes = []  # csrf exempt
     permission_classes = [ScopeAllowPermission]
 
-    @swagger_auto_schema(
-        method="POST",
-        operation_summary="Invoke specific version plugin",
-        request_body=InvokeParamsSerializer,
-        responses={200: InvokeResponseSerializer},
+    @extend_schema(
+        exclude=True,
+        summary="调用指定版本插件",
+        operation_id="invoke",
+        request=InvokeParamsSerializer,
+        responses={200: standard_response_enveloper(InvokeResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=False,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="Invoke specific version plugin",
+            match_subpath=False,
+        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, version):

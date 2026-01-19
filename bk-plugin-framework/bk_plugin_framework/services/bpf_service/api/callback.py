@@ -14,16 +14,28 @@ import logging
 import traceback
 
 from apigw_manager.apigw.decorators import apigw_require
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from blueapps.account.decorators import login_exempt
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
+from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bk_plugin_framework.runtime.callback.api import callback, parse_callback_token
+from bk_plugin_framework.serializers import standard_response_enveloper
 
 logger = logging.getLogger("bk_plugin")
+
+
+class PluginCallbackParamsSerializer(serializers.Serializer):
+    token = serializers.CharField(help_text="插件回调token", required=True)
+
+
+class PluginCallbackResponseSerializer(serializers.Serializer):
+    result = serializers.BooleanField(help_text="回调结果，True表示成功，False表示失败")
+    message = serializers.CharField(help_text="回调结果信息", required=False)
 
 
 @method_decorator(login_exempt, name="dispatch")
@@ -31,9 +43,21 @@ logger = logging.getLogger("bk_plugin")
 class PluginCallback(APIView):
     authentication_classes = []  # csrf exempt
 
-    @swagger_auto_schema(
-        method="POST",
-        operation_summary="plugin callback",
+    @extend_schema(
+        exclude=True,
+        summary="插件回调",
+        operation_id="callback",
+        request=PluginCallbackParamsSerializer,
+        responses={200: standard_response_enveloper(PluginCallbackResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=False,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="plugin callback",
+            match_subpath=False,
+        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request, token):

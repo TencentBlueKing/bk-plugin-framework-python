@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 
 import hashlib
 import os
+import time
 
 import yaml
 from django.conf import settings
@@ -32,7 +33,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         force_sync = options.get("force", False)
 
+        # 用于记录各步骤耗时（毫秒）
+        step_timings = {}
+
         # 1. 生成 yaml 文件
+        step_start = time.time()
         self.stdout.write("[Sync] generate definition.yaml")
         try:
             call_command("generate_definition_yaml")
@@ -57,26 +62,46 @@ class Command(BaseCommand):
             )
             raise SystemExit(1)
 
-        # 1.1 追加 plugin_api 资源配置
-        self._append_plugin_api_resource()
+        # 输出生成的文件路径
+        resources_yaml_path = os.path.join(settings.BASE_DIR, "resources.yaml")
+        definition_yaml_path = os.path.join(settings.BASE_DIR, "definition.yaml")
+        self.stdout.write(f"[Sync] Generated resources.yaml path: {resources_yaml_path}")
+        self.stdout.write(f"[Sync] Generated definition.yaml path: {definition_yaml_path}")
+
+        step_timings["1. 生成 yaml 文件"] = (time.time() - step_start) * 1000
+
+        # 1.1 合并 support-files/resources.yaml 中的资源配置
+        step_start = time.time()
+        self._merge_support_files_resources()
+        step_timings["1.1 合并 support-files 资源配置"] = (time.time() - step_start) * 1000
 
         # 2. 计算当前哈希值（仅计算 resources.yaml）
+        step_start = time.time()
         current_hash = self._calculate_resources_hash()
         self.stdout.write(f"[Sync] Current resources.yaml hash: {current_hash[:16]}...")
+        step_timings["2. 计算当前哈希值"] = (time.time() - step_start) * 1000
 
         # 3. 获取上次同步的哈希值
+        step_start = time.time()
         last_hash = self._get_last_sync_hash()
         if last_hash:
             self.stdout.write(f"[Sync] Last sync hash: {last_hash[:16]}...")
         else:
             self.stdout.write("[Sync] No previous sync record found")
+        step_timings["3. 获取上次同步的哈希值"] = (time.time() - step_start) * 1000
 
         # 4. 对比决定是否同步
-        if not force_sync and current_hash == last_hash:
+        step_start = time.time()
+        need_sync = force_sync or current_hash != last_hash
+        if not need_sync:
             self.stdout.write(self.style.SUCCESS("[Sync] API definition unchanged, skip sync to apigateway"))
             # 仍然获取公钥，确保公钥是最新的
             self._fetch_public_key()
+            step_timings["4. 对比决定是否同步"] = (time.time() - step_start) * 1000
+            # 打印耗时统计
+            self._print_timing_stats(step_timings)
             return
+        step_timings["4. 对比决定是否同步"] = (time.time() - step_start) * 1000
 
         if force_sync:
             self.stdout.write(self.style.WARNING("[Sync] Force sync enabled"))
@@ -84,6 +109,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("[Sync] API definition changed, start syncing..."))
 
         # 5. 执行同步
+        step_start = time.time()
         self.stdout.write("[Sync] sync to apigateway")
         try:
             call_command("sync_drf_apigateway")
@@ -92,94 +118,159 @@ class Command(BaseCommand):
             # 同步失败时更新状态
             self._save_sync_hash(current_hash, success=False)
             raise SystemExit(1)
+        step_timings["5. 执行同步"] = (time.time() - step_start) * 1000
 
         # 6. 获取公钥
+        step_start = time.time()
         self._fetch_public_key()
+        step_timings["6. 获取公钥"] = (time.time() - step_start) * 1000
 
         # 7. 更新哈希值
+        step_start = time.time()
         self._save_sync_hash(current_hash, success=True)
         self.stdout.write(self.style.SUCCESS("[Sync] API gateway sync completed successfully"))
+        step_timings["7. 更新哈希值"] = (time.time() - step_start) * 1000
 
-    def _append_plugin_api_resource(self):
-        """在 resources.yaml 的 paths 节点下追加 plugin_api 资源配置"""
-        filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
-        if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(f"[Sync] {filepath} not found, skip appending plugin_api"))
+        # 打印耗时统计
+        self._print_timing_stats(step_timings)
+
+    def _print_timing_stats(self, step_timings):
+        """打印各步骤耗时统计"""
+        self.stdout.write("\n" + "=" * 50)
+        self.stdout.write(self.style.SUCCESS("[Sync] 各步骤耗时统计（毫秒）:"))
+        self.stdout.write("=" * 50)
+        total_time = 0
+        for step_name, duration in step_timings.items():
+            self.stdout.write(f"  {step_name}: {duration:.2f} ms")
+            total_time += duration
+        self.stdout.write("-" * 50)
+        self.stdout.write(f"  总耗时: {total_time:.2f} ms")
+        self.stdout.write("=" * 50 + "\n")
+
+    def _merge_support_files_resources(self):
+        """
+        将 support-files/resources.yaml 中的资源配置合并到生成的 resources.yaml 中
+
+        合并逻辑：
+        1. 读取自动生成的 resources.yaml
+        2. 读取 support-files/resources.yaml（手动维护的补充配置）
+        3. 将 support-files 中的 paths 追加到生成的 paths 中
+        4. 将 support-files 中的 components/schemas 合并到生成的 components 中
+        5. 写回合并后的 resources.yaml
+        """
+        generated_filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
+        support_files_dir = os.path.join(os.path.dirname(__file__), "support-files")
+        support_filepath = os.path.join(support_files_dir, "resources.yaml")
+
+        # 检查生成的文件是否存在
+        if not os.path.exists(generated_filepath):
+            self.stdout.write(self.style.WARNING(f"[Sync] Generated resources.yaml not found: {generated_filepath}"))
+            return
+
+        # 检查 support-files/resources.yaml 是否存在
+        if not os.path.exists(support_filepath):
+            self.stdout.write(
+                self.style.WARNING(f"[Sync] support-files/resources.yaml not found: {support_filepath}, skip merging")
+            )
             return
 
         try:
-            # 读取现有内容，检查是否已存在
-            with open(filepath) as f:
-                content = f.read()
+            # 读取自动生成的 resources.yaml
+            with open(generated_filepath, encoding="utf-8") as f:
+                generated_data = yaml.safe_load(f)
 
-            plugin_api_path = "/bk_plugin/plugin_api/:"
-            if plugin_api_path in content:
-                self.stdout.write("[Sync] plugin_api resource already exists, skip appending")
+            # 读取 support-files/resources.yaml
+            with open(support_filepath, encoding="utf-8") as f:
+                support_data = yaml.safe_load(f)
+
+            if not generated_data:
+                self.stdout.write(self.style.WARNING("[Sync] Generated resources.yaml is empty"))
                 return
 
-            # 根据 settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH 决定 backend path
-            if getattr(settings, "BK_PLUGIN_APIGW_BACKEND_SUB_PATH", False):
-                backend_path = "/{env.api_sub_path}bk_plugin/plugin_api/"
-            else:
-                backend_path = "/bk_plugin/plugin_api/"
-
-            # 使用 YAML 解析来正确插入
-            data = yaml.safe_load(content)
-
-            if "paths" not in data:
-                self.stdout.write(self.style.WARNING("[Sync] 'paths' not found in resources.yaml, skip appending"))
+            if not support_data:
+                self.stdout.write(self.style.WARNING("[Sync] support-files/resources.yaml is empty, skip merging"))
                 return
 
-            # 在 paths 下添加 plugin_api 路径
-            data["paths"]["/bk_plugin/plugin_api/"] = {
-                "x-bk-apigateway-method-any": {
-                    "operationId": "plugin_api",
-                    "description": "",
-                    "tags": [],
-                    "responses": {"default": {"description": ""}},
-                    "x-bk-apigateway-resource": {
-                        "isPublic": True,
-                        "allowApplyPermission": True,
-                        "matchSubpath": True,
-                        "backend": {
-                            "type": "HTTP",
-                            "method": "any",
-                            "path": backend_path,
-                            "matchSubpath": True,
-                            "timeout": 0,
-                            "upstreams": {},
-                            "transformHeaders": {},
-                        },
-                        "authConfig": {"userVerifiedRequired": True, "appVerifiedRequired": False},
-                        "disabledStages": [],
-                    },
-                }
-            }
+            merged_paths_count = 0
+            merged_schemas_count = 0
 
-            # 写回文件（使用 yaml.dump 保持格式）
-            with open(filepath, "w") as f:
-                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            # 合并 paths
+            if "paths" in support_data:
+                if "paths" not in generated_data:
+                    generated_data["paths"] = {}
 
-            self.stdout.write(self.style.SUCCESS("[Sync] plugin_api resource appended to resources.yaml"))
+                for path, path_config in support_data["paths"].items():
+                    if path in generated_data["paths"]:
+                        self.stdout.write(
+                            self.style.WARNING(
+                                f"[Sync] Path '{path}' already exists, will be overwritten by support-files config"
+                            )
+                        )
+                    generated_data["paths"][path] = path_config
+                    merged_paths_count += 1
+                    self.stdout.write(f"[Sync] Merged path: {path}")
+
+            # 合并 components/schemas
+            if "components" in support_data and "schemas" in support_data.get("components", {}):
+                if "components" not in generated_data:
+                    generated_data["components"] = {}
+                if "schemas" not in generated_data["components"]:
+                    generated_data["components"]["schemas"] = {}
+
+                for schema_name, schema_config in support_data["components"]["schemas"].items():
+                    if schema_name in generated_data["components"]["schemas"]:
+                        self.stdout.write(
+                            self.style.WARNING(f"[Sync] Schema '{schema_name}' already exists, will be overwritten")
+                        )
+                    generated_data["components"]["schemas"][schema_name] = schema_config
+                    merged_schemas_count += 1
+
+            # 写回合并后的文件
+            with open(generated_filepath, "w", encoding="utf-8") as f:
+                yaml.dump(generated_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"[Sync] Merged support-files/resources.yaml: "
+                    f"{merged_paths_count} paths, {merged_schemas_count} schemas"
+                )
+            )
 
         except Exception as e:
-            self.stderr.write(self.style.ERROR(f"[Sync] Failed to append plugin_api resource: {e}"))
-
-    def _print_yaml_content(self, filepath, name):
-        """打印 YAML 文件内容"""
-        if os.path.exists(filepath):
-            self.stdout.write(f"[Sync] the {filepath} content:")
-            with open(filepath) as f:
-                self.stdout.write(f.read())
-            self.stdout.write("====================")
+            self.stderr.write(self.style.ERROR(f"[Sync] Failed to merge support-files/resources.yaml: {e}"))
 
     def _calculate_resources_hash(self):
-        """计算 resources.yaml 的哈希值"""
+        """
+        计算 resources.yaml 的哈希值
+
+        注意：为了避免 YAML 内容顺序变化导致的 hash 不一致问题，
+        这里先将 YAML 解析为字典，然后用 sort_keys=True 重新序列化，
+        确保相同内容的 YAML 文件总是产生相同的 hash 值。
+        """
         filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if os.path.exists(filepath):
-            with open(filepath) as f:
-                content = f.read()
-            return hashlib.sha256(content.encode()).hexdigest()
+            try:
+                with open(filepath, encoding="utf-8") as f:
+                    data = yaml.safe_load(f)
+
+                if data:
+                    # 使用 sort_keys=True 确保输出顺序一致
+                    # 这样即使原始文件中 A,B,C 和 B,C,A 的顺序不同，
+                    # 规范化后的内容也会相同，从而产生相同的 hash
+                    normalized_content = yaml.dump(
+                        data, default_flow_style=False, allow_unicode=True, sort_keys=True  # 关键：排序所有 key
+                    )
+                    return hashlib.sha256(normalized_content.encode()).hexdigest()
+            except Exception as e:
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash"
+                    )
+                )
+                # 回退到原始方式
+                with open(filepath, encoding="utf-8") as f:
+                    content = f.read()
+                return hashlib.sha256(content.encode()).hexdigest()
         return ""
 
     def _get_last_sync_hash(self):

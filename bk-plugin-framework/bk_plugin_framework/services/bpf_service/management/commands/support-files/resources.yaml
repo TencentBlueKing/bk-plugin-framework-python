@@ -1,0 +1,377 @@
+openapi: 3.0.3
+info:
+  title: 'BK Plugin API'
+  version: '1.0.0'
+  description: '蓝鲸插件服务 API'
+
+paths:
+
+
+  /callback/{token}/:
+    post:
+      operationId: callback
+      summary: 插件回调
+      description: 插件异步执行完成后的回调接口
+      tags:
+        - callback
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: 回调令牌
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginCallbackParams'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PluginCallbackParams'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PluginCallbackParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopedPluginCallbackResponse'
+          description: '回调成功'
+      x-bk-apigateway-resource:
+        isPublic: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /bk_plugin/callback/{token}/
+          matchSubpath: false
+          timeout: 0
+        pluginConfigs: []
+        allowApplyPermission: true
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+        descriptionEn: plugin callback
+
+  /invoke/{version}:
+    post:
+      operationId: invoke
+      summary: 调用指定版本插件
+      description: 调用指定版本的插件执行任务
+      tags:
+        - invoke
+      parameters:
+        - in: path
+          name: version
+          schema:
+            type: string
+          required: true
+          description: 插件版本号
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvokeParams'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InvokeParams'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InvokeParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopedInvokeResponse'
+          description: '调用成功'
+      x-bk-apigateway-resource:
+        isPublic: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /bk_plugin/invoke/{version}
+          matchSubpath: false
+          timeout: 0
+        pluginConfigs: []
+        allowApplyPermission: true
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+        descriptionEn: Invoke specific version plugin
+  /bk_plugin/plugin_api/:
+    x-bk-apigateway-method-any:
+      operationId: plugin_api
+      summary: 插件自定义API
+      description: 插件自定义 API 入口，支持子路径匹配
+      tags:
+        - plugin_api
+      responses:
+        default:
+          description: '插件自定义响应'
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: true
+        backend:
+          type: HTTP
+          name: default
+          method: any
+          path: /bk_plugin/plugin_api/
+          matchSubpath: true
+          timeout: 0
+          upstreams: { }
+          transformHeaders: { }
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: false
+        disabledStages: [ ]
+        descriptionEn: Plugin custom API entry
+
+  /plugin_api_dispatch/:
+    post:
+      operationId: plugin_api_dispatch
+      summary: 插件API分发
+      description: 分发请求到插件的自定义 API
+      tags:
+        - plugin_api_dispatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginAPIDispatchParams'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PluginAPIDispatchParams'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PluginAPIDispatchParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopedPluginAPIDispatchResponse'
+          description: '分发成功'
+      x-bk-apigateway-resource:
+        isPublic: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /bk_plugin/plugin_api_dispatch/
+          matchSubpath: false
+          timeout: 0
+        pluginConfigs: []
+        allowApplyPermission: true
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+        descriptionEn: Plugin API dispatch
+
+components:
+  schemas:
+    # ==================== 请求参数 ====================
+    InvokeParams:
+      type: object
+      description: 插件调用请求参数
+      properties:
+        inputs:
+          type: object
+          additionalProperties: {}
+          description: 插件调用参数
+        context:
+          type: object
+          additionalProperties: {}
+          description: 插件执行上下文
+      required:
+        - context
+        - inputs
+
+    PluginCallbackParams:
+      type: object
+      description: 插件回调请求参数
+      properties:
+        token:
+          type: string
+          description: 插件回调token
+      required:
+        - token
+
+    PluginAPIDispatchParams:
+      type: object
+      description: 插件API分发请求参数
+      properties:
+        url:
+          type: string
+          description: 数据接口 URL
+        method:
+          type: string
+          description: 调用方法
+        username:
+          type: string
+          description: 用户名
+        data:
+          type: object
+          additionalProperties: {}
+          default: {}
+          description: 接口数据
+        dumped_data:
+          type: string
+          description: json dumps后的接口数据
+      required:
+        - method
+        - url
+        - username
+
+    # ==================== 响应数据 ====================
+    InvokeData:
+      type: object
+      description: 插件调用返回数据
+      properties:
+        outputs:
+          type: object
+          additionalProperties: {}
+          description: 插件输出数据
+        state:
+          type: integer
+          description: '插件执行状态(2: POLL 3:CALLBACK 4:SUCCESS 5:FAIL)'
+        err:
+          type: string
+          description: 错误信息
+      required:
+        - err
+        - outputs
+        - state
+
+    InvokeResponse:
+      type: object
+      description: 插件调用响应
+      properties:
+        result:
+          type: boolean
+          description: 请求是否成功
+        message:
+          type: string
+          description: 请求额外信息，result 为 false 时读取
+        trace_id:
+          type: string
+          description: 调用跟踪 ID
+        data:
+          allOf:
+            - $ref: '#/components/schemas/InvokeData'
+          description: 接口数据
+      required:
+        - data
+        - message
+        - result
+        - trace_id
+
+    PluginCallbackResponse:
+      type: object
+      description: 插件回调响应
+      properties:
+        result:
+          type: boolean
+          description: 回调结果，True表示成功，False表示失败
+        message:
+          type: string
+          description: 回调结果信息
+      required:
+        - result
+
+    PluginAPIDispatchResponse:
+      type: object
+      description: 插件API分发响应
+      properties:
+        result:
+          type: boolean
+          description: 请求是否成功
+        message:
+          type: string
+          description: 请求额外信息，result 为 false 时读取
+        trace_id:
+          type: string
+          description: 调用跟踪 ID
+        data:
+          type: object
+          additionalProperties: {}
+          description: DATA API 返回的数据
+      required:
+        - data
+        - message
+        - result
+        - trace_id
+
+    # ==================== 统一响应封装 ====================
+    EnvelopedInvokeResponse:
+      type: object
+      description: 插件调用统一响应封装
+      properties:
+        code:
+          type: integer
+          description: 状态码，0表示成功
+        data:
+          $ref: '#/components/schemas/InvokeResponse'
+        message:
+          type: string
+          description: 响应消息
+        result:
+          type: boolean
+          description: 操作结果
+      required:
+        - code
+        - data
+        - message
+        - result
+
+    EnvelopedPluginCallbackResponse:
+      type: object
+      description: 插件回调统一响应封装
+      properties:
+        code:
+          type: integer
+          description: 状态码，0表示成功
+        data:
+          $ref: '#/components/schemas/PluginCallbackResponse'
+        message:
+          type: string
+          description: 响应消息
+        result:
+          type: boolean
+          description: 操作结果
+      required:
+        - code
+        - data
+        - message
+        - result
+
+    EnvelopedPluginAPIDispatchResponse:
+      type: object
+      description: 插件API分发统一响应封装
+      properties:
+        code:
+          type: integer
+          description: 状态码，0表示成功
+        data:
+          $ref: '#/components/schemas/PluginAPIDispatchResponse'
+        message:
+          type: string
+          description: 响应消息
+        result:
+          type: boolean
+          description: 操作结果
+      required:
+        - code
+        - data
+        - message
+        - result
