@@ -21,12 +21,14 @@ PLUGIN_API_URLS_MODULE = "bk_plugin.apis.urls"
 PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"
 
 urlpatterns = [
-    path(r"meta/", api.Meta.as_view()),
-    path(r"detail/<str:version>", api.Detail.as_view()),
-    path(r"invoke/<str:version>", api.Invoke.as_view()),
-    path(r"schedule/<str:trace_id>", api.Schedule.as_view()),
+    # 协议层接口（与平台方对接）
     path(r"plugin_api_dispatch/", api.PluginAPIDispatch.as_view()),
     path(r"callback/<str:token>/", api.PluginCallback.as_view()),
+    path(r"invoke/<str:version>", api.Invoke.as_view()),
+    # 插件信息接口
+    path(r"meta/", api.Meta.as_view()),
+    path(r"detail/<str:version>", api.Detail.as_view()),
+    path(r"schedule/<str:trace_id>", api.Schedule.as_view()),
 ]
 
 # add log api
