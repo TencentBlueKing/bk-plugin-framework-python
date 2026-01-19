@@ -15,19 +15,25 @@ import re
 from urllib.parse import urlsplit
 
 from apigw_manager.apigw.decorators import apigw_require
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from blueapps.account.decorators import login_exempt
 from django.test import RequestFactory
 from django.urls import Resolver404, resolve
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from bk_plugin_framework.services.bpf_service.api.permissions import ScopeAllowPermission
-from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
+from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.services.bpf_service.api.permissions import (
+    ScopeAllowPermission,
+)
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
 
 logger = logging.getLogger("bk_plugin")
 
@@ -73,11 +79,21 @@ class PluginAPIDispatch(APIView):
     authentication_classes = []  # csrf exempt
     permission_classes = [ScopeAllowPermission]
 
-    @swagger_auto_schema(
-        method="POST",
-        operation_summary="Plugin API dispatch",
-        request_body=PluginAPIDispatchParamsSerializer,
-        responses={200: PluginAPIDispatchResponseSerializer},
+    @extend_schema(
+        exclude=True,
+        summary="插件API分发",
+        operation_id="plugin_api_dispatch",
+        request=PluginAPIDispatchParamsSerializer,
+        responses={200: standard_response_enveloper(PluginAPIDispatchResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=False,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="Plugin API dispatch",
+            match_subpath=False,
+        ),
     )
     @action(methods=["POST"], detail=True)
     def post(self, request):
