@@ -14,10 +14,8 @@ import os
 import urllib
 from urllib.parse import urlparse
 
-
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
-
 
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
 # 默认关闭可观测性
@@ -25,7 +23,6 @@ ENABLE_OTEL_METRICS = os.getenv("ENABLE_METRICS", False)
 
 # 请在这里加入你的自定义 APP
 INSTALLED_APPS += (  # noqa
-
     "bk_plugin_framework.runtime.loghub",
     "bk_plugin_framework.runtime.schedule",
     "bk_plugin_framework.runtime.callback",
@@ -42,12 +39,8 @@ if ENABLE_OTEL_METRICS:
 if BKPAAS_ENVIRONMENT == "dev":
     INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
 
-from bk_plugin_framework.runtime.callback.celery import (  # noqa
-    queues as callback_queues,
-)
-from bk_plugin_framework.runtime.schedule.celery import (  # noqa
-    queues as schedule_queues,
-)
+from bk_plugin_framework.runtime.callback.celery import queues as callback_queues  # noqa
+from bk_plugin_framework.runtime.schedule.celery import queues as schedule_queues  # noqa
 
 CELERY_QUEUES = schedule_queues.CELERY_QUEUES
 CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
@@ -177,8 +170,9 @@ if locals().get("DISABLED_APPS"):
 
 ROOT_URLCONF = "bk_plugin_runtime.urls"
 
-from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
 from blueapps.core.celery import celery_app  # noqa
+
+from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
 
 celery_app.conf.beat_schedule = SCHEDULE
 
@@ -223,6 +217,8 @@ def logging_addition_settings(logging_dict):
                 {"format": logging_dict["formatters"]["verbose"][kw].strip() + " [trace_id]: %(trace_id)s"}
             )
             break
+
+
 # drf settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -258,16 +254,13 @@ BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
 BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
 
 
-
 # while deploy app on staging env, it would sync to the stage=stag of the gateway
 # while deploy app on production env, it would sync to the stage=prod of the gateway
 BK_APIGW_STAGE_NAME = bkpaas_environment
 BK_APIGW_STAGE_DESCRIPTION = "生产环境" if bkpaas_environment == "prod" else "预发布环境"
 BK_APIGW_STAGE_DESCRIPTION_EN = "Production Env" if bkpaas_environment == "prod" else "Staging Env"
 # 声明网关不同环境的环境变量
-stag_env_vars = {
-    "foo": "bar"
-}
+stag_env_vars = {"foo": "bar"}
 prod_env_vars = {
     # "foo": "bar"
 }
