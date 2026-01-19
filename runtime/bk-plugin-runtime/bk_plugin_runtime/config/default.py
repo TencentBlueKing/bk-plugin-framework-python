@@ -12,24 +12,29 @@ specific language governing permissions and limitations under the License.
 import json
 import os
 import urllib
+from urllib.parse import urlparse
+
 
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
 
+
 BKPAAS_ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-# 默认关闭可观侧性
+# 默认关闭可观测性
 ENABLE_OTEL_METRICS = os.getenv("ENABLE_METRICS", False)
 
 # 请在这里加入你的自定义 APP
 INSTALLED_APPS += (  # noqa
-    "rest_framework",
-    "drf_yasg",
+
     "bk_plugin_framework.runtime.loghub",
     "bk_plugin_framework.runtime.schedule",
     "bk_plugin_framework.runtime.callback",
     "bk_plugin_framework.services.bpf_service",
-    "apigw_manager.apigw",
+    "rest_framework",
+    "drf_spectacular",
     "django_dbconn_retry",
+    "apigw_manager.drf",
+    "apigw_manager.apigw",
 )
 if ENABLE_OTEL_METRICS:
     INSTALLED_APPS += ("blueapps.opentelemetry.instrument_app",)  # noqa
@@ -37,8 +42,12 @@ if ENABLE_OTEL_METRICS:
 if BKPAAS_ENVIRONMENT == "dev":
     INSTALLED_APPS += ("bk_plugin_framework.services.debug_panel",)  # noqa
 
-from bk_plugin_framework.runtime.callback.celery import queues as callback_queues  # noqa
-from bk_plugin_framework.runtime.schedule.celery import queues as schedule_queues  # noqa
+from bk_plugin_framework.runtime.callback.celery import (  # noqa
+    queues as callback_queues,
+)
+from bk_plugin_framework.runtime.schedule.celery import (  # noqa
+    queues as schedule_queues,
+)
 
 CELERY_QUEUES = schedule_queues.CELERY_QUEUES
 CELERY_QUEUES.extend(callback_queues.CELERY_QUEUES)
@@ -75,8 +84,6 @@ MIDDLEWARE += (  # noqa
     "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",  # JWT 透传的用户信息
 )
 
-# 用户认证
-AUTHENTICATION_BACKENDS += ("bk_plugin_runtime.packages.apigw.backends.APIGWUserModelBackend",)  # noqa
 
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
@@ -170,9 +177,8 @@ if locals().get("DISABLED_APPS"):
 
 ROOT_URLCONF = "bk_plugin_runtime.urls"
 
-from blueapps.core.celery import celery_app  # noqa
-
 from bk_plugin_framework.runtime.schedule.celery.beat import SCHEDULE  # noqa
+from blueapps.core.celery import celery_app  # noqa
 
 celery_app.conf.beat_schedule = SCHEDULE
 
@@ -217,7 +223,60 @@ def logging_addition_settings(logging_dict):
                 {"format": logging_dict["formatters"]["verbose"][kw].strip() + " [trace_id]: %(trace_id)s"}
             )
             break
+# drf settings
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "apigw_manager.drf.authentication.ApiGatewayJWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "apigw_manager.drf.permission.ApiGatewayPermission",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
+
+# 网关是否公开，公开则其他开发者可见/可申请权限
+BK_APIGW_IS_PUBLIC = os.getenv("BK_APIGW_IS_PUBLIC", "true").lower()
+# if BK_APIGW_IS_OFFICIAL is True, the BK_APIGW_NAME should be start with `bk-`
+BK_APIGW_IS_OFFICIAL = 1 if os.getenv("BK_APIGW_IS_OFFICIAL", "false").lower() == "true" else 10
+# 网关管理员，请将负责人加入列表中
+BK_APIGW_MAINTAINERS = [m.strip() for m in os.getenv("BK_APIGW_MAINTAINERS", "admin").split(",") if m.strip()]
+# 网关接口最大超时时间
+BK_APIGW_STAG_BACKEND_TIMEOUT = 60
+
+
+# analysis the app environment and address via bkpaas env vars
+bkpaas_default_preallocated_urls = json.loads(os.getenv("BKPAAS_DEFAULT_PREALLOCATED_URLS", "{}"))
+bkpaas_environment = os.getenv("BKPAAS_ENVIRONMENT", "dev")
+app_address = bkpaas_default_preallocated_urls.get(bkpaas_environment)
+parsed_url = urlparse(app_address)
+app_scheme = parsed_url.scheme
+app_domain = parsed_url.netloc
+app_subpath = parsed_url.path.rstrip("/")
+
+BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
+BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
+
+
+
+# while deploy app on staging env, it would sync to the stage=stag of the gateway
+# while deploy app on production env, it would sync to the stage=prod of the gateway
+BK_APIGW_STAGE_NAME = bkpaas_environment
+BK_APIGW_STAGE_DESCRIPTION = "生产环境" if bkpaas_environment == "prod" else "预发布环境"
+BK_APIGW_STAGE_DESCRIPTION_EN = "Production Env" if bkpaas_environment == "prod" else "Staging Env"
+# 声明网关不同环境的环境变量
+stag_env_vars = {
+    "foo": "bar"
+}
+prod_env_vars = {
+    # "foo": "bar"
+}
+BK_APIGW_STAGE_ENV_VARS = prod_env_vars if bkpaas_environment == "prod" else stag_env_vars
+
+# 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
+BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")
+# 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
+# BK_APIGW_RESOURCE_DOCS_BASE_DIR = env.str("BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=BASE_DIR / "docs")
 
 # BK SOPS RELATE
 BK_SOPS_APP_CODE = os.getenv("BK_SOPS_APP_CODE")
