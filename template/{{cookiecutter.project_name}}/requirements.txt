@@ -3,7 +3,6 @@
 bk-plugin-framework==2.3.4rc3
 # opentelemetry
 celery-prometheus-exporter==1.7.0
-celery>=4.4.0,<5.0.0  # Explicit celery version constraint to resolve pip 25.x dependency conflict
 opentelemetry-api==1.25.0
 opentelemetry-exporter-jaeger==1.21.0
 opentelemetry-exporter-jaeger-proto-grpc==1.21.0
