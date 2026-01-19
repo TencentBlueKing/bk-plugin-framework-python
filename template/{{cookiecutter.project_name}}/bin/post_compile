@@ -1,7 +1,0 @@
-#!/bin/bash
-# DO NOT MODIFY THIS SECTION !!!
-env
-python bin/manage.py migrate
-python bin/manage.py sync_plugin_apigw
-python bin/manage.py fetch_apigw_public_key
-# DO NOT MODIFY THIS SECTION !!!

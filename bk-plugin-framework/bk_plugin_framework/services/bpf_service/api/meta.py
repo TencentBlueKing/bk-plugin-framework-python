@@ -12,10 +12,11 @@ specific language governing permissions and limitations under the License.
 import logging
 from importlib import import_module
 
+from apigw_manager.drf.utils import gen_apigateway_resource_config
 from blueapps.account.decorators import login_exempt
 from django.conf import settings
 from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -23,7 +24,10 @@ from rest_framework.views import APIView
 
 from bk_plugin_framework import __version__ as bpf_version
 from bk_plugin_framework.hub import VersionHub
-from bk_plugin_framework.services.bpf_service.api.serializers import StandardResponseSerializer
+from bk_plugin_framework.serializers import standard_response_enveloper
+from bk_plugin_framework.services.bpf_service.api.serializers import (
+    StandardResponseSerializer,
+)
 
 logger = logging.getLogger("root")
 
@@ -58,10 +62,20 @@ class Meta(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    @swagger_auto_schema(
-        method="GET",
-        operation_summary="Get plugin meta info",
-        responses={200: MetaResponseSerializer},
+    @extend_schema(
+        exclude=True,
+        summary="获取插件元信息",
+        operation_id="plugin_meta_info",
+        responses={200: standard_response_enveloper(MetaResponseSerializer)},
+        extensions=gen_apigateway_resource_config(
+            is_public=True,
+            allow_apply_permission=True,
+            user_verified_required=True,
+            app_verified_required=True,
+            resource_permission_required=True,
+            description_en="Get plugin meta info",
+            match_subpath=False,
+        ),
     )
     @action(methods=["GET"], detail=True)
     def get(self, request):
