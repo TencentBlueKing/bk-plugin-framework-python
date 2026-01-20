@@ -85,11 +85,7 @@ class Command(BaseCommand):
         step_start = time.time()
         need_sync = force_sync or current_hash != last_hash
         if not need_sync:
-            self.stdout.write(
-                self.style.SUCCESS(
-                    "[Sync] API definition unchanged, skip sync to apigateway"
-                )
-            )
+            self.stdout.write(self.style.SUCCESS("[Sync] API definition unchanged, skip sync to apigateway"))
             # 仍然获取公钥，确保公钥是最新的
             self._fetch_public_key()
             step_timings["4. 对比决定是否同步"] = (time.time() - step_start) * 1000
@@ -101,9 +97,7 @@ class Command(BaseCommand):
         if force_sync:
             self.stdout.write(self.style.WARNING("[Sync] Force sync enabled"))
         else:
-            self.stdout.write(
-                self.style.WARNING("[Sync] API definition changed, start syncing...")
-            )
+            self.stdout.write(self.style.WARNING("[Sync] API definition changed, start syncing..."))
 
         # 5. 执行同步
         step_start = time.time()
@@ -125,9 +119,7 @@ class Command(BaseCommand):
         # 7. 更新哈希值
         step_start = time.time()
         self._save_sync_hash(current_hash, success=True)
-        self.stdout.write(
-            self.style.SUCCESS("[Sync] API gateway sync completed successfully")
-        )
+        self.stdout.write(self.style.SUCCESS("[Sync] API gateway sync completed successfully"))
         step_timings["7. 更新哈希值"] = (time.time() - step_start) * 1000
 
         # 打印耗时统计
@@ -162,21 +154,15 @@ class Command(BaseCommand):
 
         # 检查 support-files/resources.yaml 是否存在
         if not os.path.exists(support_filepath):
-            self.stderr.write(
-                self.style.ERROR(f"[Sync] support-files/resources.yaml not found: {support_filepath}")
-            )
+            self.stderr.write(self.style.ERROR(f"[Sync] support-files/resources.yaml not found: {support_filepath}"))
             raise SystemExit(1)
 
         try:
             # 直接复制文件
             shutil.copy2(support_filepath, target_filepath)
-            self.stdout.write(
-                self.style.SUCCESS(f"[Sync] Copied support-files/resources.yaml to {target_filepath}")
-            )
+            self.stdout.write(self.style.SUCCESS(f"[Sync] Copied support-files/resources.yaml to {target_filepath}"))
         except Exception as e:
-            self.stderr.write(
-                self.style.ERROR(f"[Sync] Failed to copy support-files/resources.yaml: {e}")
-            )
+            self.stderr.write(self.style.ERROR(f"[Sync] Failed to copy support-files/resources.yaml: {e}"))
             raise SystemExit(1)
 
     def _calculate_resources_hash(self):
@@ -190,7 +176,7 @@ class Command(BaseCommand):
         filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if os.path.exists(filepath):
             try:
-                with open(filepath, "r", encoding="utf-8") as f:
+                with open(filepath, encoding="utf-8") as f:
                     data = yaml.safe_load(f)
 
                 if data:
@@ -198,18 +184,17 @@ class Command(BaseCommand):
                     # 这样即使原始文件中 A,B,C 和 B,C,A 的顺序不同，
                     # 规范化后的内容也会相同，从而产生相同的 hash
                     normalized_content = yaml.dump(
-                        data,
-                        default_flow_style=False,
-                        allow_unicode=True,
-                        sort_keys=True  # 关键：排序所有 key
+                        data, default_flow_style=False, allow_unicode=True, sort_keys=True  # 关键：排序所有 key
                     )
                     return hashlib.sha256(normalized_content.encode()).hexdigest()
             except Exception as e:
                 self.stdout.write(
-                    self.style.WARNING(f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash")
+                    self.style.WARNING(
+                        f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash"
+                    )
                 )
                 # 回退到原始方式
-                with open(filepath, "r", encoding="utf-8") as f:
+                with open(filepath, encoding="utf-8") as f:
                     content = f.read()
                 return hashlib.sha256(content.encode()).hexdigest()
         return ""
@@ -224,9 +209,7 @@ class Command(BaseCommand):
             state = APIGatewaySyncState.objects.filter(sync_success=True).first()
             return state.api_hash if state else ""
         except Exception as e:
-            self.stdout.write(
-                self.style.WARNING(f"[Sync] Failed to get last sync hash: {e}")
-            )
+            self.stdout.write(self.style.WARNING(f"[Sync] Failed to get last sync hash: {e}"))
             return ""
 
     def _save_sync_hash(self, hash_value, success=True):
@@ -242,9 +225,7 @@ class Command(BaseCommand):
             )
             self.stdout.write(f"[Sync] Sync state saved (success={success})")
         except Exception as e:
-            self.stdout.write(
-                self.style.WARNING(f"[Sync] Failed to save sync hash: {e}")
-            )
+            self.stdout.write(self.style.WARNING(f"[Sync] Failed to save sync hash: {e}"))
 
     def _fetch_public_key(self):
         """获取 API 网关公钥"""
