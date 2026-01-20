@@ -17,9 +17,9 @@ modules:
               targetPort: 5000
               port: 80
         - name: schedule
-          procCommand: celery worker -A blueapps.core.celery -P prefork -n schedule_worker@%h -c 50 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO --max-tasks-per-child=1000 --time-limit=300
+          procCommand: celery -A blueapps.core.celery worker -P threads -n schedule_worker@%h -c 500 -Q plugin_schedule,plugin_callback,schedule_delete -l INFO
         - name: beat
-          procCommand: celery beat -A blueapps.core.celery -l INFO --pidfile=/tmp/celerybeat.pid --schedule=/tmp/celerybeat-schedule
+          procCommand: celery -A blueapps.core.celery beat -l INFO
         - name: c-monitor
           procCommand: celery-prometheus-exporter --broker amqp://$RABBITMQ_USER:$RABBITMQ_PASSWORD@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_VHOST --addr 0.0.0.0:5001 --queue-list plugin_schedule plugin_callback schedule_delete
       configuration:
