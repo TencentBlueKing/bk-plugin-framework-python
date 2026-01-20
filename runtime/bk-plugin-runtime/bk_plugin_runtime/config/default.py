@@ -253,19 +253,6 @@ app_subpath = parsed_url.path.rstrip("/")
 BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
 BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
 
-
-# while deploy app on staging env, it would sync to the stage=stag of the gateway
-# while deploy app on production env, it would sync to the stage=prod of the gateway
-BK_APIGW_STAGE_NAME = bkpaas_environment
-BK_APIGW_STAGE_DESCRIPTION = "生产环境" if bkpaas_environment == "prod" else "预发布环境"
-BK_APIGW_STAGE_DESCRIPTION_EN = "Production Env" if bkpaas_environment == "prod" else "Staging Env"
-# 声明网关不同环境的环境变量
-stag_env_vars = {"foo": "bar"}
-prod_env_vars = {
-    # "foo": "bar"
-}
-BK_APIGW_STAGE_ENV_VARS = prod_env_vars if bkpaas_environment == "prod" else stag_env_vars
-
 # 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
 BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")
 # 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
