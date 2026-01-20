@@ -16,6 +16,16 @@ if RUN_VER == "open":
 else:
     from blueapps.patch.settings_paas_services import *  # noqa
 
+# 生产环境网关配置
+BK_APIGW_STAGE_NAME = "prod"
+BK_APIGW_STAGE_DESCRIPTION = "生产环境"
+BK_APIGW_STAGE_DESCRIPTION_EN = "Production Env"
+
+# 生产环境网关环境变量
+BK_APIGW_STAGE_ENV_VARS = {
+    # "foo": "bar"
+}
+
 # 正式环境
 RUN_MODE = "PRODUCT"
 

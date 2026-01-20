@@ -18,6 +18,14 @@ if RUN_VER == "open":
 else:
     from blueapps.patch.settings_paas_services import *  # noqa
 
+# 开发环境网关配置
+BK_APIGW_STAGE_NAME = "dev"
+BK_APIGW_STAGE_DESCRIPTION = "开发环境"
+BK_APIGW_STAGE_DESCRIPTION_EN = "Development Env"
+
+# 预发布环境网关环境变量
+BK_APIGW_STAGE_ENV_VARS = {"foo": "bar"}
+
 # 预发布环境
 RUN_MODE = "STAGING"
 
