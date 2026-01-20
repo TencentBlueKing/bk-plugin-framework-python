@@ -6,7 +6,6 @@ info:
 
 paths:
 
-
   /callback/{token}/:
     post:
       operationId: callback
@@ -44,17 +43,25 @@ paths:
         isPublic: true
         matchSubpath: false
         backend:
+          type: HTTP
           name: default
           method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/callback/{token}/
+          {% else %}
           path: /bk_plugin/callback/{token}/
+          {% endif %}
           matchSubpath: false
           timeout: 0
+          upstreams: {}
+          transformHeaders: {}
         pluginConfigs: []
         allowApplyPermission: true
         authConfig:
           userVerifiedRequired: false
           appVerifiedRequired: true
           resourcePermissionRequired: true
+        disabledStages: []
         descriptionEn: plugin callback
 
   /invoke/{version}:
@@ -94,17 +101,25 @@ paths:
         isPublic: true
         matchSubpath: false
         backend:
+          type: HTTP
           name: default
           method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/invoke/{version}
+          {% else %}
           path: /bk_plugin/invoke/{version}
+          {% endif %}
           matchSubpath: false
           timeout: 0
+          upstreams: {}
+          transformHeaders: {}
         pluginConfigs: []
         allowApplyPermission: true
         authConfig:
           userVerifiedRequired: false
           appVerifiedRequired: true
           resourcePermissionRequired: true
+        disabledStages: []
         descriptionEn: Invoke specific version plugin
   /bk_plugin/plugin_api/:
     x-bk-apigateway-method-any:
@@ -124,16 +139,53 @@ paths:
           type: HTTP
           name: default
           method: any
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/plugin_api/
+          {% else %}
           path: /bk_plugin/plugin_api/
+          {% endif %}
           matchSubpath: true
           timeout: 0
-          upstreams: { }
-          transformHeaders: { }
+          upstreams: {}
+          transformHeaders: {}
         authConfig:
           userVerifiedRequired: true
           appVerifiedRequired: false
-        disabledStages: [ ]
+        disabledStages: []
         descriptionEn: Plugin custom API entry
+
+  /bk_plugin/openapi/:
+    x-bk-apigateway-method-any:
+      operationId: plugin_openapi
+      summary: 插件开放API
+      description: 插件开放 API 入口，支持子路径匹配
+      tags:
+        - openapi
+      responses:
+        default:
+          description: '插件开放API响应'
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: true
+        backend:
+          type: HTTP
+          name: default
+          method: any
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/openapi/
+          {% else %}
+          path: /bk_plugin/openapi/
+          {% endif %}
+          matchSubpath: true
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+        disabledStages: []
+        descriptionEn: Plugin open API entry
 
   /plugin_api_dispatch/:
     post:
@@ -165,17 +217,25 @@ paths:
         isPublic: true
         matchSubpath: false
         backend:
+          type: HTTP
           name: default
           method: post
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}bk_plugin/plugin_api_dispatch/
+          {% else %}
           path: /bk_plugin/plugin_api_dispatch/
+          {% endif %}
           matchSubpath: false
           timeout: 0
+          upstreams: {}
+          transformHeaders: {}
         pluginConfigs: []
         allowApplyPermission: true
         authConfig:
           userVerifiedRequired: false
           appVerifiedRequired: true
           resourcePermissionRequired: true
+        disabledStages: []
         descriptionEn: Plugin API dispatch
 
 components:

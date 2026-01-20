@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 
 import hashlib
 import os
+import shutil
 import time
 
 import yaml
@@ -36,7 +37,7 @@ class Command(BaseCommand):
         # 用于记录各步骤耗时（毫秒）
         step_timings = {}
 
-        # 1. 生成 yaml 文件
+        # 1. 生成 definition.yaml 文件
         step_start = time.time()
         self.stdout.write("[Sync] generate definition.yaml")
         try:
@@ -50,30 +51,20 @@ class Command(BaseCommand):
             )
             raise SystemExit(1)
 
-        self.stdout.write("[Sync] generate resources.yaml")
-        try:
-            call_command("generate_resources_yaml")
-        except Exception as e:
-            self.stderr.write(
-                self.style.ERROR(
-                    f"run generate_resources_yaml fail: {e}, "
-                    "please run this command on your development env to find out the reason"
-                )
-            )
-            raise SystemExit(1)
-
         # 输出生成的文件路径
         resources_yaml_path = os.path.join(settings.BASE_DIR, "resources.yaml")
         definition_yaml_path = os.path.join(settings.BASE_DIR, "definition.yaml")
-        self.stdout.write(f"[Sync] Generated resources.yaml path: {resources_yaml_path}")
         self.stdout.write(f"[Sync] Generated definition.yaml path: {definition_yaml_path}")
 
-        step_timings["1. 生成 yaml 文件"] = (time.time() - step_start) * 1000
+        step_timings["1. 生成 definition.yaml 文件"] = (time.time() - step_start) * 1000
 
-        # 1.1 合并 support-files/resources.yaml 中的资源配置
+        # 1.1 复制 support-files/resources.yaml 到项目根目录
+        # 注意：不再使用 generate_resources_yaml 命令扫描 URL 模块
+        # plugin_api/ 和 openapi/ 等接口已在 support-files/resources.yaml 中通过子路径匹配方式定义
         step_start = time.time()
-        self._merge_support_files_resources()
-        step_timings["1.1 合并 support-files 资源配置"] = (time.time() - step_start) * 1000
+        self._copy_support_files_resources()
+        self.stdout.write(f"[Sync] resources.yaml path: {resources_yaml_path}")
+        step_timings["1.1 复制 support-files/resources.yaml"] = (time.time() - step_start) * 1000
 
         # 2. 计算当前哈希值（仅计算 resources.yaml）
         step_start = time.time()
@@ -94,7 +85,11 @@ class Command(BaseCommand):
         step_start = time.time()
         need_sync = force_sync or current_hash != last_hash
         if not need_sync:
-            self.stdout.write(self.style.SUCCESS("[Sync] API definition unchanged, skip sync to apigateway"))
+            self.stdout.write(
+                self.style.SUCCESS(
+                    "[Sync] API definition unchanged, skip sync to apigateway"
+                )
+            )
             # 仍然获取公钥，确保公钥是最新的
             self._fetch_public_key()
             step_timings["4. 对比决定是否同步"] = (time.time() - step_start) * 1000
@@ -106,7 +101,9 @@ class Command(BaseCommand):
         if force_sync:
             self.stdout.write(self.style.WARNING("[Sync] Force sync enabled"))
         else:
-            self.stdout.write(self.style.WARNING("[Sync] API definition changed, start syncing..."))
+            self.stdout.write(
+                self.style.WARNING("[Sync] API definition changed, start syncing...")
+            )
 
         # 5. 执行同步
         step_start = time.time()
@@ -128,7 +125,9 @@ class Command(BaseCommand):
         # 7. 更新哈希值
         step_start = time.time()
         self._save_sync_hash(current_hash, success=True)
-        self.stdout.write(self.style.SUCCESS("[Sync] API gateway sync completed successfully"))
+        self.stdout.write(
+            self.style.SUCCESS("[Sync] API gateway sync completed successfully")
+        )
         step_timings["7. 更新哈希值"] = (time.time() - step_start) * 1000
 
         # 打印耗时统计
@@ -147,97 +146,38 @@ class Command(BaseCommand):
         self.stdout.write(f"  总耗时: {total_time:.2f} ms")
         self.stdout.write("=" * 50 + "\n")
 
-    def _merge_support_files_resources(self):
+    def _copy_support_files_resources(self):
         """
-        将 support-files/resources.yaml 中的资源配置合并到生成的 resources.yaml 中
+        将 support-files/resources.yaml 复制到项目根目录作为 resources.yaml
 
-        合并逻辑：
-        1. 读取自动生成的 resources.yaml
-        2. 读取 support-files/resources.yaml（手动维护的补充配置）
-        3. 将 support-files 中的 paths 追加到生成的 paths 中
-        4. 将 support-files 中的 components/schemas 合并到生成的 components 中
-        5. 写回合并后的 resources.yaml
+        说明：
+        - 不再使用 generate_resources_yaml 命令自动扫描 URL 模块
+        - plugin_api/ 和 openapi/ 等接口已在 support-files/resources.yaml 中
+          通过子路径匹配（matchSubpath: true）的方式统一定义
+        - 这样可以避免扫描 bk_plugin.apis.urls 和 bk_plugin.openapi.urls 模块
         """
-        generated_filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         support_files_dir = os.path.join(os.path.dirname(__file__), "support-files")
         support_filepath = os.path.join(support_files_dir, "resources.yaml")
-
-        # 检查生成的文件是否存在
-        if not os.path.exists(generated_filepath):
-            self.stdout.write(self.style.WARNING(f"[Sync] Generated resources.yaml not found: {generated_filepath}"))
-            return
+        target_filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
 
         # 检查 support-files/resources.yaml 是否存在
         if not os.path.exists(support_filepath):
-            self.stdout.write(
-                self.style.WARNING(f"[Sync] support-files/resources.yaml not found: {support_filepath}, skip merging")
+            self.stderr.write(
+                self.style.ERROR(f"[Sync] support-files/resources.yaml not found: {support_filepath}")
             )
-            return
+            raise SystemExit(1)
 
         try:
-            # 读取自动生成的 resources.yaml
-            with open(generated_filepath, encoding="utf-8") as f:
-                generated_data = yaml.safe_load(f)
-
-            # 读取 support-files/resources.yaml
-            with open(support_filepath, encoding="utf-8") as f:
-                support_data = yaml.safe_load(f)
-
-            if not generated_data:
-                self.stdout.write(self.style.WARNING("[Sync] Generated resources.yaml is empty"))
-                return
-
-            if not support_data:
-                self.stdout.write(self.style.WARNING("[Sync] support-files/resources.yaml is empty, skip merging"))
-                return
-
-            merged_paths_count = 0
-            merged_schemas_count = 0
-
-            # 合并 paths
-            if "paths" in support_data:
-                if "paths" not in generated_data:
-                    generated_data["paths"] = {}
-
-                for path, path_config in support_data["paths"].items():
-                    if path in generated_data["paths"]:
-                        self.stdout.write(
-                            self.style.WARNING(
-                                f"[Sync] Path '{path}' already exists, will be overwritten by support-files config"
-                            )
-                        )
-                    generated_data["paths"][path] = path_config
-                    merged_paths_count += 1
-                    self.stdout.write(f"[Sync] Merged path: {path}")
-
-            # 合并 components/schemas
-            if "components" in support_data and "schemas" in support_data.get("components", {}):
-                if "components" not in generated_data:
-                    generated_data["components"] = {}
-                if "schemas" not in generated_data["components"]:
-                    generated_data["components"]["schemas"] = {}
-
-                for schema_name, schema_config in support_data["components"]["schemas"].items():
-                    if schema_name in generated_data["components"]["schemas"]:
-                        self.stdout.write(
-                            self.style.WARNING(f"[Sync] Schema '{schema_name}' already exists, will be overwritten")
-                        )
-                    generated_data["components"]["schemas"][schema_name] = schema_config
-                    merged_schemas_count += 1
-
-            # 写回合并后的文件
-            with open(generated_filepath, "w", encoding="utf-8") as f:
-                yaml.dump(generated_data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-
+            # 直接复制文件
+            shutil.copy2(support_filepath, target_filepath)
             self.stdout.write(
-                self.style.SUCCESS(
-                    f"[Sync] Merged support-files/resources.yaml: "
-                    f"{merged_paths_count} paths, {merged_schemas_count} schemas"
-                )
+                self.style.SUCCESS(f"[Sync] Copied support-files/resources.yaml to {target_filepath}")
             )
-
         except Exception as e:
-            self.stderr.write(self.style.ERROR(f"[Sync] Failed to merge support-files/resources.yaml: {e}"))
+            self.stderr.write(
+                self.style.ERROR(f"[Sync] Failed to copy support-files/resources.yaml: {e}")
+            )
+            raise SystemExit(1)
 
     def _calculate_resources_hash(self):
         """
@@ -250,7 +190,7 @@ class Command(BaseCommand):
         filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if os.path.exists(filepath):
             try:
-                with open(filepath, encoding="utf-8") as f:
+                with open(filepath, "r", encoding="utf-8") as f:
                     data = yaml.safe_load(f)
 
                 if data:
@@ -258,17 +198,18 @@ class Command(BaseCommand):
                     # 这样即使原始文件中 A,B,C 和 B,C,A 的顺序不同，
                     # 规范化后的内容也会相同，从而产生相同的 hash
                     normalized_content = yaml.dump(
-                        data, default_flow_style=False, allow_unicode=True, sort_keys=True  # 关键：排序所有 key
+                        data,
+                        default_flow_style=False,
+                        allow_unicode=True,
+                        sort_keys=True  # 关键：排序所有 key
                     )
                     return hashlib.sha256(normalized_content.encode()).hexdigest()
             except Exception as e:
                 self.stdout.write(
-                    self.style.WARNING(
-                        f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash"
-                    )
+                    self.style.WARNING(f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash")
                 )
                 # 回退到原始方式
-                with open(filepath, encoding="utf-8") as f:
+                with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
                 return hashlib.sha256(content.encode()).hexdigest()
         return ""
@@ -283,7 +224,9 @@ class Command(BaseCommand):
             state = APIGatewaySyncState.objects.filter(sync_success=True).first()
             return state.api_hash if state else ""
         except Exception as e:
-            self.stdout.write(self.style.WARNING(f"[Sync] Failed to get last sync hash: {e}"))
+            self.stdout.write(
+                self.style.WARNING(f"[Sync] Failed to get last sync hash: {e}")
+            )
             return ""
 
     def _save_sync_hash(self, hash_value, success=True):
@@ -299,7 +242,9 @@ class Command(BaseCommand):
             )
             self.stdout.write(f"[Sync] Sync state saved (success={success})")
         except Exception as e:
-            self.stdout.write(self.style.WARNING(f"[Sync] Failed to save sync hash: {e}"))
+            self.stdout.write(
+                self.style.WARNING(f"[Sync] Failed to save sync hash: {e}")
+            )
 
     def _fetch_public_key(self):
         """获取 API 网关公钥"""
