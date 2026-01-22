@@ -64,7 +64,7 @@ paths:
         disabledStages: []
         descriptionEn: plugin callback
 
-  /invoke/{version}:
+  /invoke/{version}/:
     post:
       operationId: invoke
       summary: 调用指定版本插件
@@ -187,7 +187,7 @@ paths:
         disabledStages: []
         descriptionEn: Plugin open API entry
 
-  /plugin_api_dispatch/:
+  /plugin_api_dispatch:
     post:
       operationId: plugin_api_dispatch
       summary: 插件API分发
