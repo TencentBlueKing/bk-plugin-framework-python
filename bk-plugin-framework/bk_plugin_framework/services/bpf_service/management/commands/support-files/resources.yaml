@@ -3,9 +3,7 @@ info:
   title: 'BK Plugin API'
   version: '1.0.0'
   description: '蓝鲸插件服务 API'
-
 paths:
-
   /callback/{token}/:
     post:
       operationId: callback
@@ -63,7 +61,6 @@ paths:
           resourcePermissionRequired: true
         disabledStages: []
         descriptionEn: plugin callback
-
   /invoke/{version}/:
     post:
       operationId: invoke
@@ -139,11 +136,7 @@ paths:
           type: HTTP
           name: default
           method: any
-          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/plugin_api/
-          {% else %}
           path: /bk_plugin/plugin_api/
-          {% endif %}
           matchSubpath: true
           timeout: 0
           upstreams: {}
