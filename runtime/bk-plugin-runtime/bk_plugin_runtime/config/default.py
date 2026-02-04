@@ -14,6 +14,7 @@ import os
 import urllib
 from urllib.parse import urlparse
 
+from apigw_manager.plugin.config import build_bk_cors, build_stage_plugin_config_for_definition_yaml
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
 
@@ -220,6 +221,15 @@ def logging_addition_settings(logging_dict):
             )
             break
 
+
+# plugin configs
+apigw_plugin_configs = build_stage_plugin_config_for_definition_yaml(
+    [
+        build_bk_cors(
+            allow_headers="**", allow_methods="**", allow_origins="**", allow_credential=True, expose_headers="--"
+        ),
+    ]
+)
 
 # drf settings
 REST_FRAMEWORK = {
