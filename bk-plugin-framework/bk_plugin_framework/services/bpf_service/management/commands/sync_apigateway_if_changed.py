@@ -41,7 +41,7 @@ class Command(BaseCommand):
         step_start = time.time()
         self.stdout.write("[Sync] generate definition.yaml")
         try:
-            call_command("generate_definition_yaml")
+            call_command("generate_definition_yaml", "--render")
         except Exception as e:
             self.stderr.write(
                 self.style.ERROR(
@@ -66,10 +66,15 @@ class Command(BaseCommand):
         self.stdout.write(f"[Sync] resources.yaml path: {resources_yaml_path}")
         step_timings["1.1 复制 support-files/resources.yaml"] = (time.time() - step_start) * 1000
 
-        # 2. 计算当前哈希值（仅计算 resources.yaml）
+        # 2. 计算当前哈希值（计算 resources.yaml 和 definition.yaml）
         step_start = time.time()
-        current_hash = self._calculate_resources_hash()
-        self.stdout.write(f"[Sync] Current resources.yaml hash: {current_hash[:16]}...")
+        resources_hash = self._calculate_yaml_hash(resources_yaml_path)
+        definition_hash = self._calculate_yaml_hash(definition_yaml_path)
+        self.stdout.write(f"[Sync] resources.yaml hash: {resources_hash[:16] if resources_hash else 'N/A'}...")
+        self.stdout.write(f"[Sync] definition.yaml hash: {definition_hash[:16] if definition_hash else 'N/A'}...")
+        # 组合两个哈希值生成最终哈希
+        current_hash = hashlib.sha256(f"{resources_hash}:{definition_hash}".encode()).hexdigest()
+        self.stdout.write(f"[Sync] Current combined hash: {current_hash[:16]}...")
         step_timings["2. 计算当前哈希值"] = (time.time() - step_start) * 1000
 
         # 3. 获取上次同步的哈希值
@@ -165,15 +170,14 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR(f"[Sync] Failed to copy support-files/resources.yaml: {e}"))
             raise SystemExit(1)
 
-    def _calculate_resources_hash(self):
+    def _calculate_yaml_hash(self, filepath):
         """
-        计算 resources.yaml 的哈希值
+        计算单个 YAML 文件的哈希值
 
         注意：为了避免 YAML 内容顺序变化导致的 hash 不一致问题，
         这里先将 YAML 解析为字典，然后用 sort_keys=True 重新序列化，
         确保相同内容的 YAML 文件总是产生相同的 hash 值。
         """
-        filepath = os.path.join(settings.BASE_DIR, "resources.yaml")
         if os.path.exists(filepath):
             try:
                 with open(filepath, encoding="utf-8") as f:
@@ -190,7 +194,7 @@ class Command(BaseCommand):
             except Exception as e:
                 self.stdout.write(
                     self.style.WARNING(
-                        f"[Sync] Failed to normalize resources.yaml for hash: {e}, fallback to raw content hash"
+                        f"[Sync] Failed to normalize {filepath} for hash: {e}, fallback to raw content hash"
                     )
                 )
                 # 回退到原始方式
