@@ -16,6 +16,34 @@ files = [
 vine = ">=5.0.0,<6.0.0"
 
 [[package]]
+name = "apigw-manager"
+version = "4.2.3"
+description = "The SDK for managing blueking gateway resource."
+optional = false
+python-versions = "<3.13,>=3.8"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "apigw_manager-4.2.3-py3-none-any.whl", hash = "sha256:ecc531a17fbd1c52e903583ca4abb2fc1c3c7d37954e56df691c3e93577754da"},
+]
+
+[package.dependencies]
+bkapi-bk-apigateway = ">=1.0.12,<2.0.0"
+bkapi-client-core = ">=1.2.0"
+docutils = "0.20.1"
+packaging = ">=20.4"
+pyyaml = ">=5.4.2"
+setuptools = ">=21.0.0"
+urllib3 = ">=1.25.3"
+
+[package.extras]
+cryptography = ["cryptography (>=3.1.1)", "pyjwt (>=2.0.0)"]
+demo = ["Django (>=3.0.14)", "PyMySQL (>=1.0.2,<2.0.0)", "django-environ (>=0.8.1)", "pyjwt (>=2.0.0)"]
+django = ["Django (>=3.0.14)", "pyjwt (>=2.0.0)"]
+drf = ["Django (>=3.0.14)", "cryptography (>=3.1.1)", "djangorestframework (>=3.10.3)", "drf-spectacular (<=0.27.2)", "pyjwt (>=2.0.0)"]
+kubernetes = ["kubernetes"]
+
+[[package]]
 name = "asgiref"
 version = "3.8.1"
 description = "ASGI specs, helper code, and adapters"
@@ -90,6 +118,46 @@ files = [
     {file = "billiard-4.2.4-py3-none-any.whl", hash = "sha256:525b42bdec68d2b983347ac312f892db930858495db601b5836ac24e6477cde5"},
     {file = "billiard-4.2.4.tar.gz", hash = "sha256:55f542c371209e03cd5862299b74e52e4fbcba8250ba611ad94276b369b6a85f"},
 ]
+
+[[package]]
+name = "bkapi-bk-apigateway"
+version = "1.0.12"
+description = "蓝鲸API网关"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,<4.0,>=2.7"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "bkapi-bk-apigateway-1.0.12.tar.gz", hash = "sha256:4e32b3b3c5f45f8a264aab84a73a827edcb29698357d3c90e689d0271ce97902"},
+]
+
+[package.dependencies]
+bkapi-client-core = ">=1.0.2,<2.0.0"
+
+[package.extras]
+django = ["bkapi-client-core[django] (>=1.0.2,<2.0.0)"]
+
+[[package]]
+name = "bkapi-client-core"
+version = "1.2.0"
+description = "A toolkit for buiding blueking API clients."
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "bkapi_client_core-1.2.0-py2.py3-none-any.whl", hash = "sha256:f18b29e0fc0ee8d5eca33ea1f823f26dc7d7adc2f39670cc45cc2f8452f39630"},
+]
+
+[package.dependencies]
+curlify = ">=2.0"
+requests = ">=2.20"
+six = "*"
+typing-extensions = ">=3.7.4"
+
+[package.extras]
+django = ["bkoauth (>=0.0.10)", "prometheus-client (>=0.9.0)"]
+monitor = ["prometheus-client (>=0.9.0)"]
 
 [[package]]
 name = "bkoauth"
@@ -635,6 +703,22 @@ test = ["certifi", "cryptography-vectors (==43.0.3)", "pretend", "pytest (>=6.2.
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "curlify"
+version = "3.0.0"
+description = "Convert Requests request objects to curl commands."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "curlify-3.0.0-py3-none-any.whl", hash = "sha256:52060c0eb7a656b7bde6b668c32f337bed4d736ce230755767e3ada56a09c338"},
+    {file = "curlify-3.0.0.tar.gz", hash = "sha256:7b488ff3c924dba3433a1cc74044c0942da21f0a97fa26c3138319ba640ca412"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "ddtrace"
 version = "0.14.1"
 description = "Datadog tracing code"
@@ -819,6 +903,19 @@ files = [
 [package.dependencies]
 "backports.zoneinfo" = {version = "*", markers = "python_version < \"3.9\""}
 django = ">=3.0"
+
+[[package]]
+name = "docutils"
+version = "0.20.1"
+description = "Docutils -- Python Documentation Utilities"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6"},
+    {file = "docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b"},
+]
 
 [[package]]
 name = "drf-yasg"
@@ -1948,6 +2045,28 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "setuptools"
+version = "75.3.3"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "python_version < \"3.13\""
+files = [
+    {file = "setuptools-75.3.3-py3-none-any.whl", hash = "sha256:4f198f37d40550b86ebc2a678e2246ef76fbec316619a5ac61ecbb3cabf8e9bf"},
+    {file = "setuptools-75.3.3.tar.gz", hash = "sha256:22e8a8ef763eb571d8e414e29b1b9fa9fd0ae3cdcb973ad51c12d8d3ee38ff5c"},
+]
+
+[package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\"", "ruff (>=0.5.2) ; sys_platform != \"cygwin\""]
+core = ["importlib-metadata (>=6) ; python_version < \"3.10\"", "importlib-resources (>=5.10.2) ; python_version < \"3.9\"", "jaraco.collections", "jaraco.functools", "jaraco.text (>=3.7)", "more-itertools", "more-itertools (>=8.8)", "packaging", "packaging (>=24)", "platformdirs (>=4.2.2)", "tomli (>=2.0.1) ; python_version < \"3.11\"", "wheel (>=0.43.0)"]
+cover = ["pytest-cov"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier", "towncrier (<24.7)"]
+enabler = ["pytest-enabler (>=2.2)"]
+test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21) ; python_version >= \"3.9\" and sys_platform != \"cygwin\"", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "jaraco.test (>=5.5)", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.*)", "pytest-home (>=0.5)", "pytest-perf ; sys_platform != \"cygwin\"", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "ruff (<=0.7.1)", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel (>=0.44.0)"]
+type = ["importlib-metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.develop (>=7.21) ; sys_platform != \"cygwin\"", "mypy (==1.12.*)", "pytest-mypy"]
+
+[[package]]
 name = "six"
 version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -2235,4 +2354,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8.0,<4.0"
-content-hash = "ac0d1626509d1ed8b924db0e6f917c748714b1038531f493ccfebf3df1153fb1"
+content-hash = "a81c9e08689410c433abf28c64536a8612a0e8ae132c8d2c928799ebf1bfc0c2"
