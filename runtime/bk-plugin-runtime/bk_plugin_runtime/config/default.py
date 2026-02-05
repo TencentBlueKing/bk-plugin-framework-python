@@ -230,7 +230,7 @@ apigw_plugin_configs = build_stage_plugin_config_for_definition_yaml(
         ),
     ]
 )
-
+BK_APIGW_STAGE_PLUGIN_CONFIGS = apigw_plugin_configs
 # drf settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
