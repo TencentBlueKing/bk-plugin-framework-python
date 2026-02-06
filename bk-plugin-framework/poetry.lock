@@ -201,14 +201,14 @@ files = [
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.1.5rc3"
+version = "2.1.5"
 description = "bk plugin python django runtime"
 optional = false
 python-versions = ">=3.8.0,<4.0.0"
 groups = ["main"]
 files = [
-    {file = "bk_plugin_runtime-2.1.5rc3-py3-none-any.whl", hash = "sha256:de89ce9c6dcc949f2139e2af88edc8a2c6fce63921338dc94352f3288a2e42f2"},
-    {file = "bk_plugin_runtime-2.1.5rc3.tar.gz", hash = "sha256:dd682aabc1703126a65e502411016b92f3ef85113092fb5205dbffcc4325b10a"},
+    {file = "bk_plugin_runtime-2.1.5-py3-none-any.whl", hash = "sha256:02ba1e32bd6785accbf5911267028be785ab58cf79f2271dddd57f42d73a6763"},
+    {file = "bk_plugin_runtime-2.1.5.tar.gz", hash = "sha256:97b5f6cdfd68c3a3cd5b5000688472a786becac68d8dc3d4c60aa590136c5b77"},
 ]
 
 [package.dependencies]
@@ -4539,4 +4539,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8.0,<4.0"
-content-hash = "85c87363cdfd7b15f48f0ea0d2dfa279601ff99bdde1ab5836dd74dc40df1cc1"
+content-hash = "d386ca91c926fb454c8342cef6d432fccc350810c61ebd530ae83970be3a12e7"
