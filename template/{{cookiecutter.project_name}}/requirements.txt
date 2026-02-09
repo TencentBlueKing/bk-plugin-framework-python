@@ -1,6 +1,6 @@
 # base
 # DO NOT DELETE ANY PACKAGE IN base SECTION !!!
-bk-plugin-framework==2.3.5
+bk-plugin-framework==2.3.6
 # opentelemetry
 celery-prometheus-exporter==1.7.0
 opentelemetry-api==1.25.0
