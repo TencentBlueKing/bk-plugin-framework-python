@@ -14,6 +14,7 @@ import os
 import urllib
 from urllib.parse import urlparse
 
+from apigw_manager.plugin.config import build_bk_cors, build_stage_plugin_config_for_definition_yaml
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
 
@@ -221,6 +222,15 @@ def logging_addition_settings(logging_dict):
             break
 
 
+# plugin configs
+apigw_plugin_configs = build_stage_plugin_config_for_definition_yaml(
+    [
+        build_bk_cors(
+            allow_headers="**", allow_methods="**", allow_origins="**", allow_credential=True, expose_headers="--"
+        ),
+    ]
+)
+BK_APIGW_STAGE_PLUGIN_CONFIGS = apigw_plugin_configs
 # drf settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -240,7 +250,7 @@ BK_APIGW_IS_OFFICIAL = 1 if os.getenv("BK_APIGW_IS_OFFICIAL", "false").lower() =
 # 网关管理员，请将负责人加入列表中
 BK_APIGW_MAINTAINERS = [m.strip() for m in os.getenv("BK_APIGW_MAINTAINERS", "admin").split(",") if m.strip()]
 # 网关接口最大超时时间
-BK_APIGW_STAG_BACKEND_TIMEOUT = 60
+BK_APIGW_STAG_BACKEND_TIMEOUT = int(os.getenv("BK_APIGW_DEFAULT_TIMEOUT", "60"))
 
 
 # analysis the app environment and address via bkpaas env vars
@@ -258,8 +268,24 @@ BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
 # 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
 BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")
 # 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
-# BK_APIGW_RESOURCE_DOCS_BASE_DIR = env.str("BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=BASE_DIR / "docs")
+BK_APIGW_RESOURCE_DOCS_BASE_DIR = os.getenv("BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=os.path.join(BASE_DIR, "docs"))
 
+# NOTE: 根据 BKPAAS_ENVIRONMENT 自动设置 stage name
+# stag 环境对应 stag，其他环境（prod、dev）对应 prod
+BK_APIGW_STAGE_NAME = os.getenv("BK_APIGW_STAGE_NAME", "stag" if BKPAAS_ENVIRONMENT == "stag" else "prod")
+
+BK_APIGW_RELEASE_VERSION = (
+    # NOTE: 每次部署必须强制版本号变更，否则代码变更版本号不变，不会打出新版本
+    # log: resource_version 1.0.3+stag already exists, skip creating
+    os.getenv("BK_APIGW_RELEASE_VERSION", default="1.0.0")
+    + "+"
+    + BK_APIGW_STAGE_NAME
+)
+BK_APIGW_RELEASE_TITLE = os.getenv("BK_APIGW_RELEASE_TITLE", default=f"gateway release(stage={BK_APIGW_STAGE_NAME})")
+BK_APIGW_RELEASE_COMMENT = os.getenv(
+    "BK_APIGW_RELEASE_COMMENT",
+    default=f"auto release by bk-apigw-plugin-runtime(stage={BK_APIGW_STAGE_NAME})",
+)
 # BK SOPS RELATE
 BK_SOPS_APP_CODE = os.getenv("BK_SOPS_APP_CODE")
 
@@ -291,7 +317,6 @@ BK_PLUGIN_APIGW_BACKEND_SCHEME = url_parse.scheme or "http"
 BK_APIGW_CORS_ALLOW_ORIGINS = os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "")
 BK_APIGW_CORS_ALLOW_METHODS = os.getenv("BK_APIGW_CORS_ALLOW_METHODS", "")
 BK_APIGW_CORS_ALLOW_HEADERS = os.getenv("BK_APIGW_CORS_ALLOW_HEADERS", "")
-BK_APIGW_DEFAULT_TIMEOUT = int(os.getenv("BK_APIGW_DEFAULT_TIMEOUT", "60"))
-BK_APIGW_GRANTED_APPS = [BK_APP_CODE] + [
+BK_APIGW_GRANT_PERMISSION_DIMENSION_GATEWAY_APP_CODES = [BK_APP_CODE] + [
     each.strip() for each in os.getenv("BK_APIGW_GRANTED_APPS", "").split(",") if each.strip()
 ]
