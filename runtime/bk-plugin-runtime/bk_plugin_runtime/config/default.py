@@ -256,11 +256,12 @@ BK_APIGW_STAG_BACKEND_TIMEOUT = 60
 # analysis the app environment and address via bkpaas env vars
 bkpaas_default_preallocated_urls = json.loads(os.getenv("BKPAAS_DEFAULT_PREALLOCATED_URLS", "{}"))
 bkpaas_environment = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-app_address = bkpaas_default_preallocated_urls.get(bkpaas_environment)
+app_address = bkpaas_default_preallocated_urls.get(bkpaas_environment) or ""
 parsed_url = urlparse(app_address)
 app_scheme = parsed_url.scheme
 app_domain = parsed_url.netloc
-app_subpath = parsed_url.path.rstrip("/")
+_path = parsed_url.path
+app_subpath = (_path.decode("utf-8") if isinstance(_path, bytes) else _path).rstrip("/")
 
 BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
 BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
@@ -295,7 +296,8 @@ BK_PLUGIN_APIGW_BACKEND_HOST = json.loads(os.getenv("BKPAAS_DEFAULT_PREALLOCATED
 )
 url_parse = urllib.parse.urlparse(BK_PLUGIN_APIGW_BACKEND_HOST)
 BK_PLUGIN_APIGW_BACKEND_NETLOC = url_parse.netloc
-BK_PLUGIN_APIGW_BACKEND_SUB_PATH = url_parse.path.lstrip("/")
+_path = url_parse.path
+BK_PLUGIN_APIGW_BACKEND_SUB_PATH = (_path.decode("utf-8") if isinstance(_path, bytes) else _path).lstrip("/")
 BK_PLUGIN_APIGW_BACKEND_SCHEME = url_parse.scheme or "http"
 
 BK_APIGW_CORS_ALLOW_ORIGINS = os.getenv("BK_APIGW_CORS_ALLOW_ORIGINS", "")
