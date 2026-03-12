@@ -269,7 +269,9 @@ BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
 # 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
 BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")
 # 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
-BK_APIGW_RESOURCE_DOCS_BASE_DIR = os.getenv("BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=os.path.join(BASE_DIR, "docs"))
+BK_APIGW_RESOURCE_DOCS_BASE_DIR = os.getenv(
+    "BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=os.path.join(BASE_DIR, "docs")
+)  # noqa
 
 # NOTE: 根据 BKPAAS_ENVIRONMENT 自动设置 stage name
 # stag 环境对应 stag，其他环境（prod、dev）对应 prod
