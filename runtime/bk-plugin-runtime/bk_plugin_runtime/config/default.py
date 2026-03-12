@@ -126,7 +126,7 @@ IS_BKUI_HISTORY_MODE = False
 IS_AJAX_PLAIN_MODE = False
 
 # 国际化配置
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)  # noqa
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)  # noqa: F405
 
 TIME_ZONE = "Asia/Shanghai"
 LANGUAGE_CODE = "zh-hans"
