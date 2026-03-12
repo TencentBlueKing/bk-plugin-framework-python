@@ -93,7 +93,7 @@ AUTHENTICATION_BACKENDS += ("bk_plugin_runtime.packages.apigw.backends.APIGWUser
 #
 STATIC_VERSION = "1.0"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # noqa
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # noqa: F405
 
 # CELERY 开关，使用时请改为 True，修改项目目录下的 Procfile 文件，添加以下两行命令：
 # worker: python manage.py celery worker -l info
@@ -270,7 +270,7 @@ BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
 BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")
 # 在项目 docs目录下，通过 markdown文档自动化导入中英文文档; 注意markdown文件名必须等于接口的 operation_id; 见 demo 示例
 BK_APIGW_RESOURCE_DOCS_BASE_DIR = os.getenv(
-    "BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=os.path.join(BASE_DIR, "docs")
+    "BK_APIGW_RESOURCE_DOCS_BASE_DIR", default=os.path.join(BASE_DIR, "docs")  # noqa
 )  # noqa
 
 # NOTE: 根据 BKPAAS_ENVIRONMENT 自动设置 stage name
