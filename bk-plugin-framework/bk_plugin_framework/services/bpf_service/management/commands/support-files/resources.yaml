@@ -47,7 +47,7 @@ paths:
           name: default
           method: post
           {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/callback/{token}/
+          path: {env.api_sub_path}/bk_plugin/callback/{token}/
           {% else %}
           path: /bk_plugin/callback/{token}/
           {% endif %}
@@ -105,7 +105,7 @@ paths:
           name: default
           method: post
           {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/invoke/{version}
+          path: {env.api_sub_path}/bk_plugin/invoke/{version}
           {% else %}
           path: /bk_plugin/invoke/{version}
           {% endif %}
@@ -140,7 +140,7 @@ paths:
           name: default
           method: any
           {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/plugin_api/
+          path: {env.api_sub_path}/bk_plugin/plugin_api/
           {% else %}
           path: /bk_plugin/plugin_api/
           {% endif %}
@@ -173,7 +173,7 @@ paths:
           name: default
           method: any
           {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/openapi/
+          path: {env.api_sub_path}/bk_plugin/openapi/
           {% else %}
           path: /bk_plugin/openapi/
           {% endif %}
@@ -221,7 +221,7 @@ paths:
           name: default
           method: post
           {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
-          path: /{env.api_sub_path}bk_plugin/plugin_api_dispatch/
+          path: {env.api_sub_path}/bk_plugin/plugin_api_dispatch/
           {% else %}
           path: /bk_plugin/plugin_api_dispatch/
           {% endif %}
