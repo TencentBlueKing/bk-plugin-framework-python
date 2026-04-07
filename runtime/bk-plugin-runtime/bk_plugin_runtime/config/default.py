@@ -261,7 +261,7 @@ parsed_url = urlparse(app_address)
 app_scheme = parsed_url.scheme
 app_domain = parsed_url.netloc
 _path = parsed_url.path
-app_subpath = (_path.decode("utf-8") if isinstance(_path, bytes) else _path).rstrip("/")
+app_subpath = (_path.decode("utf-8") if isinstance(_path, bytes) else _path).strip("/")
 
 BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
 BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
