@@ -201,14 +201,14 @@ files = [
 
 [[package]]
 name = "bk-plugin-runtime"
-version = "2.1.8"
+version = "2.1.9"
 description = "bk plugin python django runtime"
 optional = false
 python-versions = "<4.0.0,>=3.8.0"
 groups = ["main"]
 files = [
-    {file = "bk_plugin_runtime-2.1.8-py3-none-any.whl", hash = "sha256:5a3574c2472d67b7a7514d3677b8954ca76b30c6cab3c8c3a5831ac6f36dfc77"},
-    {file = "bk_plugin_runtime-2.1.8.tar.gz", hash = "sha256:9fff59821e0bb7e878c5a9062f27a06640c54808f7de4bf3287720c8d6af9ce1"},
+    {file = "bk_plugin_runtime-2.1.9-py3-none-any.whl", hash = "sha256:6d0c89f929b25bf60f700c3ba405dd3e77ac576b17bbad24eb957439989ff003"},
+    {file = "bk_plugin_runtime-2.1.9.tar.gz", hash = "sha256:341c255a4b205cd6bea84e6832151efaf72033837912dc33ee24e1ddc5ae5d8e"},
 ]
 
 [package.dependencies]
@@ -222,7 +222,6 @@ django-celery-results = ">=2.5.1,<3.0.0"
 django-cors-headers = ">=4.0.0,<5.0.0"
 django-dbconn-retry = ">=0.1.5,<0.2.0"
 djangorestframework = ">=3.15,<4.0"
-drf-yasg = ">=1.21.5,<2.0.0"
 gunicorn = ">=19.6.0"
 protobuf = ">=3.19.4,<6.0"
 pymysql = ">=1,<2"
@@ -1322,31 +1321,6 @@ uritemplate = ">=2.0.0"
 [package.extras]
 offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
-
-[[package]]
-name = "drf-yasg"
-version = "1.21.10"
-description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
-optional = false
-python-versions = ">=3.6"
-groups = ["main"]
-files = [
-    {file = "drf-yasg-1.21.10.tar.gz", hash = "sha256:f86d50faee3c31fcec4545985a871f832366c7fb5b77b62c48089d56ecf4f8d4"},
-    {file = "drf_yasg-1.21.10-py3-none-any.whl", hash = "sha256:4d832e108dfe38e365101c36123576b498487d33bf27d57d6a37efb4cc773438"},
-]
-
-[package.dependencies]
-django = ">=2.2.16"
-djangorestframework = ">=3.10.3"
-inflection = ">=0.3.1"
-packaging = ">=21.0"
-pytz = ">=2021.1"
-pyyaml = ">=5.1"
-uritemplate = ">=3.0.0"
-
-[package.extras]
-coreapi = ["coreapi (>=2.3.3)", "coreschema (>=0.0.4)"]
-validation = ["swagger-spec-validator (>=2.1.0)"]
 
 [[package]]
 name = "exceptiongroup"
@@ -4534,4 +4508,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8.0,<4.0"
-content-hash = "d37e535ac5ee03ff855fa80aac4ddb9d1f6f9ee4ff67528bdd6af3239059c2a4"
+content-hash = "e1d561757b13165914c4417dea9022238fbaa604e5e82a855dff323847343610"
