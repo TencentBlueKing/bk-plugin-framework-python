@@ -239,7 +239,16 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "apigw_manager.drf.permission.ApiGatewayPermission",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "bk_plugin_runtime.schema.IgnoreExcludeAutoSchema",
+}
+
+# drf-spectacular 配置
+import bk_plugin_runtime.schema  # noqa: 应用 monkey-patch，使 @extend_schema(exclude=True) 不生效
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "PluginService API",
+    "VERSION": "v1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 
@@ -265,6 +274,15 @@ app_subpath = (_path.decode("utf-8") if isinstance(_path, bytes) else _path).str
 
 BK_APIGW_STAGE_BACKEND_HOST = f"{app_scheme}://{app_domain}"
 BK_APIGW_STAGE_BACKEND_SUBPATH = app_subpath
+
+# 子路径配置：当应用部署在子路径下时（如 /bk-plugin-demo-g/），
+# 需要设置 FORCE_SCRIPT_NAME 和 STATIC_URL 以确保 admin 样式和静态资源正常加载
+if app_subpath:
+    FORCE_SCRIPT_NAME = f"/{app_subpath}"
+    STATIC_URL = f"/{app_subpath}/static/"
+else:
+    FORCE_SCRIPT_NAME = ""
+    STATIC_URL = "/static/"
 
 # 网关同步 API 文档语言, zh/en, 如果配置了BK_APIGW_RESOURCE_DOCS_BASE_DIR（使用自定义文档）, 那么必须将这个变量置空
 BK_APIGW_RELEASE_DOC_LANGUAGE = os.getenv("BK_APIGW_RELEASE_DOC_LANGUAGE", "")

@@ -12,26 +12,14 @@ specific language governing permissions and limitations under the License.
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, re_path
-from drf_yasg import openapi
-from drf_yasg.views import get_schema_view
-from rest_framework import permissions
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="PluginService API",
-        default_version="v1",
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
-
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     re_path(r"^admin/", admin.site.urls),
     re_path(r"^account/", include("blueapps.account.urls")),
     re_path(r"^i18n/", include("django.conf.urls.i18n")),
-    re_path(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
-    re_path(r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    re_path(r"^schema/$", SpectacularAPIView.as_view(), name="schema"),
+    re_path(r"^redoc/$", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     re_path(r"^bk_plugin/", include("bk_plugin_framework.services.bpf_service.urls")),
 ]
 
@@ -41,11 +29,11 @@ if settings.ENVIRONMENT == "dev":
 
     urlpatterns.extend(
         [
-            re_path(r"^swagger/$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+            re_path(r"^swagger/$", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
             re_path(r"^$", debug_panel, name="debug-panel"),
         ]
     )
 else:
     urlpatterns.append(
-        re_path(r"^$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+        re_path(r"^$", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     )
