@@ -99,3 +99,6 @@ webpack_cache
 
 # Editor setting file
 .vscode/
+
+# Local implementation worktrees
+.worktrees/
