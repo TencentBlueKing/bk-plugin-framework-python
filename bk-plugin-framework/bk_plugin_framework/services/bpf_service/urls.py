@@ -19,6 +19,7 @@ from bk_plugin_framework.services.bpf_service import api
 
 PLUGIN_API_URLS_MODULE = "bk_plugin.apis.urls"
 PLUGIN_OPENAPI_URLS_MODULE = "bk_plugin.openapi.urls"
+PLUGIN_PRIVATE_URLS_MODULE = "bk_plugin.private.urls"
 
 urlpatterns = [
     # 协议层接口（与平台方对接）
@@ -52,3 +53,12 @@ except ModuleNotFoundError:
 else:
     sys.stdout.write("[!]plugin openapi urls module found\n")
     urlpatterns.append(path(r"openapi/", include(PLUGIN_OPENAPI_URLS_MODULE)))
+
+# add plugin private
+try:
+    importlib.import_module(PLUGIN_PRIVATE_URLS_MODULE)
+except ModuleNotFoundError:
+    sys.stdout.write("[!]can not find plugin private urls module, skip it\n")
+else:
+    sys.stdout.write("[!]plugin private urls module found\n")
+    urlpatterns.append(path(r"private/", include(PLUGIN_PRIVATE_URLS_MODULE)))

@@ -187,6 +187,40 @@ paths:
         disabledStages: []
         descriptionEn: Plugin open API entry
 
+  /bk_plugin/private/:
+    x-bk-apigateway-method-any:
+      operationId: plugin_private
+      summary: 插件私有API
+      description: 插件私有 API 入口，支持子路径匹配
+      tags:
+        - private
+      responses:
+        default:
+          description: '插件私有API响应'
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: true
+        backend:
+          type: HTTP
+          name: default
+          method: any
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}/bk_plugin/private/
+          {% else %}
+          path: /bk_plugin/private/
+          {% endif %}
+          matchSubpath: true
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: false
+        disabledStages: []
+        descriptionEn: Plugin private API entry
+
   /plugin_api_dispatch:
     post:
       operationId: plugin_api_dispatch
