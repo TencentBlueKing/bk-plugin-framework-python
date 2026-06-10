@@ -860,8 +860,9 @@ python bin/manage.py rundebugserver
 如果你有好的意见或建议，欢迎给我们提 Issues 或 Pull Requests，为蓝鲸开源社区贡献力量。
 
 1. 本项目使用 [Poetry](https://python-poetry.org/) 进行开发、构建及发布，本地开发环境搭建请参考 Poetry 官方文档
-2. PR 需要通过 CI 中的所有代码风格检查，单元测试及集成测试才可被接受合并
-3. 新增加的模块请确保完备的单元测试覆盖
+2. 包发布流程请参考 [Release Guide](./docs/release.md)
+3. PR 需要通过 CI 中的所有代码风格检查，单元测试及集成测试才可被接受合并
+4. 新增加的模块请确保完备的单元测试覆盖
 
 ## License
 
