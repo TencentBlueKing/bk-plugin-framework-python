@@ -13,6 +13,7 @@ import uuid
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.db import OperationalError
 
 from bk_plugin_framework.kit import State
 from bk_plugin_framework.runtime.schedule.celery import tasks
@@ -108,3 +109,42 @@ class TestScheduleTask:
             plugin_cls=VersionHub.all_plugins().get(schedule_obj.plugin_version), schedule=schedule_obj
         )
         Schedule.objects.filter.assert_not_called()
+
+    def test_schedule__transient_db_error_will_retry(self, trace_id, schedule_id):
+        Schedule = MagicMock()
+        db_err = OperationalError("(2003, \"Can't connect to MySQL server (110)\")")
+        Schedule.objects.get = MagicMock(side_effect=db_err)
+
+        class _Retry(Exception):
+            pass
+
+        with patch("bk_plugin_framework.runtime.schedule.celery.tasks.Schedule", Schedule):
+            with patch.object(tasks.schedule, "retry", side_effect=_Retry) as mock_retry:
+                with pytest.raises(_Retry):
+                    tasks.schedule(trace_id)
+
+        assert local.get_trace_id() == trace_id
+
+        Schedule.objects.get.assert_called_once_with(trace_id=trace_id)
+        # 瞬时数据库连接错误应触发重试，而不是把调度直接置为失败
+        mock_retry.assert_called_once()
+        assert mock_retry.call_args[1]["exc"] is db_err
+        assert mock_retry.call_args[1]["countdown"] == 5
+        Schedule.objects.filter.assert_not_called()
+
+    def test_schedule__transient_db_error_set_fail_when_retries_exhausted(self, trace_id, schedule_id):
+        Schedule = MagicMock()
+        Schedule.objects.get = MagicMock(side_effect=OperationalError())
+
+        with patch("bk_plugin_framework.runtime.schedule.celery.tasks.Schedule", Schedule):
+            with patch.object(tasks.schedule, "retry") as mock_retry:
+                with patch.object(tasks.schedule, "max_retries", 0):
+                    tasks.schedule(trace_id)
+
+        assert local.get_trace_id() == trace_id
+
+        Schedule.objects.get.assert_called_once_with(trace_id=trace_id)
+        # 重试已耗尽：不再重试，兜底置为失败
+        mock_retry.assert_not_called()
+        Schedule.objects.filter.assert_called_once_with(trace_id=trace_id)
+        Schedule.objects.filter(trace_id=trace_id).update.assert_called_once_with(state=State.FAIL.value)
