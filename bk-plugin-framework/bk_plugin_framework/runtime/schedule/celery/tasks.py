@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 import logging
 
 from celery import shared_task
+from django.db import InterfaceError, OperationalError
 
 from bk_plugin_framework.envs import settings
 from bk_plugin_framework.hub import VersionHub
@@ -22,6 +23,9 @@ from bk_plugin_framework.utils import local
 
 logger = logging.getLogger("bk_plugin")
 
+# 瞬时数据库连接类错误：DB 抖动可通过重试自愈，不应直接把调度判定为失败
+TRANSIENT_DB_EXC = (OperationalError, InterfaceError)
+
 
 def _set_schedule_state(trace_id: str, state: State):
     try:
@@ -30,12 +34,27 @@ def _set_schedule_state(trace_id: str, state: State):
         logger.exception("[execute] set schedule state error")
 
 
-@shared_task(ignore_result=True)
-def schedule(trace_id: str):
+@shared_task(bind=True, ignore_result=True, max_retries=6, default_retry_delay=5)
+def schedule(self, trace_id: str):
     local.set_trace_id(trace_id)
 
     try:
         schedule = Schedule.objects.get(trace_id=trace_id)
+    except TRANSIENT_DB_EXC as exc:
+        # DB 瞬时不可达：重试本次轮询而非判失败，避免误杀运行中的插件；重试用尽才兜底置失败
+        if self.request.retries >= self.max_retries:
+            logger.error(
+                "[schedule_task] db unreachable, give up fetching schedule obj %s after %s retries"
+                % (trace_id, self.request.retries)
+            )
+            _set_schedule_state(trace_id=trace_id, state=State.FAIL)
+            return
+        countdown = min(2 ** self.request.retries * 5, 60)
+        logger.warning(
+            "[schedule_task] transient db error when fetching schedule obj %s (retry=%s), retry in %ss: %s"
+            % (trace_id, self.request.retries, countdown, exc)
+        )
+        raise self.retry(exc=exc, countdown=countdown)
     except Exception:
         logger.exception("[schedule_task] fetch schedule obj %s failed" % trace_id)
         _set_schedule_state(trace_id=trace_id, state=State.FAIL)
