@@ -48,7 +48,9 @@ def test_template_dockerfile_uses_base_image_and_custom_requirements_only():
     assert "FROM {{cookiecutter.base_image}}" in dockerfile
     assert "COPY custom_requirements.txt /app/custom_requirements.txt" in dockerfile
     assert "python -m pip install --no-cache-dir -r /app/custom_requirements.txt" in dockerfile
-    assert "requirements.txt" not in dockerfile
+    assert "COPY requirements.txt" not in dockerfile
+    assert "-r /app/requirements.txt" not in dockerfile
+    assert "-r requirements.txt" not in dockerfile
 
 
 def test_custom_requirements_contains_no_default_dependencies():
@@ -73,9 +75,10 @@ def test_base_dockerfile_installs_template_requirements_from_repo_root():
 
 def test_base_image_readme_documents_bk_ci_build_command():
     readme = read_text(BASE_README)
+    expected_tag = f"bk-plugin-python-base:{get_framework_version()}"
 
     assert "docker build \\" in readme
     assert "-f docker/base/Dockerfile" in readme
     assert "--build-arg PYTHON_BASE_IMAGE=" in readme
-    assert "-t bk-plugin-python-base:2.3.14" in readme
-    assert "docker push <registry>/bk-plugin-python-base:2.3.14" in readme
+    assert f"-t {expected_tag}" in readme
+    assert f"docker push <registry>/{expected_tag}" in readme
