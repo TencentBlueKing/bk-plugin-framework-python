@@ -1,0 +1,2 @@
+# Add plugin-specific Python dependencies below this line.
+# The default runtime dependencies are already installed in the base image.
