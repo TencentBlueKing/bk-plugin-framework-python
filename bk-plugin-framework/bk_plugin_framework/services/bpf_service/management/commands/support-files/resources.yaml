@@ -121,6 +121,52 @@ paths:
           resourcePermissionRequired: true
         disabledStages: []
         descriptionEn: Invoke specific version plugin
+
+  /bk_plugin/schedule/{id}:
+    get:
+      operationId: schedule
+      summary: 获取插件调度详情
+      description: 根据 trace_id 获取插件调度详情
+      tags:
+        - schedule
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: 插件调用 trace id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopedScheduleResponse'
+          description: '查询成功'
+      x-bk-apigateway-resource:
+        isPublic: true
+        matchSubpath: false
+        backend:
+          type: HTTP
+          name: default
+          method: get
+          {% if settings.BK_PLUGIN_APIGW_BACKEND_SUB_PATH %}
+          path: /{env.api_sub_path}/bk_plugin/schedule/{id}
+          {% else %}
+          path: /bk_plugin/schedule/{id}
+          {% endif %}
+          matchSubpath: false
+          timeout: 0
+          upstreams: {}
+          transformHeaders: {}
+        pluginConfigs: []
+        allowApplyPermission: true
+        authConfig:
+          userVerifiedRequired: false
+          appVerifiedRequired: true
+          resourcePermissionRequired: false
+        disabledStages: []
+        descriptionEn: Get plugin schedule detail with trace_id
   /bk_plugin/plugin_api/:
     x-bk-apigateway-method-any:
       operationId: plugin_api
@@ -370,6 +416,64 @@ components:
         - result
         - trace_id
 
+    ScheduleData:
+      type: object
+      description: 插件调度返回数据
+      properties:
+        trace_id:
+          type: string
+          description: 插件调用 trace id
+        plugin_version:
+          type: string
+          description: 插件版本
+        state:
+          type: integer
+          description: '插件执行状态(2: POLL 3:CALLBACK 4:SUCCESS 5:FAIL)'
+        outputs:
+          type: object
+          additionalProperties: {}
+          description: 插件输出
+        err:
+          type: string
+          description: 错误信息
+        created_at:
+          type: string
+          description: 创建时间
+        finish_at:
+          type: string
+          description: 结束时间
+      required:
+        - created_at
+        - err
+        - finish_at
+        - outputs
+        - plugin_version
+        - state
+        - trace_id
+
+    ScheduleResponse:
+      type: object
+      description: 插件调度响应
+      properties:
+        result:
+          type: boolean
+          description: 请求是否成功
+        message:
+          type: string
+          description: 请求额外信息，result 为 false 时读取
+        trace_id:
+          type: string
+          description: 调用跟踪 ID
+        data:
+          allOf:
+            - $ref: '#/components/schemas/ScheduleData'
+          description: 接口数据
+      required:
+        - data
+        - message
+        - result
+        - trace_id
+
     PluginCallbackResponse:
       type: object
       description: 插件回调响应
@@ -416,6 +520,27 @@ components:
           description: 状态码，0表示成功
         data:
           $ref: '#/components/schemas/InvokeResponse'
+        message:
+          type: string
+          description: 响应消息
+        result:
+          type: boolean
+          description: 操作结果
+      required:
+        - code
+        - data
+        - message
+        - result
+
+    EnvelopedScheduleResponse:
+      type: object
+      description: 插件调度统一响应封装
+      properties:
+        code:
+          type: integer
+          description: 状态码，0表示成功
+        data:
+          $ref: '#/components/schemas/ScheduleResponse'
         message:
           type: string
           description: 响应消息
