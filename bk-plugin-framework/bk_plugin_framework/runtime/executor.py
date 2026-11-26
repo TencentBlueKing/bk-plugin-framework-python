@@ -20,6 +20,7 @@ try:
 except ImportError:
     from pydantic import ValidationError
 
+from django.db import InterfaceError, OperationalError, connection
 from django.utils.timezone import now
 
 from bk_plugin_framework.kit import (
@@ -52,6 +53,10 @@ logger = logging.getLogger("bk_plugin")
 FINISH_STATES = {State.FAIL, State.SUCCESS}
 UNFINISHED_STATES = {State.POLL, State.CALLBACK}
 
+# 瞬时数据库连接类错误：长耗时插件执行完后连接可能已被服务端断开
+TRANSIENT_DB_EXC = (OperationalError, InterfaceError)
+SCHEDULE_STATE_UPDATE_MAX_RETRIES = 3
+
 
 class ExecuteResult:
     def __init__(self, state: State, outputs: typing.Optional[dict], err: typing.Optional[str]):
@@ -78,12 +83,34 @@ class BKPluginExecutor:
     def _load_schedule_data(self, schedule: Schedule) -> dict:
         return json.loads(schedule.data)
 
+    def _update_schedule_with_retry(self, trace_id: str, update_fields: dict, log_label: str):
+        """更新 Schedule 状态，遇到瞬时 DB 连接错误时刷新连接后重试。
+
+        只重试写库本身，不重跑插件逻辑，避免长耗时 Agent 调用被重复执行。
+        """
+        for attempt in range(SCHEDULE_STATE_UPDATE_MAX_RETRIES + 1):
+            try:
+                updated_rows = Schedule.objects.filter(trace_id=trace_id).update(**update_fields)
+                if updated_rows == 0:
+                    raise RuntimeError("schedule object not found when updating state")
+                return
+            except TRANSIENT_DB_EXC as exc:
+                if attempt >= SCHEDULE_STATE_UPDATE_MAX_RETRIES:
+                    logger.exception("[%s] update schedule state failed after %s retries" % (log_label, attempt))
+                    raise
+                logger.warning(
+                    "[%s] transient db error when updating schedule state (retry=%s): %s"
+                    % (log_label, attempt + 1, exc)
+                )
+                if not connection.in_atomic_block:
+                    connection.close()
+
     def _set_schedule_state(self, trace_id: str, state: State):
         update_kwargs = {"state": state.value}
         if state in FINISH_STATES:
             update_kwargs["finish_at"] = now()
         try:
-            Schedule.objects.filter(trace_id=trace_id).update(**update_kwargs)
+            self._update_schedule_with_retry(trace_id, update_kwargs, "_set_schedule_state")
         except Exception:
             logger.exception("[execute] set schedule state error")
 
@@ -309,7 +336,7 @@ class BKPluginExecutor:
             }
 
         try:
-            Schedule.objects.filter(trace_id=schedule.trace_id).update(**update_fields)
+            self._update_schedule_with_retry(schedule.trace_id, update_fields, "schedule")
         except Exception:
             logger.exception("[schedule] schedule object update error")
             self._set_schedule_state(trace_id=schedule.trace_id, state=State.FAIL)

@@ -13,9 +13,10 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.db import OperationalError
 
 from bk_plugin_framework.kit import Context, ContextRequire, InputsModel, Plugin, State
-from bk_plugin_framework.runtime.executor import BKPluginExecutor
+from bk_plugin_framework.runtime.executor import BKPluginExecutor, SCHEDULE_STATE_UPDATE_MAX_RETRIES
 
 
 @pytest.fixture
@@ -121,6 +122,20 @@ class TestBKPluginExecutor:
         Schedule.objects.filter(trace_id=schedule_obj.trace_id).update.assert_called_once_with(
             state=state.value, finish_at="now"
         )
+
+    def test__set_schedule_state_retry_on_transient_db_error(self, executor):
+        schedule_obj = MagicMock()
+        Schedule = MagicMock()
+        Schedule.objects.filter.return_value.update.side_effect = [OperationalError("lost connection"), 1]
+        connection = MagicMock()
+        connection.in_atomic_block = False
+
+        with patch("bk_plugin_framework.runtime.executor.Schedule", Schedule):
+            with patch("bk_plugin_framework.runtime.executor.connection", connection):
+                executor._set_schedule_state(trace_id=schedule_obj.trace_id, state=State.POLL)
+
+        assert Schedule.objects.filter.return_value.update.call_count == 2
+        connection.close.assert_called_once_with()
 
     def test_execute__inputs_validate_err(self, executor, plugin_cls):
         result = executor.execute(plugin_cls, {}, {})
@@ -298,6 +313,43 @@ class TestBKPluginExecutor:
         Schedule.objects.filter(trace_id=schedule.trace_id).update.assert_called_once_with(
             state=State.SUCCESS.value, invoke_count=2, data=schedule.data, finish_at="now"
         )
+
+    def test_schedule__update_retry_on_transient_db_error(self, executor, plugin_cls):
+        schedule = MagicMock()
+        schedule.invoke_count = 1
+        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        Schedule = MagicMock()
+        Schedule.objects.filter.return_value.update.side_effect = [OperationalError("lost connection"), 1]
+        now = MagicMock(return_value="now")
+        connection = MagicMock()
+        connection.in_atomic_block = False
+
+        with patch("bk_plugin_framework.runtime.executor.Schedule", Schedule):
+            with patch("bk_plugin_framework.runtime.executor.now", now):
+                with patch("bk_plugin_framework.runtime.executor.connection", connection):
+                    executor.schedule(plugin_cls, schedule)
+
+        assert Schedule.objects.filter.return_value.update.call_count == 2
+        connection.close.assert_called_once_with()
+
+    def test_schedule__update_exhausted_retries_falls_back_to_fail(self, executor_1, plugin_cls):
+        schedule = MagicMock()
+        schedule.invoke_count = 1
+        schedule.data = '{"inputs": {"success": true}, "context": {"storage": {}, "outputs": {}, "data": {"b": "1"}}, "outputs": {}}'  # noqa
+        Schedule = MagicMock()
+        Schedule.objects.filter.return_value.update.side_effect = OperationalError("lost connection")
+        now = MagicMock(return_value="now")
+        connection = MagicMock()
+        connection.in_atomic_block = False
+
+        with patch("bk_plugin_framework.runtime.executor.Schedule", Schedule):
+            with patch("bk_plugin_framework.runtime.executor.now", now):
+                with patch("bk_plugin_framework.runtime.executor.connection", connection):
+                    executor_1.schedule(plugin_cls, schedule)
+
+        assert Schedule.objects.filter.return_value.update.call_count == SCHEDULE_STATE_UPDATE_MAX_RETRIES + 1
+        assert connection.close.call_count == SCHEDULE_STATE_UPDATE_MAX_RETRIES
+        executor_1._set_schedule_state.assert_called_once_with(trace_id=schedule.trace_id, state=State.FAIL)
 
     def test_schedule__plugin_execute_success_dump_data_err(self, executor_2, plugin_cls):
         schedule = MagicMock()
